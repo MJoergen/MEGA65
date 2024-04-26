@@ -34,30 +34,33 @@ architecture synthesis of uart is
    signal   rx_state   : state_type := IDLE_ST;
    signal   rx_counter : natural range 0 to C_COUNTER_MAX;
 
+   signal   uart_tx : std_logic;
+
 begin
 
    tx_ready_o <= '1' when tx_state = IDLE_ST else
                  '0';
 
-   uart_tx_o  <= tx_data(0);
+   uart_tx    <= tx_data(0);
 
    tx_proc : process (clk_i)
    begin
       if rising_edge(clk_i) then
-         if tx_counter > 0 then
-            tx_counter <= tx_counter - 1;
-         else
+         uart_tx_o <= uart_tx;
 
-            case tx_state is
+         case tx_state is
 
-               when IDLE_ST =>
-                  if tx_valid_i = '1' then
-                     tx_data    <= "1" & tx_data_i & "0";
-                     tx_counter <= C_COUNTER_MAX;
-                     tx_state   <= BUSY_ST;
-                  end if;
+            when IDLE_ST =>
+               if tx_valid_i = '1' then
+                  tx_data    <= "1" & tx_data_i & "0";
+                  tx_counter <= C_COUNTER_MAX;
+                  tx_state   <= BUSY_ST;
+               end if;
 
-               when BUSY_ST =>
+            when BUSY_ST =>
+               if tx_counter > 0 then
+                  tx_counter <= tx_counter - 1;
+               else
                   if or (tx_data(9 downto 1)) = '1' then
                      tx_counter <= C_COUNTER_MAX;
                      tx_data    <= "0" & tx_data(9 downto 1);
@@ -65,10 +68,10 @@ begin
                      tx_data  <= (others => '1');
                      tx_state <= IDLE_ST;
                   end if;
+               end if;
 
-            end case;
+         end case;
 
-         end if;
 
          if rst_i = '1' then
             tx_data    <= (others => '1');
@@ -99,7 +102,7 @@ begin
                   rx_counter <= rx_counter - 1;
                else
                   rx_counter <= C_COUNTER_MAX;
-                  rx_data <= uart_rx_i & rx_data(9 downto 1);
+                  rx_data    <= uart_rx_i & rx_data(9 downto 1);
                   if rx_data(0) = '0' and rx_data(9) = '1' then
                      rx_data_o  <= rx_data(8 downto 1);
                      rx_valid_o <= '1';

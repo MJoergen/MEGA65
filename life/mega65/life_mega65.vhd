@@ -35,6 +35,9 @@ end entity life_mega65;
 
 architecture structural of life_mega65 is
 
+   signal clk : std_logic;
+   signal rst : std_logic;
+
    signal uart_rx_valid : std_logic;
    signal uart_rx_ready : std_logic;
    signal uart_rx_data  : std_logic_vector(7 downto 0);
@@ -49,6 +52,14 @@ architecture structural of life_mega65 is
 
 begin
 
+   clk_inst : entity work.clk
+      port map (
+         clk_i => clk_i,
+         rst_i => max10_tx_i,
+         clk_o => clk,
+         rst_o => rst
+      );
+
    -- This controls the board.
    life_inst : entity work.life
       generic map (
@@ -57,8 +68,8 @@ begin
          G_CELLS_INIT => G_CELLS_INIT
       )
       port map (
-         clk_i    => clk_i,
-         rst_i    => max10_tx_i,
+         clk_i    => clk,
+         rst_i    => rst,
          board_o  => life_board,
          en_i     => life_step,
          index_i  => life_wr_index,
@@ -73,8 +84,8 @@ begin
          G_COLS => G_COLS
       )
       port map (
-         clk_i           => clk_i,
-         rst_i           => max10_tx_i,
+         clk_i           => clk,
+         rst_i           => rst,
          uart_rx_valid_i => uart_rx_valid,
          uart_rx_ready_o => uart_rx_ready,
          uart_rx_data_i  => uart_rx_data,
@@ -90,8 +101,8 @@ begin
 
    uart_inst : entity work.uart
       port map (
-         clk_i      => clk_i,
-         rst_i      => max10_tx_i,
+         clk_i      => clk,
+         rst_i      => rst,
          tx_valid_i => uart_tx_valid,
          tx_ready_o => uart_tx_ready,
          tx_data_i  => uart_tx_data,

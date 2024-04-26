@@ -1,6 +1,7 @@
 XILINX_DIR = /opt/Xilinx/Vivado/2023.1
 
 SRCS  = life_mega65.vhd
+SRCS += clk.vhd
 SRCS += controller.vhd
 SRCS += uart.vhd
 SRCS += ../life.vhd
@@ -14,7 +15,11 @@ life_mega65.tcl: Makefile
 	echo "read_xdc mega65.xdc" >> $@
 	echo "set_property XPM_LIBRARIES {XPM_CDC} [current_project]" >> $@
 	echo "synth_design -top life_mega65 -part xc7a200tfbg484-2 -flatten_hierarchy none" >> $@
+	echo "write_checkpoint -force post_synth.dcp" >> $@
+	echo "source debug.tcl" >> $@
+	echo "opt_design" >> $@
 	echo "place_design" >> $@
+	echo "phys_opt_design" >> $@
 	echo "route_design" >> $@
 	echo "write_checkpoint -force life_mega65.dcp" >> $@
 	echo "write_bitstream -force life_mega65.bit" >> $@
