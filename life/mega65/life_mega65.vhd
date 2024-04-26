@@ -6,13 +6,19 @@ entity life_mega65 is
    generic (
       G_ROWS       : integer          := 8;
       G_COLS       : integer          := 7;
-      G_CELLS_INIT : std_logic_vector := (0 to 55 => '0')
+      G_CELLS_INIT : std_logic_vector := "00000000" &
+                                         "00010000" &
+                                         "00001000" &
+                                         "00111000" &
+                                         "00000000" &
+                                         "00000000" &
+                                         "00000000"
    );
    port (
       -- Clock
       clk_i              : in    std_logic; -- 100 MHz
-      max10_clkandsync_o : out   std_logic := '1';
-      max10_rx_o         : out   std_logic := '1';
+      max10_clkandsync_o : out   std_logic;
+      max10_rx_o         : out   std_logic;
       max10_tx_i         : in    std_logic;
 
       uart_rxd_i         : in    std_logic;
@@ -50,12 +56,31 @@ architecture structural of life_mega65 is
    signal life_wr_value : std_logic;
    signal life_wr_en    : std_logic;
 
+   signal reset_n       : std_logic;
+
 begin
+
+   max10_inst : entity work.max10
+      port map (
+         pixelclock        => clk_i,
+         cpuclock          => clk_i,
+         led               => open,
+         max10_rx          => max10_rx_o,
+         max10_tx          => max10_tx_i,
+         max10_clkandsync  => max10_clkandsync_o,
+         max10_fpga_commit => open,
+         max10_fpga_date   => open,
+         reset_button      => reset_n,
+         dipsw             => open,
+         j21in             => open,
+         j21ddr            => (others => '0'),
+         j21out            => (others => '0')
+      );
 
    clk_inst : entity work.clk
       port map (
          clk_i => clk_i,
-         rst_i => max10_tx_i,
+         rst_i => not reset_n,
          clk_o => clk,
          rst_o => rst
       );

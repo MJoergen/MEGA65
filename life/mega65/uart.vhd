@@ -103,14 +103,17 @@ begin
                else
                   rx_counter <= C_COUNTER_MAX;
                   rx_data    <= uart_rx_i & rx_data(9 downto 1);
-                  if rx_data(0) = '0' and rx_data(9) = '1' then
-                     rx_data_o  <= rx_data(8 downto 1);
-                     rx_valid_o <= '1';
-                     rx_state   <= IDLE_ST;
-                  end if;
                end if;
 
          end case;
+
+         if rx_data(0) = '0' and rx_data(9) = '1' then
+            rx_data_o  <= rx_data(8 downto 1);
+            rx_valid_o <= '1';
+            rx_data    <= (others => '1');
+            rx_state   <= IDLE_ST;
+            rx_counter <= 0;
+         end if;
 
          if rst_i = '1' then
             rx_valid_o <= '0';

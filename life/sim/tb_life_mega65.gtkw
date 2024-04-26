@@ -1,0 +1,46 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri Apr 26 20:43:09 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/life/sim/tb_life_mega65.ghw"
+[dumpfile_mtime] "Fri Apr 26 20:41:02 2024"
+[dumpfile_size] 3440762
+[savefile] "/home/mike/git/MJoergen/MEGA65/life/sim/tb_life_mega65.gtkw"
+[timestart] 5350000000
+[size] 1472 822
+[pos] -1 -1
+*-34.104950 88130000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.tb_life_mega65.
+[treeopen] top.tb_life_mega65.life_mega65_inst.
+[sst_width] 249
+[signals_width] 272
+[sst_expanded] 1
+[sst_vpaned_height] 220
+@28
+top.tb_life_mega65.life_mega65_inst.clk_i
+top.tb_life_mega65.life_mega65_inst.max10_clkandsync_o
+top.tb_life_mega65.life_mega65_inst.max10_rx_o
+top.tb_life_mega65.life_mega65_inst.max10_tx_i
+top.tb_life_mega65.life_mega65_inst.uart_rxd_i
+top.tb_life_mega65.life_mega65_inst.uart_txd_o
+top.tb_life_mega65.life_mega65_inst.clk
+@29
+top.tb_life_mega65.life_mega65_inst.reset_n
+@28
+top.tb_life_mega65.life_mega65_inst.rst
+top.tb_life_mega65.life_mega65_inst.uart_rx_valid
+top.tb_life_mega65.life_mega65_inst.uart_rx_ready
+@22
+#{top.tb_life_mega65.life_mega65_inst.uart_rx_data[7:0]} top.tb_life_mega65.life_mega65_inst.uart_rx_data[7] top.tb_life_mega65.life_mega65_inst.uart_rx_data[6] top.tb_life_mega65.life_mega65_inst.uart_rx_data[5] top.tb_life_mega65.life_mega65_inst.uart_rx_data[4] top.tb_life_mega65.life_mega65_inst.uart_rx_data[3] top.tb_life_mega65.life_mega65_inst.uart_rx_data[2] top.tb_life_mega65.life_mega65_inst.uart_rx_data[1] top.tb_life_mega65.life_mega65_inst.uart_rx_data[0]
+@28
+top.tb_life_mega65.life_mega65_inst.uart_tx_valid
+top.tb_life_mega65.life_mega65_inst.uart_tx_ready
+@22
+#{top.tb_life_mega65.life_mega65_inst.uart_tx_data[7:0]} top.tb_life_mega65.life_mega65_inst.uart_tx_data[7] top.tb_life_mega65.life_mega65_inst.uart_tx_data[6] top.tb_life_mega65.life_mega65_inst.uart_tx_data[5] top.tb_life_mega65.life_mega65_inst.uart_tx_data[4] top.tb_life_mega65.life_mega65_inst.uart_tx_data[3] top.tb_life_mega65.life_mega65_inst.uart_tx_data[2] top.tb_life_mega65.life_mega65_inst.uart_tx_data[1] top.tb_life_mega65.life_mega65_inst.uart_tx_data[0]
+@28
+top.tb_life_mega65.life_mega65_inst.life_step
+@22
+#{top.tb_life_mega65.life_mega65_inst.life_board[55:0]} top.tb_life_mega65.life_mega65_inst.life_board[55] top.tb_life_mega65.life_mega65_inst.life_board[54] top.tb_life_mega65.life_mega65_inst.life_board[53] top.tb_life_mega65.life_mega65_inst.life_board[52] top.tb_life_mega65.life_mega65_inst.life_board[51] top.tb_life_mega65.life_mega65_inst.life_board[50] top.tb_life_mega65.life_mega65_inst.life_board[49] top.tb_life_mega65.life_mega65_inst.life_board[48] top.tb_life_mega65.life_mega65_inst.life_board[47] top.tb_life_mega65.life_mega65_inst.life_board[46] top.tb_life_mega65.life_mega65_inst.life_board[45] top.tb_life_mega65.life_mega65_inst.life_board[44] top.tb_life_mega65.life_mega65_inst.life_board[43] top.tb_life_mega65.life_mega65_inst.life_board[42] top.tb_life_mega65.life_mega65_inst.life_board[41] top.tb_life_mega65.life_mega65_inst.life_board[40] top.tb_life_mega65.life_mega65_inst.life_board[39] top.tb_life_mega65.life_mega65_inst.life_board[38] top.tb_life_mega65.life_mega65_inst.life_board[37] top.tb_life_mega65.life_mega65_inst.life_board[36] top.tb_life_mega65.life_mega65_inst.life_board[35] top.tb_life_mega65.life_mega65_inst.life_board[34] top.tb_life_mega65.life_mega65_inst.life_board[33] top.tb_life_mega65.life_mega65_inst.life_board[32] top.tb_life_mega65.life_mega65_inst.life_board[31] top.tb_life_mega65.life_mega65_inst.life_board[30] top.tb_life_mega65.life_mega65_inst.life_board[29] top.tb_life_mega65.life_mega65_inst.life_board[28] top.tb_life_mega65.life_mega65_inst.life_board[27] top.tb_life_mega65.life_mega65_inst.life_board[26] top.tb_life_mega65.life_mega65_inst.life_board[25] top.tb_life_mega65.life_mega65_inst.life_board[24] top.tb_life_mega65.life_mega65_inst.life_board[23] top.tb_life_mega65.life_mega65_inst.life_board[22] top.tb_life_mega65.life_mega65_inst.life_board[21] top.tb_life_mega65.life_mega65_inst.life_board[20] top.tb_life_mega65.life_mega65_inst.life_board[19] top.tb_life_mega65.life_mega65_inst.life_board[18] top.tb_life_mega65.life_mega65_inst.life_board[17] top.tb_life_mega65.life_mega65_inst.life_board[16] top.tb_life_mega65.life_mega65_inst.life_board[15] top.tb_life_mega65.life_mega65_inst.life_board[14] top.tb_life_mega65.life_mega65_inst.life_board[13] top.tb_life_mega65.life_mega65_inst.life_board[12] top.tb_life_mega65.life_mega65_inst.life_board[11] top.tb_life_mega65.life_mega65_inst.life_board[10] top.tb_life_mega65.life_mega65_inst.life_board[9] top.tb_life_mega65.life_mega65_inst.life_board[8] top.tb_life_mega65.life_mega65_inst.life_board[7] top.tb_life_mega65.life_mega65_inst.life_board[6] top.tb_life_mega65.life_mega65_inst.life_board[5] top.tb_life_mega65.life_mega65_inst.life_board[4] top.tb_life_mega65.life_mega65_inst.life_board[3] top.tb_life_mega65.life_mega65_inst.life_board[2] top.tb_life_mega65.life_mega65_inst.life_board[1] top.tb_life_mega65.life_mega65_inst.life_board[0]
+[pattern_trace] 1
+[pattern_trace] 0

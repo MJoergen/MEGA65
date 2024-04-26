@@ -3,10 +3,18 @@
 # in your OS repository, otherwise it may be downloaded from here:
 # https://github.com/ghdl/ghdl
 
+XILINX_DIR = /opt/Xilinx/Vivado/2023.1
+XPM_DIR = ../../../../fransschreuder/xpm_vhdl
+
 #TB       = tb_uart
 TB       = tb_life
+TB       = tb_life_mega65
 SOURCES  = ../life.vhd
 SOURCES += ../mega65/uart.vhd
+SOURCES += ../mega65/life_mega65.vhd
+SOURCES += ../mega65/controller.vhd
+SOURCES += ../mega65/clk.vhd
+SOURCES += ../mega65/max10.vhd
 SOURCES += $(TB).vhd
 SAVE     = $(TB).gtkw
 WAVE     = $(TB).ghw
@@ -17,10 +25,46 @@ WAVE     = $(TB).ghw
 #####################################
 
 .PHONY: sim
-sim: $(SOURCES)
-	ghdl -i --std=08 $(SOURCES)
-	ghdl -m --std=08 $(TB)
-	ghdl -r --std=08 $(TB) --wave=$(WAVE) --stop-time=100us
+sim: $(SOURCES) unisim-obj08.cf xpm-obj08.cf
+	ghdl -i --std=08 -frelaxed-rules -fsynopsys $(SOURCES)
+	ghdl -m --std=08 -frelaxed-rules -fsynopsys $(TB)
+	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) --wave=$(WAVE) --stop-time=100us
+
+unisim-obj08.cf:
+	ghdl -i --std=08 --work=unisim -frelaxed-rules -fsynopsys $(XILINX_DIR)/data/vhdl/src/unisims/unisim_VCOMP.vhd
+	ghdl -i --std=08 --work=unisim -frelaxed-rules -fsynopsys $(XILINX_DIR)/data/vhdl/src/unisims/unisim_VPKG.vhd
+	ghdl -i --std=08 --work=unisim -frelaxed-rules -fsynopsys $(XILINX_DIR)/data/vhdl/src/unisims/primitive/*.vhd
+
+xpm-obj08.cf:
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_VCOMP.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_cdc/hdl/xpm_cdc_single.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_cdc/hdl/xpm_cdc_array_single.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_cdc/hdl/xpm_cdc_async_rst.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_cdc/hdl/xpm_cdc_gray.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_cdc/hdl/xpm_cdc_handshake.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_cdc/hdl/xpm_cdc_low_latency_handshake.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_cdc/hdl/xpm_cdc_pulse.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_cdc/hdl/xpm_cdc_sync_rst.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_memory/hdl/xpm_memory_base.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_memory/hdl/xpm_memory_dpdistram.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_memory/hdl/xpm_memory_dprom.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_memory/hdl/xpm_memory_sdpram.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_memory/hdl/xpm_memory_spram.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_memory/hdl/xpm_memory_sprom.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_memory/hdl/xpm_memory_tdpram.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_fifo/hdl/xpm_fifo_rst.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_fifo/hdl/xpm_fifo_reg_bit.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_fifo/hdl/xpm_counter_updn.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_fifo/hdl/xpm_fifo_reg_vec.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_fifo/hdl/xpm_reg_pipe_bit.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_fifo/hdl/xpm_fifo_base.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_fifo/hdl/xpm_fifo_async.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_fifo/hdl/xpm_fifo_axi_reg_slice.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_fifo/hdl/xpm_fifo_axif.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_fifo/hdl/xpm_fifo_axil.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_fifo/hdl/xpm_fifo_axis.vhd
+	ghdl -a --std=08 --work=xpm ${XPM_DIR}/src/xpm/xpm_fifo/hdl/xpm_fifo_sync.vhd
+
 
 $WAVE): sim
 
