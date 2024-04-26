@@ -1,0 +1,32 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri Apr 26 12:35:38 2024
+[*]
+[dumpfile] "/home/mfj/git/PRIVATE/MJoergen/MEGA65/life/sim/tb_life.ghw"
+[dumpfile_mtime] "Fri Apr 26 12:34:39 2024"
+[dumpfile_size] 1439
+[savefile] "/home/mfj/git/PRIVATE/MJoergen/MEGA65/life/sim/tb_life.gtkw"
+[timestart] 0
+[size] 1231 757
+[pos] -146 -69
+*-25.312391 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.tb_life.
+[treeopen] top.tb_life.life_inst.
+[sst_width] 210
+[signals_width] 151
+[sst_expanded] 1
+[sst_vpaned_height] 198
+@28
+top.tb_life.life_inst.rst_i
+top.tb_life.life_inst.clk_i
+top.tb_life.life_inst.en_i
+@420
+top.tb_life.life_inst.index_i
+@28
+top.tb_life.life_inst.update_i
+top.tb_life.life_inst.value_i
+@22
+#{top.tb_life.life_inst.board_o[55:0]} top.tb_life.life_inst.board_o[55] top.tb_life.life_inst.board_o[54] top.tb_life.life_inst.board_o[53] top.tb_life.life_inst.board_o[52] top.tb_life.life_inst.board_o[51] top.tb_life.life_inst.board_o[50] top.tb_life.life_inst.board_o[49] top.tb_life.life_inst.board_o[48] top.tb_life.life_inst.board_o[47] top.tb_life.life_inst.board_o[46] top.tb_life.life_inst.board_o[45] top.tb_life.life_inst.board_o[44] top.tb_life.life_inst.board_o[43] top.tb_life.life_inst.board_o[42] top.tb_life.life_inst.board_o[41] top.tb_life.life_inst.board_o[40] top.tb_life.life_inst.board_o[39] top.tb_life.life_inst.board_o[38] top.tb_life.life_inst.board_o[37] top.tb_life.life_inst.board_o[36] top.tb_life.life_inst.board_o[35] top.tb_life.life_inst.board_o[34] top.tb_life.life_inst.board_o[33] top.tb_life.life_inst.board_o[32] top.tb_life.life_inst.board_o[31] top.tb_life.life_inst.board_o[30] top.tb_life.life_inst.board_o[29] top.tb_life.life_inst.board_o[28] top.tb_life.life_inst.board_o[27] top.tb_life.life_inst.board_o[26] top.tb_life.life_inst.board_o[25] top.tb_life.life_inst.board_o[24] top.tb_life.life_inst.board_o[23] top.tb_life.life_inst.board_o[22] top.tb_life.life_inst.board_o[21] top.tb_life.life_inst.board_o[20] top.tb_life.life_inst.board_o[19] top.tb_life.life_inst.board_o[18] top.tb_life.life_inst.board_o[17] top.tb_life.life_inst.board_o[16] top.tb_life.life_inst.board_o[15] top.tb_life.life_inst.board_o[14] top.tb_life.life_inst.board_o[13] top.tb_life.life_inst.board_o[12] top.tb_life.life_inst.board_o[11] top.tb_life.life_inst.board_o[10] top.tb_life.life_inst.board_o[9] top.tb_life.life_inst.board_o[8] top.tb_life.life_inst.board_o[7] top.tb_life.life_inst.board_o[6] top.tb_life.life_inst.board_o[5] top.tb_life.life_inst.board_o[4] top.tb_life.life_inst.board_o[3] top.tb_life.life_inst.board_o[2] top.tb_life.life_inst.board_o[1] top.tb_life.life_inst.board_o[0]
+[pattern_trace] 1
+[pattern_trace] 0

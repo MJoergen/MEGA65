@@ -1,0 +1,56 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri Apr 26 14:13:23 2024
+[*]
+[dumpfile] "/home/mfj/git/PRIVATE/MJoergen/MEGA65/life/sim/tb_uart.ghw"
+[dumpfile_mtime] "Fri Apr 26 14:11:14 2024"
+[dumpfile_size] 17694
+[savefile] "/home/mfj/git/PRIVATE/MJoergen/MEGA65/life/sim/tb_uart.gtkw"
+[timestart] 0
+[size] 1217 742
+[pos] -185 -74
+*-31.032158 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.tb_uart.
+[treeopen] top.tb_uart.uart_rx_inst.
+[sst_width] 210
+[signals_width] 183
+[sst_expanded] 1
+[sst_vpaned_height] 193
+@c00200
+-TB
+@28
+top.tb_uart.running
+top.tb_uart.clk
+top.tb_uart.rst
+top.tb_uart.tx_valid
+top.tb_uart.tx_ready
+@22
+#{top.tb_uart.tx_data[7:0]} top.tb_uart.tx_data[7] top.tb_uart.tx_data[6] top.tb_uart.tx_data[5] top.tb_uart.tx_data[4] top.tb_uart.tx_data[3] top.tb_uart.tx_data[2] top.tb_uart.tx_data[1] top.tb_uart.tx_data[0]
+@28
+top.tb_uart.rx_valid
+top.tb_uart.rx_ready
+@22
+#{top.tb_uart.rx_data[7:0]} top.tb_uart.rx_data[7] top.tb_uart.rx_data[6] top.tb_uart.rx_data[5] top.tb_uart.rx_data[4] top.tb_uart.rx_data[3] top.tb_uart.rx_data[2] top.tb_uart.rx_data[1] top.tb_uart.rx_data[0]
+@28
+top.tb_uart.data
+@1401200
+-TB
+@800200
+-uart_rx
+@28
+top.tb_uart.uart_rx_inst.clk_i
+top.tb_uart.uart_rx_inst.rst_i
+top.tb_uart.uart_rx_inst.uart_rx_i
+top.tb_uart.uart_rx_inst.rx_valid_o
+top.tb_uart.uart_rx_inst.rx_ready_i
+@22
+#{top.tb_uart.uart_rx_inst.rx_data_o[7:0]} top.tb_uart.uart_rx_inst.rx_data_o[7] top.tb_uart.uart_rx_inst.rx_data_o[6] top.tb_uart.uart_rx_inst.rx_data_o[5] top.tb_uart.uart_rx_inst.rx_data_o[4] top.tb_uart.uart_rx_inst.rx_data_o[3] top.tb_uart.uart_rx_inst.rx_data_o[2] top.tb_uart.uart_rx_inst.rx_data_o[1] top.tb_uart.uart_rx_inst.rx_data_o[0]
+#{top.tb_uart.uart_rx_inst.rx_data[9:0]} top.tb_uart.uart_rx_inst.rx_data[9] top.tb_uart.uart_rx_inst.rx_data[8] top.tb_uart.uart_rx_inst.rx_data[7] top.tb_uart.uart_rx_inst.rx_data[6] top.tb_uart.uart_rx_inst.rx_data[5] top.tb_uart.uart_rx_inst.rx_data[4] top.tb_uart.uart_rx_inst.rx_data[3] top.tb_uart.uart_rx_inst.rx_data[2] top.tb_uart.uart_rx_inst.rx_data[1] top.tb_uart.uart_rx_inst.rx_data[0]
+@420
+top.tb_uart.uart_rx_inst.rx_counter
+top.tb_uart.uart_rx_inst.rx_state
+@1000200
+-uart_rx
+[pattern_trace] 1
+[pattern_trace] 0
