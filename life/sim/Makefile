@@ -19,6 +19,11 @@ SOURCES += ../mega65/m2m_keyb.vhd
 SOURCES += ../mega65/matrix_to_keynum.vhdl
 SOURCES += ../mega65/mega65kbd_to_matrix.vhdl
 SOURCES += ../mega65/kb_matrix_ram.vhdl
+SOURCES += ../mega65/video.vhd
+SOURCES += ../mega65/video_sync.vhd
+SOURCES += ../mega65/video_modes_pkg.vhd
+SOURCES += ../mega65/digits.vhd
+SOURCES += ../mega65/font.vhd
 
 SOURCES += $(TB).vhd
 SAVE     = $(TB).gtkw

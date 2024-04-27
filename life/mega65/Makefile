@@ -10,6 +10,11 @@ SRCS += m2m_keyb.vhd
 SRCS += matrix_to_keynum.vhdl
 SRCS += mega65kbd_to_matrix.vhdl
 SRCS += kb_matrix_ram.vhdl
+SRCS += video.vhd
+SRCS += video_sync.vhd
+SRCS += video_modes_pkg.vhd
+SRCS += digits.vhd
+SRCS += font.vhd
 
 life_mega65.bit: life_mega65.tcl $(SRCS) mega65.xdc Makefile
 	bash -c "source $(XILINX_DIR)/settings64.sh ; vivado -mode tcl -source $<"
@@ -36,6 +41,12 @@ clean:
 	rm -rf life_mega65.tcl
 	rm -rf life_mega65.bit
 	rm -rf life_mega65.dcp
+	rm -rf post_synth.dcp
 	rm -rf .Xil
 	rm -rf .cache
+	rm -rf debug.ltx
+	rm -rf life_mega65.cache
+	rm -rf life_mega65.hw
+	rm -rf life_mega65.runs
+	rm -rf life_mega65.srcs
 

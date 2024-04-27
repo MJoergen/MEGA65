@@ -53,6 +53,9 @@ architecture structural of life_mega65 is
 begin
 
    mega65_inst : entity work.mega65
+      generic map (
+         G_BOARD_SIZE => G_ROWS * G_COLS
+      )
       port map (
          -- MEGA65 I/O ports
          sys_clk_i       => sys_clk_i,
@@ -78,7 +81,8 @@ begin
          uart_tx_data_i  => uart_tx_data,
          uart_rx_valid_o => uart_rx_valid,
          uart_rx_ready_i => uart_rx_ready,
-         uart_rx_data_o  => uart_rx_data
+         uart_rx_data_o  => uart_rx_data,
+         board_i         => life_board
       ); -- mega65_inst
 
    -- User Interface
