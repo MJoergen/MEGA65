@@ -15,12 +15,10 @@ create_generated_clock -name clk [get_pins clk_inst/pll_inst/CLKOUT0]
 ################################
 
 # Onboard crystal oscillator = 100 MHz
-set_property -dict {PACKAGE_PIN V13  IOSTANDARD LVCMOS33} [get_ports {clk_i}];                  # CLOCK_FPGA_MRCC
+set_property -dict {PACKAGE_PIN V13  IOSTANDARD LVCMOS33} [get_ports {sys_clk_i}];              # CLOCK_FPGA_MRCC
 
 # MAX10 FPGA (delivers reset)
-set_property -dict {PACKAGE_PIN L16  IOSTANDARD LVCMOS33} [get_ports {max10_clkandsync_o}];     # FPGA_TX
-set_property -dict {PACKAGE_PIN K16  IOSTANDARD LVCMOS33} [get_ports {max10_rx_o}];             # FPGA_RX
-set_property -dict {PACKAGE_PIN M13  IOSTANDARD LVCMOS33} [get_ports {max10_tx_i}];             # FPGA_RESET_N
+set_property -dict {PACKAGE_PIN M13  IOSTANDARD LVCMOS33} [get_ports {sys_rstn_i}];             # FPGA_RESET_N
 
 # USB-RS232 Interface
 set_property -dict {PACKAGE_PIN L14  IOSTANDARD LVCMOS33} [get_ports {uart_rxd_i}];             # DBG_UART_RX
@@ -62,11 +60,12 @@ set_property -dict {PACKAGE_PIN A14  IOSTANDARD LVCMOS33} [get_ports {kb_io0_o}]
 set_property -dict {PACKAGE_PIN A13  IOSTANDARD LVCMOS33} [get_ports {kb_io1_o}];               # KB_IO2
 set_property -dict {PACKAGE_PIN C13  IOSTANDARD LVCMOS33} [get_ports {kb_io2_i}];               # KB_IO3
 
-# Place MAX10 close to I/O pins
-create_pblock pblock_MAX10
-add_cells_to_pblock pblock_MAX10 [get_cells [list max10_inst]]
-resize_pblock pblock_MAX10 -add {SLICE_X0Y150:SLICE_X7Y174}
-
+# Place KBD close to I/O pins
+startgroup
+create_pblock pblock_i_kbd
+resize_pblock pblock_i_kbd -add {SLICE_X0Y225:SLICE_X7Y237}
+add_cells_to_pblock pblock_i_kbd [get_cells [list mega65_inst/m2m_keyb_inst/m65driver]]
+endgroup
 
 
 ################################

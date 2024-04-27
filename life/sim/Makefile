@@ -7,14 +7,19 @@ XILINX_DIR = /opt/Xilinx/Vivado/2023.1
 XPM_DIR = ../../../../fransschreuder/xpm_vhdl
 
 #TB       = tb_uart
-TB       = tb_life
+#TB       = tb_life
 TB       = tb_life_mega65
 SOURCES  = ../life.vhd
 SOURCES += ../mega65/uart.vhd
 SOURCES += ../mega65/life_mega65.vhd
 SOURCES += ../mega65/controller.vhd
 SOURCES += ../mega65/clk.vhd
-SOURCES += ../mega65/max10.vhd
+SOURCES += ../mega65/mega65.vhd
+SOURCES += ../mega65/m2m_keyb.vhd
+SOURCES += ../mega65/matrix_to_keynum.vhdl
+SOURCES += ../mega65/mega65kbd_to_matrix.vhdl
+SOURCES += ../mega65/kb_matrix_ram.vhdl
+
 SOURCES += $(TB).vhd
 SAVE     = $(TB).gtkw
 WAVE     = $(TB).ghw

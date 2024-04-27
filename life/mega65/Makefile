@@ -5,7 +5,11 @@ SRCS += clk.vhd
 SRCS += controller.vhd
 SRCS += uart.vhd
 SRCS += ../life.vhd
-SRCS += max10.vhd
+SRCS += mega65.vhd
+SRCS += m2m_keyb.vhd
+SRCS += matrix_to_keynum.vhdl
+SRCS += mega65kbd_to_matrix.vhdl
+SRCS += kb_matrix_ram.vhdl
 
 life_mega65.bit: life_mega65.tcl $(SRCS) mega65.xdc Makefile
 	bash -c "source $(XILINX_DIR)/settings64.sh ; vivado -mode tcl -source $<"

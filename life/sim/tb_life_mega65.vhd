@@ -64,8 +64,8 @@ begin
 
    life_mega65_inst : entity work.life_mega65
       port map (
-         clk_i      => clk,
-         max10_tx_i => not rst,
+         sys_clk_i  => clk,
+         sys_rstn_i => not rst,
          uart_rxd_i => uart_rxd,
          uart_txd_o => uart_txd,
          kb_io2_i   => '0'
