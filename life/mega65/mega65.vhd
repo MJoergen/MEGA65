@@ -45,8 +45,8 @@ end entity mega65;
 architecture synthesis of mega65 is
 
    -- video mode selection: 720p @ 60 Hz
-   constant C_VIDEO_MODE : video_modes_t := C_VIDEO_MODE_1280_720_60;
-   constant C_FONT_FILE  : string        := "font8x8.txt";
+   constant C_VIDEO_MODE : video_modes_type := C_VIDEO_MODE_1280_720_60;
+   constant C_FONT_FILE  : string           := "font8x8.txt";
 
    signal   vga_clk   : std_logic;
    signal   vga_rst   : std_logic;
