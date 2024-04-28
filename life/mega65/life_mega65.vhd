@@ -4,8 +4,8 @@ library ieee;
 
 entity life_mega65 is
    generic (
-      G_ROWS       : integer          := 8;
-      G_COLS       : integer          := 7;
+      G_ROWS       : integer          := 7;
+      G_COLS       : integer          := 8;
       G_CELLS_INIT : std_logic_vector := "00000000" &
                                          "00010000" &
                                          "00001000" &
@@ -54,7 +54,8 @@ begin
 
    mega65_inst : entity work.mega65
       generic map (
-         G_BOARD_SIZE => G_ROWS * G_COLS
+         G_ROWS => G_ROWS,
+         G_COLS => G_COLS
       )
       port map (
          -- MEGA65 I/O ports

@@ -10,7 +10,8 @@ library work;
 
 entity mega65 is
    generic (
-      G_BOARD_SIZE : natural
+      G_ROWS : integer;
+      G_COLS : integer
    );
    port (
       -- MEGA65 I/O ports
@@ -38,7 +39,7 @@ entity mega65 is
       uart_rx_valid_o : out   std_logic;
       uart_rx_ready_i : in    std_logic;
       uart_rx_data_o  : out   std_logic_vector(7 downto 0);
-      board_i         : in    std_logic_vector(G_BOARD_SIZE - 1 downto 0)
+      board_i         : in    std_logic_vector(G_ROWS * G_COLS - 1 downto 0)
    );
 end entity mega65;
 
@@ -50,7 +51,7 @@ architecture synthesis of mega65 is
 
    signal   vga_clk   : std_logic;
    signal   vga_rst   : std_logic;
-   signal   vga_board : std_logic_vector(G_BOARD_SIZE - 1 downto 0);
+   signal   vga_board : std_logic_vector(G_ROWS * G_COLS - 1 downto 0);
 
 begin
 
@@ -94,7 +95,7 @@ begin
 
    xpm_cdc_array_single_inst : component xpm_cdc_array_single
       generic map (
-         WIDTH => G_BOARD_SIZE
+         WIDTH => G_ROWS * G_COLS
       )
       port map (
          src_clk  => clk_o,
@@ -105,14 +106,15 @@ begin
 
    video_inst : entity work.video
       generic map (
-         G_FONT_FILE   => C_FONT_FILE,
-         G_DIGITS_SIZE => G_BOARD_SIZE,
-         G_VIDEO_MODE  => C_VIDEO_MODE
+         G_FONT_FILE  => C_FONT_FILE,
+         G_ROWS       => G_ROWS,
+         G_COLS       => G_COLS,
+         G_VIDEO_MODE => C_VIDEO_MODE
       )
       port map (
          rst_i         => vga_rst,
          clk_i         => vga_clk,
-         digits_i      => vga_board,
+         board_i       => vga_board,
          video_vs_o    => vga_vs_o,
          video_hs_o    => vga_hs_o,
          video_de_o    => open,

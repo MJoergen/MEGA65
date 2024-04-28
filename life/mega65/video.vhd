@@ -7,14 +7,15 @@ library work;
 
 entity video is
    generic (
-      G_FONT_FILE   : string;
-      G_DIGITS_SIZE : integer;
-      G_VIDEO_MODE  : video_modes_type
+      G_FONT_FILE  : string;
+      G_ROWS       : integer;
+      G_COLS       : integer;
+      G_VIDEO_MODE : video_modes_type
    );
    port (
       clk_i         : in    std_logic;
       rst_i         : in    std_logic;
-      digits_i      : in    std_logic_vector(G_DIGITS_SIZE - 1 downto 0);
+      board_i       : in    std_logic_vector(G_ROWS * G_COLS - 1 downto 0);
       video_vs_o    : out   std_logic;
       video_hs_o    : out   std_logic;
       video_de_o    : out   std_logic;
@@ -61,13 +62,14 @@ begin
    -- Latency 3 clock cycles
    digits_inst : entity work.digits
       generic map (
-         G_FONT_FILE   => G_FONT_FILE,
-         G_DIGITS_SIZE => G_DIGITS_SIZE,
-         G_VIDEO_MODE  => G_VIDEO_MODE
+         G_FONT_FILE  => G_FONT_FILE,
+         G_ROWS       => G_ROWS,
+         G_COLS       => G_COLS,
+         G_VIDEO_MODE => G_VIDEO_MODE
       )
       port map (
          clk_i    => clk_i,
-         digits_i => digits_i,
+         digits_i => board_i,
          pix_x_i  => pixel_x,
          pix_y_i  => pixel_y,
          pixel_o  => pixel
