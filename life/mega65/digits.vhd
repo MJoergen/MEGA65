@@ -26,8 +26,8 @@ end entity digits;
 architecture synthesis of digits is
 
    -- Define positioning of text on screen
-   constant C_TEXT_CHAR_X : integer                      := 14;
-   constant C_TEXT_CHAR_Y : integer                      := 2;
+   constant C_TEXT_CHAR_X : integer                      := G_VIDEO_MODE.H_PIXELS / 64 - G_COLS / 2;
+   constant C_TEXT_CHAR_Y : integer                      := G_VIDEO_MODE.V_PIXELS / 64 - G_ROWS / 2;
 
    -- A single character bitmap is defined by 8x8 = 64 bits.
    subtype  BITMAP_TYPE is std_logic_vector(63 downto 0);

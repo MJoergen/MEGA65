@@ -89,6 +89,8 @@ show: $(WAVE) $(SAVE)
 clean:
 	rm -rf *.o
 	rm -rf work-obj08.cf
+	rm -rf unisim-obj08.cf
+	rm -rf xpm-obj08.cf
 	rm -rf $(TB)
 	rm -rf $(WAVE)
 
