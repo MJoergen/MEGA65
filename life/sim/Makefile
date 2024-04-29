@@ -6,24 +6,25 @@
 XILINX_DIR = /opt/Xilinx/Vivado/2023.1
 XPM_DIR = ../../../../fransschreuder/xpm_vhdl
 
+PROJECT = life
+
 #TB       = tb_uart
-#TB       = tb_life
-TB       = tb_life_mega65
-SOURCES  = ../life.vhd
-SOURCES += ../mega65/uart.vhd
+#TB       = tb_$(PROJECT)
+TB       = tb_$(PROJECT)_mega65
+SOURCES  = ../$(PROJECT).vhd
+SOURCES += ../../common/uart.vhd
+SOURCES += ../../common/clk.vhd
+SOURCES += ../../common/mega65.vhd
+SOURCES += ../../common/m2m_keyb.vhd
+SOURCES += ../../common/matrix_to_keynum.vhd
+SOURCES += ../../common/mega65kbd_to_matrix.vhd
+SOURCES += ../../common/kb_matrix_ram.vhd
+SOURCES += ../../common/video_sync.vhd
+SOURCES += ../../common/video_modes_pkg.vhd
+SOURCES += ../../common/font.vhd
 SOURCES += ../mega65/life_mega65.vhd
 SOURCES += ../mega65/controller.vhd
-SOURCES += ../mega65/clk.vhd
-SOURCES += ../mega65/mega65.vhd
-SOURCES += ../mega65/m2m_keyb.vhd
-SOURCES += ../mega65/matrix_to_keynum.vhd
-SOURCES += ../mega65/mega65kbd_to_matrix.vhd
-SOURCES += ../mega65/kb_matrix_ram.vhd
-SOURCES += ../mega65/video.vhd
-SOURCES += ../mega65/video_sync.vhd
-SOURCES += ../mega65/video_modes_pkg.vhd
 SOURCES += ../mega65/digits.vhd
-SOURCES += ../mega65/font.vhd
 
 SOURCES += $(TB).vhd
 SAVE     = $(TB).gtkw

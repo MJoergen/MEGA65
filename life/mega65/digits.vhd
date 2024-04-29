@@ -15,11 +15,11 @@ entity digits is
       G_VIDEO_MODE : video_modes_type
    );
    port (
-      clk_i    : in    std_logic;
-      digits_i : in    std_logic_vector(G_ROWS * G_COLS - 1 downto 0);
-      pix_x_i  : in    std_logic_vector(G_VIDEO_MODE.PIX_SIZE - 1 downto 0);
-      pix_y_i  : in    std_logic_vector(G_VIDEO_MODE.PIX_SIZE - 1 downto 0);
-      pixel_o  : out   std_logic_vector(7 downto 0)
+      vga_clk_i    : in    std_logic;
+      vga_hcount_i : in    std_logic_vector(G_VIDEO_MODE.PIX_SIZE - 1 downto 0);
+      vga_vcount_i : in    std_logic_vector(G_VIDEO_MODE.PIX_SIZE - 1 downto 0);
+      vga_board_i  : in    std_logic_vector(G_ROWS * G_COLS - 1 downto 0);
+      vga_rgb_o    : out   std_logic_vector(7 downto 0)
    );
 end entity digits;
 
@@ -78,12 +78,12 @@ begin
    --------------------------------------------------
 
    -- Calculate character coordinates, within 40x30
-   black_0    <= '1' when pix_x_i >= G_VIDEO_MODE.H_PIXELS or pix_y_i >= G_VIDEO_MODE.V_PIXELS else
+   black_0    <= '1' when vga_hcount_i >= G_VIDEO_MODE.H_PIXELS or vga_vcount_i >= G_VIDEO_MODE.V_PIXELS else
                  '0';
-   char_col_0 <= to_integer(pix_x_i(10 downto 5));
-   char_row_0 <= to_integer(pix_y_i(10 downto 5));
-   pix_col_0  <= to_integer(pix_x_i(4 downto 2));
-   pix_row_0  <= 7 - to_integer(pix_y_i(4 downto 2));
+   char_col_0 <= to_integer(vga_hcount_i(10 downto 5));
+   char_row_0 <= to_integer(vga_vcount_i(10 downto 5));
+   pix_col_0  <= to_integer(vga_hcount_i(4 downto 2));
+   pix_row_0  <= 7 - to_integer(vga_vcount_i(4 downto 2));
 
    index_0    <= (char_row_0 - C_TEXT_CHAR_Y) * G_COLS + (char_col_0 - C_TEXT_CHAR_X);
 
@@ -92,10 +92,10 @@ begin
    -- Stage 1
    --------------------------------------------------
 
-   stage1_proc : process (clk_i)
+   stage1_proc : process (vga_clk_i)
    begin
-      if rising_edge(clk_i) then
-         if digits_i(G_ROWS * G_COLS - 1 - index_0) = '1' then
+      if rising_edge(vga_clk_i) then
+         if vga_board_i(G_ROWS * G_COLS - 1 - index_0) = '1' then
             char_txt_1 <= X"58";
          else
             char_txt_1 <= X"2E";
@@ -124,14 +124,14 @@ begin
          G_FONT_FILE => G_FONT_FILE
       )
       port map (
-         clk_i    => clk_i,
+         clk_i    => vga_clk_i,
          char_i   => char_1,
          bitmap_o => bitmap_2
       ); -- font_inst
 
-   stage2_proc : process (clk_i)
+   stage2_proc : process (vga_clk_i)
    begin
-      if rising_edge(clk_i) then
+      if rising_edge(vga_clk_i) then
          black_2    <= black_1;
          char_col_2 <= char_col_1;
          char_row_2 <= char_row_1;
@@ -150,9 +150,9 @@ begin
    --------------------------------------------------
 
    -- Generate pixel colour
-   stage3_proc : process (clk_i)
+   stage3_proc : process (vga_clk_i)
    begin
-      if rising_edge(clk_i) then
+      if rising_edge(vga_clk_i) then
          -- Set the default screen background colour
          pixel_3 <= C_PIXEL_GREY;
 
@@ -173,7 +173,7 @@ begin
       end if;
    end process stage3_proc;
 
-   pixel_o        <= pixel_3;
+   vga_rgb_o      <= pixel_3;
 
 end architecture synthesis;
 

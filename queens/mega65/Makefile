@@ -1,10 +1,10 @@
 XILINX_DIR = /opt/Xilinx/Vivado/2023.1
 
-PROJECT = life
+PROJECT = queens
 
 SRCS  = $(PROJECT)_mega65.vhd
-SRCS += controller.vhd
-SRCS += digits.vhd
+SRCS += disp_queens.vhd
+SRCS += bitmap_pkg.vhd
 SRCS += ../$(PROJECT).vhd
 SRCS += ../../common/clk.vhd
 SRCS += ../../common/uart.vhd
@@ -15,7 +15,6 @@ SRCS += ../../common/mega65kbd_to_matrix.vhd
 SRCS += ../../common/kb_matrix_ram.vhd
 SRCS += ../../common/video_sync.vhd
 SRCS += ../../common/video_modes_pkg.vhd
-SRCS += ../../common/font.vhd
 
 XDC = ../../common/mega65.xdc
 
