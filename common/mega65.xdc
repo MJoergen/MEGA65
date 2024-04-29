@@ -65,7 +65,7 @@ set_property -dict {PACKAGE_PIN C13  IOSTANDARD LVCMOS33} [get_ports {kb_io2_i}]
 startgroup
 create_pblock pblock_i_kbd
 resize_pblock pblock_i_kbd -add {SLICE_X0Y225:SLICE_X7Y237}
-add_cells_to_pblock pblock_i_kbd [get_cells [list mega65_inst/m2m_keyb_inst/m65driver]]
+add_cells_to_pblock pblock_i_kbd [get_cells [list mega65_inst/m2m_keyb_inst/mega65kbd_to_matrix_inst]]
 endgroup
 
 
