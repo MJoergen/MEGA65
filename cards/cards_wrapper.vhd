@@ -36,6 +36,7 @@ architecture synthesis of cards_wrapper is
 
    constant C_VIDEO_MODE : video_modes_type := C_VIDEO_MODE_1280_720_60;
 
+   signal   cards_step  : std_logic;
    signal   cards_board : std_logic_vector(2 * G_PAIRS * G_PAIRS - 1 downto 0);
    signal   cards_valid : std_logic;
    signal   cards_done  : std_logic;
@@ -44,9 +45,25 @@ architecture synthesis of cards_wrapper is
 
 begin
 
-   uart_rx_ready_o <= '1';
-   uart_tx_valid_o <= '0';
-   uart_tx_data_o  <= (others => '0');
+   -- User Interface
+   controller_inst : entity work.controller
+      generic map (
+         G_PAIRS => G_PAIRS
+      )
+      port map (
+         clk_i           => clk_i,
+         rst_i           => rst_i,
+         uart_rx_valid_i => uart_rx_valid_i,
+         uart_rx_ready_o => uart_rx_ready_o,
+         uart_rx_data_i  => uart_rx_data_i,
+         uart_tx_valid_o => uart_tx_valid_o,
+         uart_tx_ready_i => uart_tx_ready_i,
+         uart_tx_data_o  => uart_tx_data_o,
+         board_i         => cards_board,
+         valid_i         => cards_valid,
+         done_i          => cards_done,
+         step_o          => cards_step
+      ); -- controller_inst
 
    cards_inst : entity work.cards
       generic map (
@@ -55,7 +72,7 @@ begin
       port map (
          clk_i      => clk_i,
          rst_i      => rst_i,
-         en_i       => '1',
+         en_i       => cards_step,
          cards_o    => cards_board,
          cards_or_o => open,
          invalid_o  => open,

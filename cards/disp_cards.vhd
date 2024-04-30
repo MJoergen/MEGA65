@@ -38,6 +38,8 @@ architecture behavioral of disp_cards is
    constant C_OFFSET_X : integer                    := 50;
    constant C_OFFSET_Y : integer                    := 150;
 
+   constant C_SIZE : natural := 2*G_PAIRS;
+
    type     bitmaps_vector_type is array(natural range <>) of bitmap_t;
    constant C_BITMAPS : bitmaps_vector_type(0 to 9) :=
    (
@@ -76,14 +78,14 @@ begin
 
       if vga_blank_i = '0' then
          vga_rgb_o <= "10110110";
-         if (hcount_v >= C_OFFSET_X) and (hcount_v < C_OFFSET_X + 16 * 2 * G_PAIRS)
+         if (hcount_v >= C_OFFSET_X) and (hcount_v < C_OFFSET_X + 16 * C_SIZE)
             and (vcount_v >= C_OFFSET_Y) and (vcount_v < C_OFFSET_Y + 16 * G_PAIRS) then
             col_v   := (hcount_v - C_OFFSET_X) / 16;
             row_v   := G_PAIRS - 1 - (vcount_v - C_OFFSET_Y) / 16;
             xdiff_v := hcount_v - C_OFFSET_X - 16 * col_v;
             ydiff_v := vcount_v - C_OFFSET_Y - 16 * row_v;
 
-            if vga_cards_i(row_v * 2 * G_PAIRS + (2 * G_PAIRS - 1 - col_v)) = '1' then
+            if vga_cards_i(row_v * C_SIZE + C_SIZE - 1 - col_v) = '1' then
                bitmap_v := C_BITMAPS(row_v + 1);
             end if;
 

@@ -7,7 +7,7 @@ end entity tb_cards_wrapper;
 
 architecture simulation of tb_cards_wrapper is
 
-   constant C_PAIRS : integer                                        := 8;
+   constant C_PAIRS : integer                                        := 4;
 
    signal   running       : std_logic                                     := '1';
    signal   clk           : std_logic                                     := '1';
@@ -24,6 +24,8 @@ architecture simulation of tb_cards_wrapper is
    signal   vga_vcount : std_logic_vector(10 downto 0);
    signal   vga_blank  : std_logic;
    signal   vga_rgb    : std_logic_vector(7 downto 0);
+
+   signal   uart_tx_str : string(1 to 10);
 
 begin
 
@@ -52,6 +54,18 @@ begin
 
    uart_tx_ready <= '1';
 
+   uart_tx_str_proc : process (clk)
+   begin
+      if rising_edge(clk) then
+         if uart_tx_valid = '1' then
+            uart_tx_str <= uart_tx_str(2 to 10) & character'val(to_integer(uart_tx_data));
+         end if;
+         if uart_rx_valid = '1' then
+            uart_tx_str <= "          ";
+         end if;
+      end if;
+   end process uart_tx_str_proc;
+
    test_proc : process
    begin
       uart_rx_valid <= '0';
@@ -60,14 +74,40 @@ begin
       wait until clk = '1';
 
       assert uart_rx_ready = '1';
+      uart_rx_data  <= X"50";
+      uart_rx_valid <= '1';
+      wait until clk = '1';
+      uart_rx_valid <= '0';
+      wait until clk = '1';
+
+      wait for 200 ns;
+      wait until clk = '1';
+
+      assert uart_tx_str(1 to 8) = "1.1234.."
+         report "Got : " & uart_tx_str(1 to 8);
+
       uart_rx_data  <= X"53";
       uart_rx_valid <= '1';
       wait until clk = '1';
       uart_rx_valid <= '0';
       wait until clk = '1';
 
-      wait for 2000 ns;
+      wait for 200 ns;
       wait until clk = '1';
+
+      assert uart_tx_str(1 to 8) = "        "
+         report "Got : " & uart_tx_str(1 to 8);
+
+      for i in 1 to 30 loop
+         uart_rx_data  <= X"53";
+         uart_rx_valid <= '1';
+         wait until clk = '1';
+         uart_rx_valid <= '0';
+         wait until clk = '1';
+      end loop;
+
+      assert uart_tx_str(1 to 8) = "        "
+         report "Got : " & uart_tx_str(1 to 8);
 
       uart_rx_data  <= X"50";
       uart_rx_valid <= '1';
@@ -75,8 +115,11 @@ begin
       uart_rx_valid <= '0';
       wait until clk = '1';
 
-      wait for 2000 ns;
+      wait for 200 ns;
       wait until clk = '1';
+
+      assert uart_tx_str(1 to 8) = "41312432"
+         report "Got : " & uart_tx_str(1 to 8);
 
       running       <= '0';
       report "Test finished";
