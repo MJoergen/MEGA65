@@ -5,6 +5,7 @@ PROJECT = queens
 SRCS  = $(PROJECT)_mega65.vhd
 SRCS += ../disp_queens.vhd
 SRCS += ../bitmap_pkg.vhd
+SRCS += ../controller.vhd
 SRCS += ../$(PROJECT).vhd
 SRCS += ../$(PROJECT)_wrapper.vhd
 SRCS += ../../common/clk.vhd

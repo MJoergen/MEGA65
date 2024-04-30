@@ -1,23 +1,23 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Tue Apr 30 10:31:11 2024
+[*] Tue Apr 30 13:21:03 2024
 [*]
 [dumpfile] "/home/mike/git/MJoergen/MEGA65/queens/sim/tb_queens_wrapper.ghw"
-[dumpfile_mtime] "Tue Apr 30 10:28:48 2024"
-[dumpfile_size] 10368
+[dumpfile_mtime] "Tue Apr 30 13:20:40 2024"
+[dumpfile_size] 18773
 [savefile] "/home/mike/git/MJoergen/MEGA65/queens/sim/tb_queens_wrapper.gtkw"
 [timestart] 0
-[size] 1331 763
+[size] 1599 824
 [pos] -1 -1
-*-30.303633 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-29.451447 3190000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.tb_queens_wrapper.
-[treeopen] top.tb_queens_wrapper.queens_wrapper_inst.
+[treeopen] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.
 [sst_width] 249
 [signals_width] 374
 [sst_expanded] 1
-[sst_vpaned_height] 200
-@800200
+[sst_vpaned_height] 220
+@c00200
 -queens_wrapper
 @28
 top.tb_queens_wrapper.queens_wrapper_inst.clk_i
@@ -46,7 +46,34 @@ top.tb_queens_wrapper.queens_wrapper_inst.queens_done
 @22
 #{top.tb_queens_wrapper.queens_wrapper_inst.queens_board[15:0]} top.tb_queens_wrapper.queens_wrapper_inst.queens_board[15] top.tb_queens_wrapper.queens_wrapper_inst.queens_board[14] top.tb_queens_wrapper.queens_wrapper_inst.queens_board[13] top.tb_queens_wrapper.queens_wrapper_inst.queens_board[12] top.tb_queens_wrapper.queens_wrapper_inst.queens_board[11] top.tb_queens_wrapper.queens_wrapper_inst.queens_board[10] top.tb_queens_wrapper.queens_wrapper_inst.queens_board[9] top.tb_queens_wrapper.queens_wrapper_inst.queens_board[8] top.tb_queens_wrapper.queens_wrapper_inst.queens_board[7] top.tb_queens_wrapper.queens_wrapper_inst.queens_board[6] top.tb_queens_wrapper.queens_wrapper_inst.queens_board[5] top.tb_queens_wrapper.queens_wrapper_inst.queens_board[4] top.tb_queens_wrapper.queens_wrapper_inst.queens_board[3] top.tb_queens_wrapper.queens_wrapper_inst.queens_board[2] top.tb_queens_wrapper.queens_wrapper_inst.queens_board[1] top.tb_queens_wrapper.queens_wrapper_inst.queens_board[0]
 #{top.tb_queens_wrapper.queens_wrapper_inst.vga_board[15:0]} top.tb_queens_wrapper.queens_wrapper_inst.vga_board[15] top.tb_queens_wrapper.queens_wrapper_inst.vga_board[14] top.tb_queens_wrapper.queens_wrapper_inst.vga_board[13] top.tb_queens_wrapper.queens_wrapper_inst.vga_board[12] top.tb_queens_wrapper.queens_wrapper_inst.vga_board[11] top.tb_queens_wrapper.queens_wrapper_inst.vga_board[10] top.tb_queens_wrapper.queens_wrapper_inst.vga_board[9] top.tb_queens_wrapper.queens_wrapper_inst.vga_board[8] top.tb_queens_wrapper.queens_wrapper_inst.vga_board[7] top.tb_queens_wrapper.queens_wrapper_inst.vga_board[6] top.tb_queens_wrapper.queens_wrapper_inst.vga_board[5] top.tb_queens_wrapper.queens_wrapper_inst.vga_board[4] top.tb_queens_wrapper.queens_wrapper_inst.vga_board[3] top.tb_queens_wrapper.queens_wrapper_inst.vga_board[2] top.tb_queens_wrapper.queens_wrapper_inst.vga_board[1] top.tb_queens_wrapper.queens_wrapper_inst.vga_board[0]
-@1000200
+@1401200
 -queens_wrapper
+@800200
+-controller
+@28
+top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.clk_i
+top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.rst_i
+top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_rx_valid_i
+top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_rx_ready_o
+@22
+#{top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_rx_data_i[7:0]} top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_rx_data_i[7] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_rx_data_i[6] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_rx_data_i[5] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_rx_data_i[4] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_rx_data_i[3] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_rx_data_i[2] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_rx_data_i[1] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_rx_data_i[0]
+@28
+top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_tx_valid_o
+top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_tx_ready_i
+@22
+#{top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_tx_data_o[7:0]} top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_tx_data_o[7] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_tx_data_o[6] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_tx_data_o[5] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_tx_data_o[4] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_tx_data_o[3] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_tx_data_o[2] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_tx_data_o[1] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.uart_tx_data_o[0]
+@28
+top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.valid_i
+@22
+#{top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[63:0]} top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[63] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[62] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[61] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[60] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[59] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[58] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[57] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[56] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[55] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[54] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[53] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[52] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[51] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[50] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[49] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[48] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[47] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[46] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[45] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[44] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[43] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[42] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[41] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[40] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[39] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[38] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[37] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[36] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[35] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[34] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[33] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[32] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[31] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[30] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[29] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[28] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[27] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[26] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[25] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[24] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[23] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[22] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[21] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[20] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[19] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[18] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[17] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[16] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[15] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[14] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[13] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[12] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[11] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[10] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[9] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[8] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[7] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[6] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[5] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[4] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[3] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[2] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[1] top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.board_i[0]
+@28
+top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.done_i
+top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.step_o
+@420
+top.tb_queens_wrapper.queens_wrapper_inst.controller_inst.state
+@1000200
+-controller
+@23
+#{top.tb_queens_wrapper.uart_tx_str[1:80]} top.tb_queens_wrapper.uart_tx_str[1] top.tb_queens_wrapper.uart_tx_str[2] top.tb_queens_wrapper.uart_tx_str[3] top.tb_queens_wrapper.uart_tx_str[4] top.tb_queens_wrapper.uart_tx_str[5] top.tb_queens_wrapper.uart_tx_str[6] top.tb_queens_wrapper.uart_tx_str[7] top.tb_queens_wrapper.uart_tx_str[8] top.tb_queens_wrapper.uart_tx_str[9] top.tb_queens_wrapper.uart_tx_str[10] top.tb_queens_wrapper.uart_tx_str[11] top.tb_queens_wrapper.uart_tx_str[12] top.tb_queens_wrapper.uart_tx_str[13] top.tb_queens_wrapper.uart_tx_str[14] top.tb_queens_wrapper.uart_tx_str[15] top.tb_queens_wrapper.uart_tx_str[16] top.tb_queens_wrapper.uart_tx_str[17] top.tb_queens_wrapper.uart_tx_str[18] top.tb_queens_wrapper.uart_tx_str[19] top.tb_queens_wrapper.uart_tx_str[20] top.tb_queens_wrapper.uart_tx_str[21] top.tb_queens_wrapper.uart_tx_str[22] top.tb_queens_wrapper.uart_tx_str[23] top.tb_queens_wrapper.uart_tx_str[24] top.tb_queens_wrapper.uart_tx_str[25] top.tb_queens_wrapper.uart_tx_str[26] top.tb_queens_wrapper.uart_tx_str[27] top.tb_queens_wrapper.uart_tx_str[28] top.tb_queens_wrapper.uart_tx_str[29] top.tb_queens_wrapper.uart_tx_str[30] top.tb_queens_wrapper.uart_tx_str[31] top.tb_queens_wrapper.uart_tx_str[32] top.tb_queens_wrapper.uart_tx_str[33] top.tb_queens_wrapper.uart_tx_str[34] top.tb_queens_wrapper.uart_tx_str[35] top.tb_queens_wrapper.uart_tx_str[36] top.tb_queens_wrapper.uart_tx_str[37] top.tb_queens_wrapper.uart_tx_str[38] top.tb_queens_wrapper.uart_tx_str[39] top.tb_queens_wrapper.uart_tx_str[40] top.tb_queens_wrapper.uart_tx_str[41] top.tb_queens_wrapper.uart_tx_str[42] top.tb_queens_wrapper.uart_tx_str[43] top.tb_queens_wrapper.uart_tx_str[44] top.tb_queens_wrapper.uart_tx_str[45] top.tb_queens_wrapper.uart_tx_str[46] top.tb_queens_wrapper.uart_tx_str[47] top.tb_queens_wrapper.uart_tx_str[48] top.tb_queens_wrapper.uart_tx_str[49] top.tb_queens_wrapper.uart_tx_str[50] top.tb_queens_wrapper.uart_tx_str[51] top.tb_queens_wrapper.uart_tx_str[52] top.tb_queens_wrapper.uart_tx_str[53] top.tb_queens_wrapper.uart_tx_str[54] top.tb_queens_wrapper.uart_tx_str[55] top.tb_queens_wrapper.uart_tx_str[56] top.tb_queens_wrapper.uart_tx_str[57] top.tb_queens_wrapper.uart_tx_str[58] top.tb_queens_wrapper.uart_tx_str[59] top.tb_queens_wrapper.uart_tx_str[60] top.tb_queens_wrapper.uart_tx_str[61] top.tb_queens_wrapper.uart_tx_str[62] top.tb_queens_wrapper.uart_tx_str[63] top.tb_queens_wrapper.uart_tx_str[64] top.tb_queens_wrapper.uart_tx_str[65] top.tb_queens_wrapper.uart_tx_str[66] top.tb_queens_wrapper.uart_tx_str[67] top.tb_queens_wrapper.uart_tx_str[68] top.tb_queens_wrapper.uart_tx_str[69] top.tb_queens_wrapper.uart_tx_str[70] top.tb_queens_wrapper.uart_tx_str[71] top.tb_queens_wrapper.uart_tx_str[72] top.tb_queens_wrapper.uart_tx_str[73] top.tb_queens_wrapper.uart_tx_str[74] top.tb_queens_wrapper.uart_tx_str[75] top.tb_queens_wrapper.uart_tx_str[76] top.tb_queens_wrapper.uart_tx_str[77] top.tb_queens_wrapper.uart_tx_str[78] top.tb_queens_wrapper.uart_tx_str[79] top.tb_queens_wrapper.uart_tx_str[80]
 [pattern_trace] 1
 [pattern_trace] 0

@@ -22,6 +22,7 @@ SOURCES += ../../common/video_modes_pkg.vhd
 SOURCES += ../../common/font.vhd
 SOURCES += ../$(PROJECT).vhd
 SOURCES += ../$(PROJECT)_wrapper.vhd
+SOURCES += ../controller.vhd
 SOURCES += ../disp_queens.vhd
 SOURCES += ../bitmap_pkg.vhd
 SOURCES += $(TB).vhd

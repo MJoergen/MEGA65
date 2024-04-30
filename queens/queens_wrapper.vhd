@@ -30,6 +30,7 @@ end entity queens_wrapper;
 
 architecture synthesis of queens_wrapper is
 
+   signal queens_step  : std_logic;
    signal queens_board : std_logic_vector(G_NUM_QUEENS * G_NUM_QUEENS - 1 downto 0);
    signal queens_valid : std_logic;
    signal queens_done  : std_logic;
@@ -38,9 +39,25 @@ architecture synthesis of queens_wrapper is
 
 begin
 
-   uart_rx_ready_o <= '1';
-   uart_tx_valid_o <= '0';
-   uart_tx_data_o  <= (others => '0');
+   -- User Interface
+   controller_inst : entity work.controller
+      generic map (
+         G_NUM_QUEENS => G_NUM_QUEENS
+      )
+      port map (
+         clk_i           => clk_i,
+         rst_i           => rst_i,
+         uart_rx_valid_i => uart_rx_valid_i,
+         uart_rx_ready_o => uart_rx_ready_o,
+         uart_rx_data_i  => uart_rx_data_i,
+         uart_tx_valid_o => uart_tx_valid_o,
+         uart_tx_ready_i => uart_tx_ready_i,
+         uart_tx_data_o  => uart_tx_data_o,
+         board_i         => queens_board,
+         valid_i         => queens_valid,
+         done_i          => queens_done,
+         step_o          => queens_step
+      ); -- controller_inst
 
    queens_inst : entity work.queens
       generic map (
@@ -49,7 +66,7 @@ begin
       port map (
          clk_i   => clk_i,
          rst_i   => rst_i,
-         en_i    => '1',
+         en_i    => queens_step,
          board_o => queens_board,
          valid_o => queens_valid,
          done_o  => queens_done
