@@ -24,7 +24,7 @@ library work;
 entity disp_cards is
    generic (
       G_VIDEO_MODE : video_modes_type;
-      G_PAIRS : integer
+      G_PAIRS      : integer
    );
    port (
       vga_clk_i    : in    std_logic; -- Currently not used
@@ -40,10 +40,10 @@ end entity disp_cards;
 
 architecture behavioral of disp_cards is
 
-   constant C_OFFSET_X : integer                    := 50;
-   constant C_OFFSET_Y : integer                    := 150;
+   constant C_OFFSET_X : integer                    := G_VIDEO_MODE.H_PIXELS / 2 - G_PAIRS * 32;
+   constant C_OFFSET_Y : integer                    := G_VIDEO_MODE.V_PIXELS / 2 - G_PAIRS * 16;
 
-   constant C_SIZE : natural := 2*G_PAIRS;
+   constant C_SIZE : natural                        := 2 * G_PAIRS;
 
    type     bitmaps_vector_type is array(natural range <>) of bitmap_t;
    constant C_BITMAPS : bitmaps_vector_type(0 to 9) :=
@@ -60,41 +60,37 @@ architecture behavioral of disp_cards is
       bitmap_9
    );
 
+   signal   hcount : integer;
+   signal   vcount : integer;
+   signal   col    : integer;
+   signal   row    : integer;
+   signal   xdiff  : integer range 0 to 15;
+   signal   ydiff  : integer range 0 to 15;
+
 begin
 
-   vga_proc : process (all)
-      variable hcount_v : integer;
-      variable vcount_v : integer;
-      variable col_v    : integer;
-      variable row_v    : integer;
-      variable xdiff_v  : integer range 0 to 15;
-      variable ydiff_v  : integer range 0 to 15;
-      variable bitmap_v : bitmap_t;
+   hcount <= to_integer(vga_hcount_i);
+   vcount <= to_integer(vga_vcount_i);
+   col    <= (hcount - C_OFFSET_X) / 32;
+   row    <= G_PAIRS - 1 - (vcount - C_OFFSET_Y) / 32;
+   xdiff  <= (hcount - C_OFFSET_X - 32 * col) / 2;
+   ydiff  <= (vcount - C_OFFSET_Y - 32 * row) / 2;
 
+   vga_proc : process (all)
+      variable bitmap_v : bitmap_t;
    begin
-      hcount_v  := to_integer(vga_hcount_i);
-      vcount_v  := to_integer(vga_vcount_i);
-      col_v     := 0;
-      row_v     := 0;
-      xdiff_v   := 0;
-      ydiff_v   := 0;
       bitmap_v  := bitmap_grey;
       vga_rgb_o <= (others => '0');
 
       if vga_blank_i = '0' then
          vga_rgb_o <= "10110110";
-         if (hcount_v >= C_OFFSET_X) and (hcount_v < C_OFFSET_X + 16 * C_SIZE)
-            and (vcount_v >= C_OFFSET_Y) and (vcount_v < C_OFFSET_Y + 16 * G_PAIRS) then
-            col_v   := (hcount_v - C_OFFSET_X) / 16;
-            row_v   := G_PAIRS - 1 - (vcount_v - C_OFFSET_Y) / 16;
-            xdiff_v := hcount_v - C_OFFSET_X - 16 * col_v;
-            ydiff_v := vcount_v - C_OFFSET_Y - 16 * row_v;
-
-            if vga_cards_i(row_v * C_SIZE + C_SIZE - 1 - col_v) = '1' then
-               bitmap_v := C_BITMAPS(row_v + 1);
+         if hcount >= C_OFFSET_X and hcount < C_OFFSET_X + 32 * C_SIZE
+            and vcount >= C_OFFSET_Y and vcount < C_OFFSET_Y + 32 * G_PAIRS then
+            if vga_cards_i(row * C_SIZE + C_SIZE - 1 - col) = '1' then
+               bitmap_v := C_BITMAPS(row + 1);
             end if;
 
-            case bitmap_v(ydiff_v * 16 + xdiff_v) is
+            case bitmap_v(ydiff * 16 + xdiff) is
 
                when "01" =>
                   vga_rgb_o <= "11011010";
