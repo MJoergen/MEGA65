@@ -3,9 +3,10 @@ XILINX_DIR = /opt/Xilinx/Vivado/2023.1
 PROJECT = cards
 
 SRCS  = $(PROJECT)_mega65.vhd
-SRCS += disp_cards.vhd
-SRCS += bitmap_pkg.vhd
+SRCS += ../disp_cards.vhd
+SRCS += ../bitmap_pkg.vhd
 SRCS += ../$(PROJECT).vhd
+SRCS += ../$(PROJECT)_wrapper.vhd
 SRCS += ../../common/clk.vhd
 SRCS += ../../common/uart.vhd
 SRCS += ../../common/mega65.vhd

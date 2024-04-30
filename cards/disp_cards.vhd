@@ -4,7 +4,7 @@
 --
 -- Create Date:
 -- Design Name:
--- Module Name:     disp_cells
+-- Module Name:     disp_cardss
 -- Project Name:
 -- Target Device:
 -- Tool versions:
@@ -23,10 +23,12 @@ entity disp_cards is
    );
    port (
       vga_clk_i    : in    std_logic; -- Currently not used
+
       vga_hcount_i : in    std_logic_vector(10 downto 0);
       vga_vcount_i : in    std_logic_vector(10 downto 0);
       vga_blank_i  : in    std_logic;
       vga_cards_i  : in    std_logic_vector(2 * G_PAIRS * G_PAIRS - 1 downto 0);
+
       vga_rgb_o    : out   std_logic_vector(7 downto 0)
    );
 end entity disp_cards;
@@ -61,6 +63,7 @@ begin
       variable xdiff_v  : integer range 0 to 15;
       variable ydiff_v  : integer range 0 to 15;
       variable bitmap_v : bitmap_t;
+
    begin
       hcount_v  := to_integer(vga_hcount_i);
       vcount_v  := to_integer(vga_vcount_i);

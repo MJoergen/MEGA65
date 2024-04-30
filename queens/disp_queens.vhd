@@ -56,13 +56,15 @@ begin
       row_v     := 0;
       xdiff_v   := 0;
       ydiff_v   := 0;
+      bitmap_v  := bitmap_queen;
       vga_rgb_o <= (others => '0');
 
-      if vga_blank_i = '0' then                                                                -- in the active screen
+      if vga_blank_i = '0' then
+         vga_rgb_o <= "10110110";
          if hcount_v >= C_OFFSET_X and hcount_v < C_OFFSET_X + 16 * G_NUM_QUEENS
             and vcount_v >= C_OFFSET_Y and vcount_v < C_OFFSET_Y + 16 * G_NUM_QUEENS then
-            row_v   := G_NUM_QUEENS - 1 - (vcount_v - C_OFFSET_Y) / 16;
             col_v   := G_NUM_QUEENS - 1 - (hcount_v - C_OFFSET_X) / 16;
+            row_v   := G_NUM_QUEENS - 1 - (vcount_v - C_OFFSET_Y) / 16;
             xdiff_v := (hcount_v - C_OFFSET_X) rem 16;
             ydiff_v := (vcount_v - C_OFFSET_Y) rem 16;
             if (row_v rem 2) = (col_v rem 2) then
@@ -72,7 +74,7 @@ begin
             end if;
             if vga_board_i(row_v * G_NUM_QUEENS + col_v) = '1' then
 
-               case bitmap_queen(ydiff_v * 16 + xdiff_v) is
+               case bitmap_v(ydiff_v * 16 + xdiff_v) is
 
                   when "01" =>
                      vga_rgb_o <= "11011010";
@@ -81,7 +83,7 @@ begin
                      vga_rgb_o <= "00100101";
 
                   when others =>
-                     null;
+                     vga_rgb_o <= "01010101";
 
                end case;
 
