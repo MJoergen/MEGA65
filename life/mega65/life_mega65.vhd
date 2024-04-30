@@ -117,6 +117,7 @@ begin
          vga_clk_i       => vga_clk,
          vga_hcount_i    => vga_hcount,
          vga_vcount_i    => vga_vcount,
+         vga_blank_i     => vga_blank,
          vga_rgb_o       => vga_rgb
       ); -- life_wrapper_inst
 

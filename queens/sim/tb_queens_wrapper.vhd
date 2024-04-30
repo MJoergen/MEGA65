@@ -2,20 +2,12 @@ library ieee;
    use ieee.std_logic_1164.all;
    use ieee.numeric_std_unsigned.all;
 
-entity tb_life_wrapper is
-end entity tb_life_wrapper;
+entity tb_queens_wrapper is
+end entity tb_queens_wrapper;
 
-architecture simulation of tb_life_wrapper is
+architecture simulation of tb_queens_wrapper is
 
-   constant C_ROWS       : integer                                        := 7;
-   constant C_COLS       : integer                                        := 8;
-   constant C_CELLS_INIT : std_logic_vector(C_ROWS * C_COLS - 1 downto 0) := "00000000" &
-                                                                             "00010000" &
-                                                                             "00001000" &
-                                                                             "00111000" &
-                                                                             "00000000" &
-                                                                             "00000000" &
-                                                                             "00000000";
+   constant C_NUM_QUEENS : integer                                        := 8;
 
    signal   running       : std_logic                                     := '1';
    signal   clk           : std_logic                                     := '1';
@@ -38,12 +30,9 @@ begin
    clk <= running and not clk after 5 ns;
    rst <= '1', '0' after 100 ns;
 
-   life_wrapper_inst : entity work.life_wrapper
+   queens_wrapper_inst : entity work.queens_wrapper
       generic map (
-         G_FONT_PATH  => "../../common/",
-         G_ROWS       => C_ROWS,
-         G_COLS       => C_COLS,
-         G_CELLS_INIT => C_CELLS_INIT
+         G_NUM_QUEENS => C_NUM_QUEENS
       )
       port map (
          clk_i           => clk,
@@ -59,7 +48,7 @@ begin
          vga_vcount_i    => vga_vcount,
          vga_blank_i     => vga_blank,
          vga_rgb_o       => vga_rgb
-      ); -- life_wrapper_inst
+      ); -- queens_wrapper_inst
 
    uart_tx_ready <= '1';
 

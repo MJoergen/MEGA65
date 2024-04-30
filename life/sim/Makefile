@@ -8,7 +8,6 @@ XPM_DIR = ../../../../fransschreuder/xpm_vhdl
 
 PROJECT = life
 
-#TB       = tb_uart
 TB       = tb_$(PROJECT)
 #TB       = tb_$(PROJECT)_wrapper
 SOURCES  = ../../common/uart.vhd
@@ -25,8 +24,6 @@ SOURCES += ../$(PROJECT).vhd
 SOURCES += ../$(PROJECT)_wrapper.vhd
 SOURCES += ../controller.vhd
 SOURCES += ../digits.vhd
-SOURCES += ../mega65/life_mega65.vhd
-
 SOURCES += $(TB).vhd
 SAVE     = $(TB).gtkw
 WAVE     = $(TB).ghw

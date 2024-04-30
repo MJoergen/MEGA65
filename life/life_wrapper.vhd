@@ -18,6 +18,7 @@ entity life_wrapper is
    port (
       clk_i           : in    std_logic;
       rst_i           : in    std_logic;
+
       uart_rx_valid_i : in    std_logic;
       uart_rx_ready_o : out   std_logic;
       uart_rx_data_i  : in    std_logic_vector(7 downto 0);
@@ -28,6 +29,7 @@ entity life_wrapper is
       vga_clk_i       : in    std_logic;
       vga_hcount_i    : in    std_logic_vector(10 downto 0);
       vga_vcount_i    : in    std_logic_vector(10 downto 0);
+      vga_blank_i     : in    std_logic;
       vga_rgb_o       : out   std_logic_vector(7 downto 0)
    );
 end entity life_wrapper;
@@ -108,6 +110,7 @@ begin
          vga_clk_i    => vga_clk_i,
          vga_hcount_i => vga_hcount_i,
          vga_vcount_i => vga_vcount_i,
+         vga_blank_i  => vga_blank_i,
          vga_board_i  => vga_board,
          vga_rgb_o    => vga_rgb_o
       ); -- digits_inst

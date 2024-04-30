@@ -19,6 +19,7 @@ entity digits is
       vga_hcount_i : in    std_logic_vector(G_VIDEO_MODE.PIX_SIZE - 1 downto 0);
       vga_vcount_i : in    std_logic_vector(G_VIDEO_MODE.PIX_SIZE - 1 downto 0);
       vga_board_i  : in    std_logic_vector(G_ROWS * G_COLS - 1 downto 0);
+      vga_blank_i  : in    std_logic;
       vga_rgb_o    : out   std_logic_vector(7 downto 0)
    );
 end entity digits;

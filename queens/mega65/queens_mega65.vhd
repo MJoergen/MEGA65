@@ -47,15 +47,10 @@ architecture synthesis of queens_mega65 is
    signal uart_rx_ready : std_logic;
    signal uart_rx_data  : std_logic_vector(7 downto 0);
 
-   signal queens_board : std_logic_vector(G_NUM_QUEENS * G_NUM_QUEENS - 1 downto 0);
-   signal queens_valid : std_logic;
-   signal queens_done  : std_logic;
-
    signal vga_clk    : std_logic;
    signal vga_hcount : std_logic_vector(10 downto 0);
    signal vga_vcount : std_logic_vector(10 downto 0);
    signal vga_blank  : std_logic;
-   signal vga_board  : std_logic_vector(G_NUM_QUEENS * G_NUM_QUEENS - 1 downto 0);
    signal vga_rgb    : std_logic_vector(7 downto 0);
 
 begin
@@ -89,54 +84,33 @@ begin
          vga_rgb_i       => vga_rgb,
          clk_o           => clk,
          rst_o           => rst,
-         uart_tx_valid_i => uart_tx_valid,
-         uart_tx_ready_o => uart_tx_ready,
-         uart_tx_data_i  => uart_tx_data,
          uart_rx_valid_o => uart_rx_valid,
          uart_rx_ready_i => uart_rx_ready,
-         uart_rx_data_o  => uart_rx_data
+         uart_rx_data_o  => uart_rx_data,
+         uart_tx_valid_i => uart_tx_valid,
+         uart_tx_ready_o => uart_tx_ready,
+         uart_tx_data_i  => uart_tx_data
       ); -- mega65_inst
 
-
-   -- This controls the cards
-   queens_inst : entity work.queens
+   queens_wrapper_inst : entity work.queens_wrapper
       generic map (
          G_NUM_QUEENS => G_NUM_QUEENS
       )
       port map (
-         clk_i   => clk,
-         rst_i   => rst,
-         en_i    => '1',
-         board_o => queens_board,
-         valid_o => queens_valid,
-         done_o  => queens_done
-      ); -- queens_inst
-
-   xpm_cdc_array_single_inst : component xpm_cdc_array_single
-      generic map (
-         WIDTH => G_NUM_QUEENS * G_NUM_QUEENS
-      )
-      port map (
-         src_clk  => clk,
-         src_in   => queens_board,
-         dest_clk => vga_clk,
-         dest_out => vga_board
-      ); -- xpm_cdc_array_single_inst
-
-
-   -- This generates the image
-   disp_queens_inst : entity work.disp_queens
-      generic map (
-         G_NUM_QUEENS => G_NUM_QUEENS
-      )
-      port map (
-         vga_clk_i    => vga_clk,
-         vga_hcount_i => vga_hcount,
-         vga_vcount_i => vga_vcount,
-         vga_blank_i  => vga_blank,
-         vga_board_i  => vga_board,
-         vga_rgb_o    => vga_rgb
-      ); -- disp_queens_inst
+         clk_i           => clk,
+         rst_i           => rst,
+         uart_rx_valid_i => uart_rx_valid,
+         uart_rx_ready_o => uart_rx_ready,
+         uart_rx_data_i  => uart_rx_data,
+         uart_tx_valid_o => uart_tx_valid,
+         uart_tx_ready_i => uart_tx_ready,
+         uart_tx_data_o  => uart_tx_data,
+         vga_clk_i       => vga_clk,
+         vga_hcount_i    => vga_hcount,
+         vga_vcount_i    => vga_vcount,
+         vga_blank_i     => vga_blank,
+         vga_rgb_o       => vga_rgb
+      ); -- queens_wrapper_inst
 
 end architecture synthesis;
 
