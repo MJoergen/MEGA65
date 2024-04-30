@@ -5,6 +5,9 @@ library ieee;
 library xpm;
    use xpm.vcomponents.all;
 
+library work;
+   use work.video_modes_pkg.all;
+
 entity queens_wrapper is
    generic (
       G_NUM_QUEENS : integer := 8
@@ -29,6 +32,8 @@ entity queens_wrapper is
 end entity queens_wrapper;
 
 architecture synthesis of queens_wrapper is
+
+   constant C_VIDEO_MODE : video_modes_type := C_VIDEO_MODE_1280_720_60;
 
    signal queens_step  : std_logic;
    signal queens_board : std_logic_vector(G_NUM_QUEENS * G_NUM_QUEENS - 1 downto 0);
@@ -87,6 +92,7 @@ begin
    -- This generates the image
    disp_queens_inst : entity work.disp_queens
       generic map (
+         G_VIDEO_MODE => C_VIDEO_MODE,
          G_NUM_QUEENS => G_NUM_QUEENS
       )
       port map (

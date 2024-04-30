@@ -95,6 +95,7 @@ begin
    -- This generates the image
    disp_cards_inst : entity work.disp_cards
       generic map (
+         G_VIDEO_MODE => C_VIDEO_MODE,
          G_PAIRS => G_PAIRS
       )
       port map (

@@ -17,8 +17,13 @@ library ieee;
    use ieee.numeric_std_unsigned.all;
    use work.bitmap_pkg.all;
 
+library work;
+   use work.video_modes_pkg.all;
+
+
 entity disp_cards is
    generic (
+      G_VIDEO_MODE : video_modes_type;
       G_PAIRS : integer
    );
    port (

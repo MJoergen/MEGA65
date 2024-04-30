@@ -17,8 +17,12 @@ library ieee;
    use ieee.numeric_std_unsigned.all;
    use work.bitmap_pkg.all;
 
+library work;
+   use work.video_modes_pkg.all;
+
 entity disp_queens is
    generic (
+      G_VIDEO_MODE : video_modes_type;
       G_NUM_QUEENS : integer
    );
    port (
@@ -35,8 +39,8 @@ end entity disp_queens;
 
 architecture behavioral of disp_queens is
 
-   constant C_OFFSET_X : integer := 50;
-   constant C_OFFSET_Y : integer := 150;
+   constant C_OFFSET_X : integer := G_VIDEO_MODE.H_PIXELS - G_NUM_QUEENS * 8;
+   constant C_OFFSET_Y : integer := G_VIDEO_MODE.V_PIXELS - G_NUM_QUEENS * 8;
 
 begin
 
