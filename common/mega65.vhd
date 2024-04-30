@@ -60,6 +60,28 @@ architecture synthesis of mega65 is
    signal   vga_hs_d3 : std_logic;
    signal   vga_de_d3 : std_logic;
 
+   signal   key_num       : integer range 0 to 79; -- cycles through all keys with G_SCAN_FREQUENCY
+   signal   key_pressed_n : std_logic;             -- low active: debounced feedback: is kb_key_num_o pressed right now?
+
+   signal   key_pressed_n_d : std_logic;
+   signal   key_valid       : std_logic;
+   signal   key_ready       : std_logic;
+   signal   key_data        : std_logic_vector(7 downto 0);
+   signal   key_data_s      : std_logic_vector(7 downto 0);
+
+   signal   uart_rx_valid : std_logic;
+   signal   uart_rx_ready : std_logic;
+   signal   uart_rx_data  : std_logic_vector(7 downto 0);
+
+   constant C_KEYCODE_TO_ASCII : string(0 to 79) := "........3W" &
+                                                    "A4ZSE.5RD6" &
+                                                    "CFTX7YG8BH" &
+                                                    "UV9IJ0MKON" &
+                                                    "+PL-.:@,.*" &
+                                                    ";..=./1..2" &
+                                                    " .Q......." &
+                                                    "..........";
+
 begin
 
    clk_inst : entity work.clk
@@ -74,17 +96,58 @@ begin
 
    m2m_keyb_inst : entity work.m2m_keyb
       port map (
-         clk_main_i       => sys_clk_i,
+         clk_main_i       => clk_o,
          clk_main_speed_i => 100 * 1000 * 1000,
          kio8_o           => kb_io0_o,
          kio9_o           => kb_io1_o,
          kio10_i          => kb_io2_i,
          enable_core_i    => '1',
-         key_num_o        => open,
-         key_pressed_n_o  => open,
+         key_num_o        => key_num,
+         key_pressed_n_o  => key_pressed_n,
          drive_led_i      => '0',
          qnice_keys_n_o   => open
       ); -- m2m_keyb_inst
+
+   key_data_s  <= to_stdlogicvector(character'pos(C_KEYCODE_TO_ASCII(key_num)), 8);
+
+   key_proc : process (clk_o)
+   begin
+      if rising_edge(clk_o) then
+         key_pressed_n_d <= key_pressed_n;
+
+         if key_ready = '1' then
+            key_valid <= '0';
+         end if;
+
+         if key_data = key_data_s then
+            if key_pressed_n = '1' then
+               key_data <= (others => '0');
+            end if;
+         elsif key_pressed_n_d = '1' and key_pressed_n = '0' then
+            key_data  <= key_data_s;
+            key_valid <= '1';
+         end if;
+
+      end if;
+   end process key_proc;
+
+   axi_merger_inst : entity work.axi_merger
+      generic map (
+         G_DATA_SIZE => 8
+      )
+      port map (
+         clk_i      => clk_o,
+         rst_i      => rst_o,
+         s1_ready_o => key_ready,
+         s1_valid_i => key_valid,
+         s1_data_i  => key_data,
+         s2_ready_o => uart_rx_ready,
+         s2_valid_i => uart_rx_valid,
+         s2_data_i  => uart_rx_data,
+         m_ready_i  => uart_rx_ready_i,
+         m_valid_o  => uart_rx_valid_o,
+         m_data_o   => uart_rx_data_o
+      );
 
    uart_inst : entity work.uart
       port map (
@@ -93,9 +156,9 @@ begin
          tx_valid_i => uart_tx_valid_i,
          tx_ready_o => uart_tx_ready_o,
          tx_data_i  => uart_tx_data_i,
-         rx_valid_o => uart_rx_valid_o,
-         rx_ready_i => uart_rx_ready_i,
-         rx_data_o  => uart_rx_data_o,
+         rx_valid_o => uart_rx_valid,
+         rx_ready_i => uart_rx_ready,
+         rx_data_o  => uart_rx_data,
          uart_tx_o  => uart_txd_o,
          uart_rx_i  => uart_rxd_i
       ); -- uart_inst

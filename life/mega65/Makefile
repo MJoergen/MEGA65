@@ -17,6 +17,7 @@ SRCS += ../../common/kb_matrix_ram.vhd
 SRCS += ../../common/video_sync.vhd
 SRCS += ../../common/video_modes_pkg.vhd
 SRCS += ../../common/font.vhd
+SRCS += ../../common/axi_merger.vhd
 
 XDC = ../../common/mega65.xdc
 
