@@ -9,10 +9,9 @@ XPM_DIR = ../../../../fransschreuder/xpm_vhdl
 PROJECT = life
 
 #TB       = tb_uart
-#TB       = tb_$(PROJECT)
-TB       = tb_$(PROJECT)_mega65
-SOURCES  = ../$(PROJECT).vhd
-SOURCES += ../../common/uart.vhd
+TB       = tb_$(PROJECT)
+#TB       = tb_$(PROJECT)_wrapper
+SOURCES  = ../../common/uart.vhd
 SOURCES += ../../common/clk.vhd
 SOURCES += ../../common/mega65.vhd
 SOURCES += ../../common/m2m_keyb.vhd
@@ -22,9 +21,11 @@ SOURCES += ../../common/kb_matrix_ram.vhd
 SOURCES += ../../common/video_sync.vhd
 SOURCES += ../../common/video_modes_pkg.vhd
 SOURCES += ../../common/font.vhd
+SOURCES += ../$(PROJECT).vhd
+SOURCES += ../$(PROJECT)_wrapper.vhd
+SOURCES += ../controller.vhd
+SOURCES += ../digits.vhd
 SOURCES += ../mega65/life_mega65.vhd
-SOURCES += ../mega65/controller.vhd
-SOURCES += ../mega65/digits.vhd
 
 SOURCES += $(TB).vhd
 SAVE     = $(TB).gtkw

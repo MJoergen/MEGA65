@@ -43,7 +43,6 @@ end entity life_mega65;
 architecture synthesis of life_mega65 is
 
    constant C_VIDEO_MODE : video_modes_type := C_VIDEO_MODE_1280_720_60;
-   constant C_FONT_FILE  : string           := "font8x8.txt";
 
    signal   clk : std_logic;
    signal   rst : std_logic;
@@ -55,17 +54,10 @@ architecture synthesis of life_mega65 is
    signal   uart_rx_ready : std_logic;
    signal   uart_rx_data  : std_logic_vector(7 downto 0);
 
-   signal   life_board    : std_logic_vector(G_ROWS * G_COLS - 1 downto 0);
-   signal   life_step     : std_logic;
-   signal   life_wr_index : integer range G_ROWS * G_COLS - 1 downto 0;
-   signal   life_wr_value : std_logic;
-   signal   life_wr_en    : std_logic;
-
    signal   vga_clk    : std_logic;
    signal   vga_hcount : std_logic_vector(10 downto 0);
    signal   vga_vcount : std_logic_vector(10 downto 0);
    signal   vga_blank  : std_logic;
-   signal   vga_board  : std_logic_vector(G_ROWS * G_COLS - 1 downto 0);
    signal   vga_rgb    : std_logic_vector(7 downto 0);
 
 begin
@@ -99,19 +91,19 @@ begin
          vga_rgb_i       => vga_rgb,
          clk_o           => clk,
          rst_o           => rst,
-         uart_tx_valid_i => uart_tx_valid,
-         uart_tx_ready_o => uart_tx_ready,
-         uart_tx_data_i  => uart_tx_data,
          uart_rx_valid_o => uart_rx_valid,
          uart_rx_ready_i => uart_rx_ready,
-         uart_rx_data_o  => uart_rx_data
+         uart_rx_data_o  => uart_rx_data,
+         uart_tx_valid_i => uart_tx_valid,
+         uart_tx_ready_o => uart_tx_ready,
+         uart_tx_data_i  => uart_tx_data
       ); -- mega65_inst
 
-   -- User Interface
-   controller_inst : entity work.controller
+   life_wrapper_inst : entity work.life_wrapper
       generic map (
-         G_ROWS => G_ROWS,
-         G_COLS => G_COLS
+         G_ROWS       => G_ROWS,
+         G_COLS       => G_COLS,
+         G_CELLS_INIT => G_CELLS_INIT
       )
       port map (
          clk_i           => clk,
@@ -122,55 +114,11 @@ begin
          uart_tx_valid_o => uart_tx_valid,
          uart_tx_ready_i => uart_tx_ready,
          uart_tx_data_o  => uart_tx_data,
-         board_i         => life_board,
-         step_o          => life_step,
-         wr_index_o      => life_wr_index,
-         wr_value_o      => life_wr_value,
-         wr_en_o         => life_wr_en
-      ); -- controller_inst
-
-   -- This controls the board.
-   life_inst : entity work.life
-      generic map (
-         G_ROWS       => G_ROWS,
-         G_COLS       => G_COLS,
-         G_CELLS_INIT => G_CELLS_INIT
-      )
-      port map (
-         clk_i    => clk,
-         rst_i    => rst,
-         en_i     => life_step,
-         board_o  => life_board,
-         index_i  => life_wr_index,
-         value_i  => life_wr_value,
-         update_i => life_wr_en
-      ); -- life_inst
-
-   xpm_cdc_array_single_inst : component xpm_cdc_array_single
-      generic map (
-         WIDTH => G_ROWS * G_COLS
-      )
-      port map (
-         src_clk  => clk,
-         src_in   => life_board,
-         dest_clk => vga_clk,
-         dest_out => vga_board
-      ); -- xpm_cdc_array_single_inst
-
-   digits_inst : entity work.digits
-      generic map (
-         G_FONT_FILE  => C_FONT_FILE,
-         G_ROWS       => G_ROWS,
-         G_COLS       => G_COLS,
-         G_VIDEO_MODE => C_VIDEO_MODE
-      )
-      port map (
-         vga_clk_i    => vga_clk,
-         vga_hcount_i => vga_hcount,
-         vga_vcount_i => vga_vcount,
-         vga_board_i  => vga_board,
-         vga_rgb_o    => vga_rgb
-      ); -- digits_inst
+         vga_clk_i       => vga_clk,
+         vga_hcount_i    => vga_hcount,
+         vga_vcount_i    => vga_vcount,
+         vga_rgb_o       => vga_rgb
+      ); -- life_wrapper_inst
 
 end architecture synthesis;
 

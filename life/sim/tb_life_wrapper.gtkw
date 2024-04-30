@@ -1,0 +1,84 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Tue Apr 30 09:36:15 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/life/sim/tb_life_wrapper.ghw"
+[dumpfile_mtime] "Tue Apr 30 09:36:02 2024"
+[dumpfile_size] 11702
+[savefile] "/home/mike/git/MJoergen/MEGA65/life/sim/tb_life_wrapper.gtkw"
+[timestart] 0
+[size] 1510 896
+[pos] -1 -1
+*-29.831362 320000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.tb_life_wrapper.
+[treeopen] top.tb_life_wrapper.life_wrapper_inst.
+[treeopen] top.tb_life_wrapper.life_wrapper_inst.controller_inst.
+[sst_width] 249
+[signals_width] 297
+[sst_expanded] 1
+[sst_vpaned_height] 246
+@c00200
+-life_wrapper
+@28
+top.tb_life_wrapper.life_wrapper_inst.clk_i
+top.tb_life_wrapper.life_wrapper_inst.rst_i
+top.tb_life_wrapper.life_wrapper_inst.uart_rx_valid_i
+top.tb_life_wrapper.life_wrapper_inst.uart_rx_ready_o
+@22
+#{top.tb_life_wrapper.life_wrapper_inst.uart_rx_data_i[7:0]} top.tb_life_wrapper.life_wrapper_inst.uart_rx_data_i[7] top.tb_life_wrapper.life_wrapper_inst.uart_rx_data_i[6] top.tb_life_wrapper.life_wrapper_inst.uart_rx_data_i[5] top.tb_life_wrapper.life_wrapper_inst.uart_rx_data_i[4] top.tb_life_wrapper.life_wrapper_inst.uart_rx_data_i[3] top.tb_life_wrapper.life_wrapper_inst.uart_rx_data_i[2] top.tb_life_wrapper.life_wrapper_inst.uart_rx_data_i[1] top.tb_life_wrapper.life_wrapper_inst.uart_rx_data_i[0]
+@28
+top.tb_life_wrapper.life_wrapper_inst.uart_tx_valid_o
+top.tb_life_wrapper.life_wrapper_inst.uart_tx_ready_i
+@22
+#{top.tb_life_wrapper.life_wrapper_inst.uart_tx_data_o[7:0]} top.tb_life_wrapper.life_wrapper_inst.uart_tx_data_o[7] top.tb_life_wrapper.life_wrapper_inst.uart_tx_data_o[6] top.tb_life_wrapper.life_wrapper_inst.uart_tx_data_o[5] top.tb_life_wrapper.life_wrapper_inst.uart_tx_data_o[4] top.tb_life_wrapper.life_wrapper_inst.uart_tx_data_o[3] top.tb_life_wrapper.life_wrapper_inst.uart_tx_data_o[2] top.tb_life_wrapper.life_wrapper_inst.uart_tx_data_o[1] top.tb_life_wrapper.life_wrapper_inst.uart_tx_data_o[0]
+@28
+top.tb_life_wrapper.life_wrapper_inst.vga_clk_i
+@22
+#{top.tb_life_wrapper.life_wrapper_inst.vga_hcount_i[10:0]} top.tb_life_wrapper.life_wrapper_inst.vga_hcount_i[10] top.tb_life_wrapper.life_wrapper_inst.vga_hcount_i[9] top.tb_life_wrapper.life_wrapper_inst.vga_hcount_i[8] top.tb_life_wrapper.life_wrapper_inst.vga_hcount_i[7] top.tb_life_wrapper.life_wrapper_inst.vga_hcount_i[6] top.tb_life_wrapper.life_wrapper_inst.vga_hcount_i[5] top.tb_life_wrapper.life_wrapper_inst.vga_hcount_i[4] top.tb_life_wrapper.life_wrapper_inst.vga_hcount_i[3] top.tb_life_wrapper.life_wrapper_inst.vga_hcount_i[2] top.tb_life_wrapper.life_wrapper_inst.vga_hcount_i[1] top.tb_life_wrapper.life_wrapper_inst.vga_hcount_i[0]
+#{top.tb_life_wrapper.life_wrapper_inst.vga_vcount_i[10:0]} top.tb_life_wrapper.life_wrapper_inst.vga_vcount_i[10] top.tb_life_wrapper.life_wrapper_inst.vga_vcount_i[9] top.tb_life_wrapper.life_wrapper_inst.vga_vcount_i[8] top.tb_life_wrapper.life_wrapper_inst.vga_vcount_i[7] top.tb_life_wrapper.life_wrapper_inst.vga_vcount_i[6] top.tb_life_wrapper.life_wrapper_inst.vga_vcount_i[5] top.tb_life_wrapper.life_wrapper_inst.vga_vcount_i[4] top.tb_life_wrapper.life_wrapper_inst.vga_vcount_i[3] top.tb_life_wrapper.life_wrapper_inst.vga_vcount_i[2] top.tb_life_wrapper.life_wrapper_inst.vga_vcount_i[1] top.tb_life_wrapper.life_wrapper_inst.vga_vcount_i[0]
+#{top.tb_life_wrapper.life_wrapper_inst.vga_rgb_o[7:0]} top.tb_life_wrapper.life_wrapper_inst.vga_rgb_o[7] top.tb_life_wrapper.life_wrapper_inst.vga_rgb_o[6] top.tb_life_wrapper.life_wrapper_inst.vga_rgb_o[5] top.tb_life_wrapper.life_wrapper_inst.vga_rgb_o[4] top.tb_life_wrapper.life_wrapper_inst.vga_rgb_o[3] top.tb_life_wrapper.life_wrapper_inst.vga_rgb_o[2] top.tb_life_wrapper.life_wrapper_inst.vga_rgb_o[1] top.tb_life_wrapper.life_wrapper_inst.vga_rgb_o[0]
+@28
+top.tb_life_wrapper.life_wrapper_inst.life_step
+@420
+top.tb_life_wrapper.life_wrapper_inst.life_wr_index
+@28
+top.tb_life_wrapper.life_wrapper_inst.life_wr_value
+top.tb_life_wrapper.life_wrapper_inst.life_wr_en
+@22
+#{top.tb_life_wrapper.life_wrapper_inst.life_board[55:0]} top.tb_life_wrapper.life_wrapper_inst.life_board[55] top.tb_life_wrapper.life_wrapper_inst.life_board[54] top.tb_life_wrapper.life_wrapper_inst.life_board[53] top.tb_life_wrapper.life_wrapper_inst.life_board[52] top.tb_life_wrapper.life_wrapper_inst.life_board[51] top.tb_life_wrapper.life_wrapper_inst.life_board[50] top.tb_life_wrapper.life_wrapper_inst.life_board[49] top.tb_life_wrapper.life_wrapper_inst.life_board[48] top.tb_life_wrapper.life_wrapper_inst.life_board[47] top.tb_life_wrapper.life_wrapper_inst.life_board[46] top.tb_life_wrapper.life_wrapper_inst.life_board[45] top.tb_life_wrapper.life_wrapper_inst.life_board[44] top.tb_life_wrapper.life_wrapper_inst.life_board[43] top.tb_life_wrapper.life_wrapper_inst.life_board[42] top.tb_life_wrapper.life_wrapper_inst.life_board[41] top.tb_life_wrapper.life_wrapper_inst.life_board[40] top.tb_life_wrapper.life_wrapper_inst.life_board[39] top.tb_life_wrapper.life_wrapper_inst.life_board[38] top.tb_life_wrapper.life_wrapper_inst.life_board[37] top.tb_life_wrapper.life_wrapper_inst.life_board[36] top.tb_life_wrapper.life_wrapper_inst.life_board[35] top.tb_life_wrapper.life_wrapper_inst.life_board[34] top.tb_life_wrapper.life_wrapper_inst.life_board[33] top.tb_life_wrapper.life_wrapper_inst.life_board[32] top.tb_life_wrapper.life_wrapper_inst.life_board[31] top.tb_life_wrapper.life_wrapper_inst.life_board[30] top.tb_life_wrapper.life_wrapper_inst.life_board[29] top.tb_life_wrapper.life_wrapper_inst.life_board[28] top.tb_life_wrapper.life_wrapper_inst.life_board[27] top.tb_life_wrapper.life_wrapper_inst.life_board[26] top.tb_life_wrapper.life_wrapper_inst.life_board[25] top.tb_life_wrapper.life_wrapper_inst.life_board[24] top.tb_life_wrapper.life_wrapper_inst.life_board[23] top.tb_life_wrapper.life_wrapper_inst.life_board[22] top.tb_life_wrapper.life_wrapper_inst.life_board[21] top.tb_life_wrapper.life_wrapper_inst.life_board[20] top.tb_life_wrapper.life_wrapper_inst.life_board[19] top.tb_life_wrapper.life_wrapper_inst.life_board[18] top.tb_life_wrapper.life_wrapper_inst.life_board[17] top.tb_life_wrapper.life_wrapper_inst.life_board[16] top.tb_life_wrapper.life_wrapper_inst.life_board[15] top.tb_life_wrapper.life_wrapper_inst.life_board[14] top.tb_life_wrapper.life_wrapper_inst.life_board[13] top.tb_life_wrapper.life_wrapper_inst.life_board[12] top.tb_life_wrapper.life_wrapper_inst.life_board[11] top.tb_life_wrapper.life_wrapper_inst.life_board[10] top.tb_life_wrapper.life_wrapper_inst.life_board[9] top.tb_life_wrapper.life_wrapper_inst.life_board[8] top.tb_life_wrapper.life_wrapper_inst.life_board[7] top.tb_life_wrapper.life_wrapper_inst.life_board[6] top.tb_life_wrapper.life_wrapper_inst.life_board[5] top.tb_life_wrapper.life_wrapper_inst.life_board[4] top.tb_life_wrapper.life_wrapper_inst.life_board[3] top.tb_life_wrapper.life_wrapper_inst.life_board[2] top.tb_life_wrapper.life_wrapper_inst.life_board[1] top.tb_life_wrapper.life_wrapper_inst.life_board[0]
+#{top.tb_life_wrapper.life_wrapper_inst.vga_board[55:0]} top.tb_life_wrapper.life_wrapper_inst.vga_board[55] top.tb_life_wrapper.life_wrapper_inst.vga_board[54] top.tb_life_wrapper.life_wrapper_inst.vga_board[53] top.tb_life_wrapper.life_wrapper_inst.vga_board[52] top.tb_life_wrapper.life_wrapper_inst.vga_board[51] top.tb_life_wrapper.life_wrapper_inst.vga_board[50] top.tb_life_wrapper.life_wrapper_inst.vga_board[49] top.tb_life_wrapper.life_wrapper_inst.vga_board[48] top.tb_life_wrapper.life_wrapper_inst.vga_board[47] top.tb_life_wrapper.life_wrapper_inst.vga_board[46] top.tb_life_wrapper.life_wrapper_inst.vga_board[45] top.tb_life_wrapper.life_wrapper_inst.vga_board[44] top.tb_life_wrapper.life_wrapper_inst.vga_board[43] top.tb_life_wrapper.life_wrapper_inst.vga_board[42] top.tb_life_wrapper.life_wrapper_inst.vga_board[41] top.tb_life_wrapper.life_wrapper_inst.vga_board[40] top.tb_life_wrapper.life_wrapper_inst.vga_board[39] top.tb_life_wrapper.life_wrapper_inst.vga_board[38] top.tb_life_wrapper.life_wrapper_inst.vga_board[37] top.tb_life_wrapper.life_wrapper_inst.vga_board[36] top.tb_life_wrapper.life_wrapper_inst.vga_board[35] top.tb_life_wrapper.life_wrapper_inst.vga_board[34] top.tb_life_wrapper.life_wrapper_inst.vga_board[33] top.tb_life_wrapper.life_wrapper_inst.vga_board[32] top.tb_life_wrapper.life_wrapper_inst.vga_board[31] top.tb_life_wrapper.life_wrapper_inst.vga_board[30] top.tb_life_wrapper.life_wrapper_inst.vga_board[29] top.tb_life_wrapper.life_wrapper_inst.vga_board[28] top.tb_life_wrapper.life_wrapper_inst.vga_board[27] top.tb_life_wrapper.life_wrapper_inst.vga_board[26] top.tb_life_wrapper.life_wrapper_inst.vga_board[25] top.tb_life_wrapper.life_wrapper_inst.vga_board[24] top.tb_life_wrapper.life_wrapper_inst.vga_board[23] top.tb_life_wrapper.life_wrapper_inst.vga_board[22] top.tb_life_wrapper.life_wrapper_inst.vga_board[21] top.tb_life_wrapper.life_wrapper_inst.vga_board[20] top.tb_life_wrapper.life_wrapper_inst.vga_board[19] top.tb_life_wrapper.life_wrapper_inst.vga_board[18] top.tb_life_wrapper.life_wrapper_inst.vga_board[17] top.tb_life_wrapper.life_wrapper_inst.vga_board[16] top.tb_life_wrapper.life_wrapper_inst.vga_board[15] top.tb_life_wrapper.life_wrapper_inst.vga_board[14] top.tb_life_wrapper.life_wrapper_inst.vga_board[13] top.tb_life_wrapper.life_wrapper_inst.vga_board[12] top.tb_life_wrapper.life_wrapper_inst.vga_board[11] top.tb_life_wrapper.life_wrapper_inst.vga_board[10] top.tb_life_wrapper.life_wrapper_inst.vga_board[9] top.tb_life_wrapper.life_wrapper_inst.vga_board[8] top.tb_life_wrapper.life_wrapper_inst.vga_board[7] top.tb_life_wrapper.life_wrapper_inst.vga_board[6] top.tb_life_wrapper.life_wrapper_inst.vga_board[5] top.tb_life_wrapper.life_wrapper_inst.vga_board[4] top.tb_life_wrapper.life_wrapper_inst.vga_board[3] top.tb_life_wrapper.life_wrapper_inst.vga_board[2] top.tb_life_wrapper.life_wrapper_inst.vga_board[1] top.tb_life_wrapper.life_wrapper_inst.vga_board[0]
+@1401200
+-life_wrapper
+@800200
+-controller
+@28
+top.tb_life_wrapper.life_wrapper_inst.controller_inst.clk_i
+top.tb_life_wrapper.life_wrapper_inst.controller_inst.rst_i
+@22
+#{top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_rx_data_i[7:0]} top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_rx_data_i[7] top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_rx_data_i[6] top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_rx_data_i[5] top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_rx_data_i[4] top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_rx_data_i[3] top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_rx_data_i[2] top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_rx_data_i[1] top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_rx_data_i[0]
+@28
+top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_rx_ready_o
+top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_rx_valid_i
+@22
+#{top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_tx_data_o[7:0]} top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_tx_data_o[7] top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_tx_data_o[6] top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_tx_data_o[5] top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_tx_data_o[4] top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_tx_data_o[3] top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_tx_data_o[2] top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_tx_data_o[1] top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_tx_data_o[0]
+@28
+top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_tx_ready_i
+top.tb_life_wrapper.life_wrapper_inst.controller_inst.uart_tx_valid_o
+@22
+#{top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[55:0]} top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[55] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[54] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[53] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[52] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[51] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[50] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[49] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[48] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[47] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[46] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[45] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[44] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[43] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[42] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[41] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[40] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[39] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[38] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[37] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[36] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[35] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[34] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[33] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[32] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[31] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[30] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[29] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[28] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[27] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[26] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[25] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[24] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[23] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[22] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[21] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[20] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[19] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[18] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[17] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[16] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[15] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[14] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[13] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[12] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[11] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[10] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[9] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[8] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[7] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[6] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[5] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[4] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[3] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[2] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[1] top.tb_life_wrapper.life_wrapper_inst.controller_inst.board_i[0]
+@28
+top.tb_life_wrapper.life_wrapper_inst.controller_inst.step_o
+top.tb_life_wrapper.life_wrapper_inst.controller_inst.wr_en_o
+@420
+top.tb_life_wrapper.life_wrapper_inst.controller_inst.wr_index_o
+@28
+top.tb_life_wrapper.life_wrapper_inst.controller_inst.wr_value_o
+@420
+top.tb_life_wrapper.life_wrapper_inst.controller_inst.state
+top.tb_life_wrapper.life_wrapper_inst.controller_inst.cur_row
+top.tb_life_wrapper.life_wrapper_inst.controller_inst.cur_col
+@1000200
+-controller
+[pattern_trace] 1
+[pattern_trace] 0
