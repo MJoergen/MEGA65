@@ -18,10 +18,13 @@ entity digits is
       vga_clk_i    : in    std_logic;
       vga_hcount_i : in    std_logic_vector(G_VIDEO_MODE.PIX_SIZE - 1 downto 0);
       vga_vcount_i : in    std_logic_vector(G_VIDEO_MODE.PIX_SIZE - 1 downto 0);
-      vga_board_i  : in    std_logic_vector(G_ROWS * G_COLS - 1 downto 0);
       vga_blank_i  : in    std_logic;
+      vga_board_i  : in    std_logic_vector(G_ROWS * G_COLS - 1 downto 0);
       vga_rgb_o    : out   std_logic_vector(7 downto 0)
    );
+   -- 'vga_rgb_o' is valid this many clock cycles after 'vga_board_i'.
+   attribute latency : positive;
+   attribute latency of digits : entity is 3;
 end entity digits;
 
 architecture synthesis of digits is
