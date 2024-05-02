@@ -1,0 +1,45 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Thu May  2 11:00:40 2024
+[*]
+[dumpfile] "/home/mfj/git/PRIVATE/MJoergen/MEGA65/timer_demo/sim/tb_timer_wrapper.ghw"
+[dumpfile_mtime] "Thu May  2 10:59:45 2024"
+[dumpfile_size] 27341
+[savefile] "/home/mfj/git/PRIVATE/MJoergen/MEGA65/timer_demo/sim/tb_timer_wrapper.gtkw"
+[timestart] 0
+[size] 1170 700
+[pos] -176 -189
+*-28.365339 506000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.tb_timer_wrapper.
+[sst_width] 210
+[signals_width] 264
+[sst_expanded] 1
+[sst_vpaned_height] 178
+@800200
+-tb_timer_wrapper
+@28
+top.tb_timer_wrapper.running
+top.tb_timer_wrapper.clk
+top.tb_timer_wrapper.rst
+top.tb_timer_wrapper.uart_rx_valid
+top.tb_timer_wrapper.uart_rx_ready
+@22
+#{top.tb_timer_wrapper.uart_rx_data[7:0]} top.tb_timer_wrapper.uart_rx_data[7] top.tb_timer_wrapper.uart_rx_data[6] top.tb_timer_wrapper.uart_rx_data[5] top.tb_timer_wrapper.uart_rx_data[4] top.tb_timer_wrapper.uart_rx_data[3] top.tb_timer_wrapper.uart_rx_data[2] top.tb_timer_wrapper.uart_rx_data[1] top.tb_timer_wrapper.uart_rx_data[0]
+@28
+top.tb_timer_wrapper.uart_tx_valid
+top.tb_timer_wrapper.uart_tx_ready
+@22
+#{top.tb_timer_wrapper.uart_tx_data[7:0]} top.tb_timer_wrapper.uart_tx_data[7] top.tb_timer_wrapper.uart_tx_data[6] top.tb_timer_wrapper.uart_tx_data[5] top.tb_timer_wrapper.uart_tx_data[4] top.tb_timer_wrapper.uart_tx_data[3] top.tb_timer_wrapper.uart_tx_data[2] top.tb_timer_wrapper.uart_tx_data[1] top.tb_timer_wrapper.uart_tx_data[0]
+@28
+top.tb_timer_wrapper.vga_clk
+top.tb_timer_wrapper.vga_blank
+@22
+#{top.tb_timer_wrapper.vga_hcount[10:0]} top.tb_timer_wrapper.vga_hcount[10] top.tb_timer_wrapper.vga_hcount[9] top.tb_timer_wrapper.vga_hcount[8] top.tb_timer_wrapper.vga_hcount[7] top.tb_timer_wrapper.vga_hcount[6] top.tb_timer_wrapper.vga_hcount[5] top.tb_timer_wrapper.vga_hcount[4] top.tb_timer_wrapper.vga_hcount[3] top.tb_timer_wrapper.vga_hcount[2] top.tb_timer_wrapper.vga_hcount[1] top.tb_timer_wrapper.vga_hcount[0]
+#{top.tb_timer_wrapper.vga_vcount[10:0]} top.tb_timer_wrapper.vga_vcount[10] top.tb_timer_wrapper.vga_vcount[9] top.tb_timer_wrapper.vga_vcount[8] top.tb_timer_wrapper.vga_vcount[7] top.tb_timer_wrapper.vga_vcount[6] top.tb_timer_wrapper.vga_vcount[5] top.tb_timer_wrapper.vga_vcount[4] top.tb_timer_wrapper.vga_vcount[3] top.tb_timer_wrapper.vga_vcount[2] top.tb_timer_wrapper.vga_vcount[1] top.tb_timer_wrapper.vga_vcount[0]
+#{top.tb_timer_wrapper.vga_rgb[7:0]} top.tb_timer_wrapper.vga_rgb[7] top.tb_timer_wrapper.vga_rgb[6] top.tb_timer_wrapper.vga_rgb[5] top.tb_timer_wrapper.vga_rgb[4] top.tb_timer_wrapper.vga_rgb[3] top.tb_timer_wrapper.vga_rgb[2] top.tb_timer_wrapper.vga_rgb[1] top.tb_timer_wrapper.vga_rgb[0]
+#{top.tb_timer_wrapper.uart_tx_str[1:10]} top.tb_timer_wrapper.uart_tx_str[1] top.tb_timer_wrapper.uart_tx_str[2] top.tb_timer_wrapper.uart_tx_str[3] top.tb_timer_wrapper.uart_tx_str[4] top.tb_timer_wrapper.uart_tx_str[5] top.tb_timer_wrapper.uart_tx_str[6] top.tb_timer_wrapper.uart_tx_str[7] top.tb_timer_wrapper.uart_tx_str[8]
+@1000200
+-tb_timer_wrapper
+[pattern_trace] 1
+[pattern_trace] 0

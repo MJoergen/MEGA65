@@ -1,0 +1,33 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Thu May  2 09:31:40 2024
+[*]
+[dumpfile] "/home/mfj/git/PRIVATE/MJoergen/MEGA65/timer_demo/sim/tb_timer.ghw"
+[dumpfile_mtime] "Thu May  2 09:31:23 2024"
+[dumpfile_size] 1451
+[savefile] "/home/mfj/git/PRIVATE/MJoergen/MEGA65/timer_demo/sim/tb_timer.gtkw"
+[timestart] 0
+[size] 1306 757
+[pos] -1 -1
+*-25.488770 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.tb_timer.
+[sst_width] 210
+[signals_width] 150
+[sst_expanded] 1
+[sst_vpaned_height] 198
+@28
+top.tb_timer.running
+top.tb_timer.rst
+top.tb_timer.clk
+top.tb_timer.en
+@22
+#{top.tb_timer.timer_h10[3:0]} top.tb_timer.timer_h10[3] top.tb_timer.timer_h10[2] top.tb_timer.timer_h10[1] top.tb_timer.timer_h10[0]
+#{top.tb_timer.timer_h1[3:0]} top.tb_timer.timer_h1[3] top.tb_timer.timer_h1[2] top.tb_timer.timer_h1[1] top.tb_timer.timer_h1[0]
+#{top.tb_timer.timer_m10[3:0]} top.tb_timer.timer_m10[3] top.tb_timer.timer_m10[2] top.tb_timer.timer_m10[1] top.tb_timer.timer_m10[0]
+#{top.tb_timer.timer_m1[3:0]} top.tb_timer.timer_m1[3] top.tb_timer.timer_m1[2] top.tb_timer.timer_m1[1] top.tb_timer.timer_m1[0]
+#{top.tb_timer.timer_s10[3:0]} top.tb_timer.timer_s10[3] top.tb_timer.timer_s10[2] top.tb_timer.timer_s10[1] top.tb_timer.timer_s10[0]
+#{top.tb_timer.timer_s1[3:0]} top.tb_timer.timer_s1[3] top.tb_timer.timer_s1[2] top.tb_timer.timer_s1[1] top.tb_timer.timer_s1[0]
+#{top.tb_timer.timer_all[23:0]} top.tb_timer.timer_all[23] top.tb_timer.timer_all[22] top.tb_timer.timer_all[21] top.tb_timer.timer_all[20] top.tb_timer.timer_all[19] top.tb_timer.timer_all[18] top.tb_timer.timer_all[17] top.tb_timer.timer_all[16] top.tb_timer.timer_all[15] top.tb_timer.timer_all[14] top.tb_timer.timer_all[13] top.tb_timer.timer_all[12] top.tb_timer.timer_all[11] top.tb_timer.timer_all[10] top.tb_timer.timer_all[9] top.tb_timer.timer_all[8] top.tb_timer.timer_all[7] top.tb_timer.timer_all[6] top.tb_timer.timer_all[5] top.tb_timer.timer_all[4] top.tb_timer.timer_all[3] top.tb_timer.timer_all[2] top.tb_timer.timer_all[1] top.tb_timer.timer_all[0]
+[pattern_trace] 1
+[pattern_trace] 0
