@@ -1,0 +1,69 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri May  3 11:56:48 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/common/sim/tb_slv_to_dec.ghw"
+[dumpfile_mtime] "Fri May  3 11:56:35 2024"
+[dumpfile_size] 108764
+[savefile] "/home/mike/git/MJoergen/MEGA65/common/sim/tb_slv_to_dec.gtkw"
+[timestart] 0
+[size] 1467 708
+[pos] -1 -1
+*-32.636810 210000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.tb_slv_to_dec.
+[treeopen] top.tb_slv_to_dec.slv_to_dec_inst.
+[sst_width] 249
+[signals_width] 245
+[sst_expanded] 1
+[sst_vpaned_height] 178
+@c00200
+-tb_slv_to_dec
+@28
+top.tb_slv_to_dec.running
+top.tb_slv_to_dec.rst
+top.tb_slv_to_dec.clk
+top.tb_slv_to_dec.slv_valid
+top.tb_slv_to_dec.slv_ready
+@22
+#{top.tb_slv_to_dec.slv_data[15:0]} top.tb_slv_to_dec.slv_data[15] top.tb_slv_to_dec.slv_data[14] top.tb_slv_to_dec.slv_data[13] top.tb_slv_to_dec.slv_data[12] top.tb_slv_to_dec.slv_data[11] top.tb_slv_to_dec.slv_data[10] top.tb_slv_to_dec.slv_data[9] top.tb_slv_to_dec.slv_data[8] top.tb_slv_to_dec.slv_data[7] top.tb_slv_to_dec.slv_data[6] top.tb_slv_to_dec.slv_data[5] top.tb_slv_to_dec.slv_data[4] top.tb_slv_to_dec.slv_data[3] top.tb_slv_to_dec.slv_data[2] top.tb_slv_to_dec.slv_data[1] top.tb_slv_to_dec.slv_data[0]
+@28
+top.tb_slv_to_dec.dec_valid
+top.tb_slv_to_dec.dec_ready
+top.tb_slv_to_dec.dec_last
+@22
+#{top.tb_slv_to_dec.dec_data[3:0]} top.tb_slv_to_dec.dec_data[3] top.tb_slv_to_dec.dec_data[2] top.tb_slv_to_dec.dec_data[1] top.tb_slv_to_dec.dec_data[0]
+@420
+top.tb_slv_to_dec.res
+@1401200
+-tb_slv_to_dec
+@800200
+-slv_to_dec
+@28
+top.tb_slv_to_dec.slv_to_dec_inst.clk_i
+top.tb_slv_to_dec.slv_to_dec_inst.rst_i
+top.tb_slv_to_dec.slv_to_dec_inst.slv_valid_i
+@29
+top.tb_slv_to_dec.slv_to_dec_inst.slv_ready_o
+@22
+#{top.tb_slv_to_dec.slv_to_dec_inst.slv_data_i[15:0]} top.tb_slv_to_dec.slv_to_dec_inst.slv_data_i[15] top.tb_slv_to_dec.slv_to_dec_inst.slv_data_i[14] top.tb_slv_to_dec.slv_to_dec_inst.slv_data_i[13] top.tb_slv_to_dec.slv_to_dec_inst.slv_data_i[12] top.tb_slv_to_dec.slv_to_dec_inst.slv_data_i[11] top.tb_slv_to_dec.slv_to_dec_inst.slv_data_i[10] top.tb_slv_to_dec.slv_to_dec_inst.slv_data_i[9] top.tb_slv_to_dec.slv_to_dec_inst.slv_data_i[8] top.tb_slv_to_dec.slv_to_dec_inst.slv_data_i[7] top.tb_slv_to_dec.slv_to_dec_inst.slv_data_i[6] top.tb_slv_to_dec.slv_to_dec_inst.slv_data_i[5] top.tb_slv_to_dec.slv_to_dec_inst.slv_data_i[4] top.tb_slv_to_dec.slv_to_dec_inst.slv_data_i[3] top.tb_slv_to_dec.slv_to_dec_inst.slv_data_i[2] top.tb_slv_to_dec.slv_to_dec_inst.slv_data_i[1] top.tb_slv_to_dec.slv_to_dec_inst.slv_data_i[0]
+@28
+top.tb_slv_to_dec.slv_to_dec_inst.dec_valid_o
+top.tb_slv_to_dec.slv_to_dec_inst.dec_ready_i
+top.tb_slv_to_dec.slv_to_dec_inst.dec_last_o
+@22
+#{top.tb_slv_to_dec.slv_to_dec_inst.dec_data_o[3:0]} top.tb_slv_to_dec.slv_to_dec_inst.dec_data_o[3] top.tb_slv_to_dec.slv_to_dec_inst.dec_data_o[2] top.tb_slv_to_dec.slv_to_dec_inst.dec_data_o[1] top.tb_slv_to_dec.slv_to_dec_inst.dec_data_o[0]
+@420
+top.tb_slv_to_dec.slv_to_dec_inst.state
+@28
+top.tb_slv_to_dec.slv_to_dec_inst.first
+top.tb_slv_to_dec.slv_to_dec_inst.de_start
+top.tb_slv_to_dec.slv_to_dec_inst.de_valid
+@22
+#{top.tb_slv_to_dec.slv_to_dec_inst.de_res[15:0]} top.tb_slv_to_dec.slv_to_dec_inst.de_res[15] top.tb_slv_to_dec.slv_to_dec_inst.de_res[14] top.tb_slv_to_dec.slv_to_dec_inst.de_res[13] top.tb_slv_to_dec.slv_to_dec_inst.de_res[12] top.tb_slv_to_dec.slv_to_dec_inst.de_res[11] top.tb_slv_to_dec.slv_to_dec_inst.de_res[10] top.tb_slv_to_dec.slv_to_dec_inst.de_res[9] top.tb_slv_to_dec.slv_to_dec_inst.de_res[8] top.tb_slv_to_dec.slv_to_dec_inst.de_res[7] top.tb_slv_to_dec.slv_to_dec_inst.de_res[6] top.tb_slv_to_dec.slv_to_dec_inst.de_res[5] top.tb_slv_to_dec.slv_to_dec_inst.de_res[4] top.tb_slv_to_dec.slv_to_dec_inst.de_res[3] top.tb_slv_to_dec.slv_to_dec_inst.de_res[2] top.tb_slv_to_dec.slv_to_dec_inst.de_res[1] top.tb_slv_to_dec.slv_to_dec_inst.de_res[0]
+#{top.tb_slv_to_dec.slv_to_dec_inst.pow_ten[15:0]} top.tb_slv_to_dec.slv_to_dec_inst.pow_ten[15] top.tb_slv_to_dec.slv_to_dec_inst.pow_ten[14] top.tb_slv_to_dec.slv_to_dec_inst.pow_ten[13] top.tb_slv_to_dec.slv_to_dec_inst.pow_ten[12] top.tb_slv_to_dec.slv_to_dec_inst.pow_ten[11] top.tb_slv_to_dec.slv_to_dec_inst.pow_ten[10] top.tb_slv_to_dec.slv_to_dec_inst.pow_ten[9] top.tb_slv_to_dec.slv_to_dec_inst.pow_ten[8] top.tb_slv_to_dec.slv_to_dec_inst.pow_ten[7] top.tb_slv_to_dec.slv_to_dec_inst.pow_ten[6] top.tb_slv_to_dec.slv_to_dec_inst.pow_ten[5] top.tb_slv_to_dec.slv_to_dec_inst.pow_ten[4] top.tb_slv_to_dec.slv_to_dec_inst.pow_ten[3] top.tb_slv_to_dec.slv_to_dec_inst.pow_ten[2] top.tb_slv_to_dec.slv_to_dec_inst.pow_ten[1] top.tb_slv_to_dec.slv_to_dec_inst.pow_ten[0]
+#{top.tb_slv_to_dec.slv_to_dec_inst.slv_data[15:0]} top.tb_slv_to_dec.slv_to_dec_inst.slv_data[15] top.tb_slv_to_dec.slv_to_dec_inst.slv_data[14] top.tb_slv_to_dec.slv_to_dec_inst.slv_data[13] top.tb_slv_to_dec.slv_to_dec_inst.slv_data[12] top.tb_slv_to_dec.slv_to_dec_inst.slv_data[11] top.tb_slv_to_dec.slv_to_dec_inst.slv_data[10] top.tb_slv_to_dec.slv_to_dec_inst.slv_data[9] top.tb_slv_to_dec.slv_to_dec_inst.slv_data[8] top.tb_slv_to_dec.slv_to_dec_inst.slv_data[7] top.tb_slv_to_dec.slv_to_dec_inst.slv_data[6] top.tb_slv_to_dec.slv_to_dec_inst.slv_data[5] top.tb_slv_to_dec.slv_to_dec_inst.slv_data[4] top.tb_slv_to_dec.slv_to_dec_inst.slv_data[3] top.tb_slv_to_dec.slv_to_dec_inst.slv_data[2] top.tb_slv_to_dec.slv_to_dec_inst.slv_data[1] top.tb_slv_to_dec.slv_to_dec_inst.slv_data[0]
+@1000200
+-slv_to_dec
+[pattern_trace] 1
+[pattern_trace] 0

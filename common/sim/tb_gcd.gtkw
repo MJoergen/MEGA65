@@ -1,0 +1,36 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri May  3 08:31:21 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/fact/sim/tb_gcd.ghw"
+[dumpfile_mtime] "Fri May  3 08:30:31 2024"
+[dumpfile_size] 5973
+[savefile] "/home/mike/git/MJoergen/MEGA65/fact/sim/tb_gcd.gtkw"
+[timestart] 0
+[size] 1484 688
+[pos] -1 -1
+*-26.713175 210000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.tb_gcd.
+[sst_width] 249
+[signals_width] 210
+[sst_expanded] 1
+[sst_vpaned_height] 174
+@800200
+-tb_gcd
+@28
+top.tb_gcd.running
+top.tb_gcd.rst
+top.tb_gcd.clk
+top.tb_gcd.start
+@22
+#{top.tb_gcd.val1[7:0]} top.tb_gcd.val1[7] top.tb_gcd.val1[6] top.tb_gcd.val1[5] top.tb_gcd.val1[4] top.tb_gcd.val1[3] top.tb_gcd.val1[2] top.tb_gcd.val1[1] top.tb_gcd.val1[0]
+#{top.tb_gcd.val2[7:0]} top.tb_gcd.val2[7] top.tb_gcd.val2[6] top.tb_gcd.val2[5] top.tb_gcd.val2[4] top.tb_gcd.val2[3] top.tb_gcd.val2[2] top.tb_gcd.val2[1] top.tb_gcd.val2[0]
+@28
+top.tb_gcd.valid
+@22
+#{top.tb_gcd.res[7:0]} top.tb_gcd.res[7] top.tb_gcd.res[6] top.tb_gcd.res[5] top.tb_gcd.res[4] top.tb_gcd.res[3] top.tb_gcd.res[2] top.tb_gcd.res[1] top.tb_gcd.res[0]
+@1000200
+-tb_gcd
+[pattern_trace] 1
+[pattern_trace] 0

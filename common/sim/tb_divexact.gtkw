@@ -1,0 +1,36 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri May  3 08:26:58 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/fact/sim/tb_divexact.ghw"
+[dumpfile_mtime] "Fri May  3 08:25:47 2024"
+[dumpfile_size] 3823
+[savefile] "/home/mike/git/MJoergen/MEGA65/fact/sim/tb_divexact.gtkw"
+[timestart] 0
+[size] 1561 640
+[pos] -1 -1
+*-28.033079 1287400000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.tb_divexact.
+[sst_width] 249
+[signals_width] 231
+[sst_expanded] 1
+[sst_vpaned_height] 154
+@800200
+-tb_divexact
+@28
+top.tb_divexact.running
+top.tb_divexact.rst
+top.tb_divexact.clk
+top.tb_divexact.start
+@22
+#{top.tb_divexact.val1[7:0]} top.tb_divexact.val1[7] top.tb_divexact.val1[6] top.tb_divexact.val1[5] top.tb_divexact.val1[4] top.tb_divexact.val1[3] top.tb_divexact.val1[2] top.tb_divexact.val1[1] top.tb_divexact.val1[0]
+#{top.tb_divexact.val2[7:0]} top.tb_divexact.val2[7] top.tb_divexact.val2[6] top.tb_divexact.val2[5] top.tb_divexact.val2[4] top.tb_divexact.val2[3] top.tb_divexact.val2[2] top.tb_divexact.val2[1] top.tb_divexact.val2[0]
+@28
+top.tb_divexact.valid
+@22
+#{top.tb_divexact.res[7:0]} top.tb_divexact.res[7] top.tb_divexact.res[6] top.tb_divexact.res[5] top.tb_divexact.res[4] top.tb_divexact.res[3] top.tb_divexact.res[2] top.tb_divexact.res[1] top.tb_divexact.res[0]
+@1000200
+-tb_divexact
+[pattern_trace] 1
+[pattern_trace] 0
