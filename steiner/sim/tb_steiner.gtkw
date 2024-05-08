@@ -1,0 +1,30 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Wed May  8 12:04:15 2024
+[*]
+[dumpfile] "/home/mfj/git/PRIVATE/MJoergen/MEGA65/steiner/sim/tb_steiner.ghw"
+[dumpfile_mtime] "Wed May  8 12:03:53 2024"
+[dumpfile_size] 16201
+[savefile] "/home/mfj/git/PRIVATE/MJoergen/MEGA65/steiner/sim/tb_steiner.gtkw"
+[timestart] 0
+[size] 1000 600
+[pos] -1 -1
+*-24.966616 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.tb_steiner.
+[sst_width] 210
+[signals_width] 126
+[sst_expanded] 1
+[sst_vpaned_height] 143
+@28
+top.tb_steiner.clk
+top.tb_steiner.rst
+top.tb_steiner.valid
+top.tb_steiner.done
+top.tb_steiner.step
+@420
+top.tb_steiner.count
+@23
+#{top.tb_steiner.result[84:0]} top.tb_steiner.result[84] top.tb_steiner.result[83] top.tb_steiner.result[82] top.tb_steiner.result[81] top.tb_steiner.result[80] top.tb_steiner.result[79] top.tb_steiner.result[78] top.tb_steiner.result[77] top.tb_steiner.result[76] top.tb_steiner.result[75] top.tb_steiner.result[74] top.tb_steiner.result[73] top.tb_steiner.result[72] top.tb_steiner.result[71] top.tb_steiner.result[70] top.tb_steiner.result[69] top.tb_steiner.result[68] top.tb_steiner.result[67] top.tb_steiner.result[66] top.tb_steiner.result[65] top.tb_steiner.result[64] top.tb_steiner.result[63] top.tb_steiner.result[62] top.tb_steiner.result[61] top.tb_steiner.result[60] top.tb_steiner.result[59] top.tb_steiner.result[58] top.tb_steiner.result[57] top.tb_steiner.result[56] top.tb_steiner.result[55] top.tb_steiner.result[54] top.tb_steiner.result[53] top.tb_steiner.result[52] top.tb_steiner.result[51] top.tb_steiner.result[50] top.tb_steiner.result[49] top.tb_steiner.result[48] top.tb_steiner.result[47] top.tb_steiner.result[46] top.tb_steiner.result[45] top.tb_steiner.result[44] top.tb_steiner.result[43] top.tb_steiner.result[42] top.tb_steiner.result[41] top.tb_steiner.result[40] top.tb_steiner.result[39] top.tb_steiner.result[38] top.tb_steiner.result[37] top.tb_steiner.result[36] top.tb_steiner.result[35] top.tb_steiner.result[34] top.tb_steiner.result[33] top.tb_steiner.result[32] top.tb_steiner.result[31] top.tb_steiner.result[30] top.tb_steiner.result[29] top.tb_steiner.result[28] top.tb_steiner.result[27] top.tb_steiner.result[26] top.tb_steiner.result[25] top.tb_steiner.result[24] top.tb_steiner.result[23] top.tb_steiner.result[22] top.tb_steiner.result[21] top.tb_steiner.result[20] top.tb_steiner.result[19] top.tb_steiner.result[18] top.tb_steiner.result[17] top.tb_steiner.result[16] top.tb_steiner.result[15] top.tb_steiner.result[14] top.tb_steiner.result[13] top.tb_steiner.result[12] top.tb_steiner.result[11] top.tb_steiner.result[10] top.tb_steiner.result[9] top.tb_steiner.result[8] top.tb_steiner.result[7] top.tb_steiner.result[6] top.tb_steiner.result[5] top.tb_steiner.result[4] top.tb_steiner.result[3] top.tb_steiner.result[2] top.tb_steiner.result[1] top.tb_steiner.result[0]
+[pattern_trace] 1
+[pattern_trace] 0

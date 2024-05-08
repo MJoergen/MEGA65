@@ -1,0 +1,48 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Wed May  8 12:14:55 2024
+[*]
+[dumpfile] "/home/mfj/git/PRIVATE/MJoergen/MEGA65/steiner/sim/tb_steiner_wrapper.ghw"
+[dumpfile_mtime] "Wed May  8 12:14:40 2024"
+[dumpfile_size] 303674
+[savefile] "/home/mfj/git/PRIVATE/MJoergen/MEGA65/steiner/sim/tb_steiner_wrapper.gtkw"
+[timestart] 0
+[size] 1249 742
+[pos] -1 -1
+*-34.975357 79200000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.tb_steiner_wrapper.
+[treeopen] top.tb_steiner_wrapper.steiner_wrapper_inst.
+[sst_width] 349
+[signals_width] 252
+[sst_expanded] 1
+[sst_vpaned_height] 254
+@28
+top.tb_steiner_wrapper.steiner_wrapper_inst.clk_i
+top.tb_steiner_wrapper.steiner_wrapper_inst.rst_i
+top.tb_steiner_wrapper.steiner_wrapper_inst.uart_rx_valid_i
+top.tb_steiner_wrapper.steiner_wrapper_inst.uart_rx_ready_o
+@22
+#{top.tb_steiner_wrapper.steiner_wrapper_inst.uart_rx_data_i[7:0]} top.tb_steiner_wrapper.steiner_wrapper_inst.uart_rx_data_i[7] top.tb_steiner_wrapper.steiner_wrapper_inst.uart_rx_data_i[6] top.tb_steiner_wrapper.steiner_wrapper_inst.uart_rx_data_i[5] top.tb_steiner_wrapper.steiner_wrapper_inst.uart_rx_data_i[4] top.tb_steiner_wrapper.steiner_wrapper_inst.uart_rx_data_i[3] top.tb_steiner_wrapper.steiner_wrapper_inst.uart_rx_data_i[2] top.tb_steiner_wrapper.steiner_wrapper_inst.uart_rx_data_i[1] top.tb_steiner_wrapper.steiner_wrapper_inst.uart_rx_data_i[0]
+@28
+top.tb_steiner_wrapper.steiner_wrapper_inst.uart_tx_valid_o
+top.tb_steiner_wrapper.steiner_wrapper_inst.uart_tx_ready_i
+@22
+#{top.tb_steiner_wrapper.steiner_wrapper_inst.uart_tx_data_o[7:0]} top.tb_steiner_wrapper.steiner_wrapper_inst.uart_tx_data_o[7] top.tb_steiner_wrapper.steiner_wrapper_inst.uart_tx_data_o[6] top.tb_steiner_wrapper.steiner_wrapper_inst.uart_tx_data_o[5] top.tb_steiner_wrapper.steiner_wrapper_inst.uart_tx_data_o[4] top.tb_steiner_wrapper.steiner_wrapper_inst.uart_tx_data_o[3] top.tb_steiner_wrapper.steiner_wrapper_inst.uart_tx_data_o[2] top.tb_steiner_wrapper.steiner_wrapper_inst.uart_tx_data_o[1] top.tb_steiner_wrapper.steiner_wrapper_inst.uart_tx_data_o[0]
+@28
+top.tb_steiner_wrapper.steiner_wrapper_inst.vga_clk_i
+@22
+#{top.tb_steiner_wrapper.steiner_wrapper_inst.vga_hcount_i[10:0]} top.tb_steiner_wrapper.steiner_wrapper_inst.vga_hcount_i[10] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_hcount_i[9] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_hcount_i[8] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_hcount_i[7] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_hcount_i[6] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_hcount_i[5] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_hcount_i[4] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_hcount_i[3] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_hcount_i[2] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_hcount_i[1] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_hcount_i[0]
+#{top.tb_steiner_wrapper.steiner_wrapper_inst.vga_vcount_i[10:0]} top.tb_steiner_wrapper.steiner_wrapper_inst.vga_vcount_i[10] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_vcount_i[9] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_vcount_i[8] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_vcount_i[7] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_vcount_i[6] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_vcount_i[5] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_vcount_i[4] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_vcount_i[3] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_vcount_i[2] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_vcount_i[1] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_vcount_i[0]
+@28
+top.tb_steiner_wrapper.steiner_wrapper_inst.vga_blank_i
+@22
+#{top.tb_steiner_wrapper.steiner_wrapper_inst.vga_rgb_o[7:0]} top.tb_steiner_wrapper.steiner_wrapper_inst.vga_rgb_o[7] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_rgb_o[6] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_rgb_o[5] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_rgb_o[4] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_rgb_o[3] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_rgb_o[2] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_rgb_o[1] top.tb_steiner_wrapper.steiner_wrapper_inst.vga_rgb_o[0]
+@28
+top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_valid
+top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_done
+top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_step
+@22
+#{top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[84:0]} top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[35] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[34] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[33] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[32] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[31] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[30] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[29] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[28] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[27] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[26] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[25] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[24] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[23] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[22] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[21] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[20] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[19] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[18] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[17] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[16] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[15] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[14] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[13] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[12] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[11] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[10] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[9] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[8] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[7] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[6] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[5] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[4] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[3] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[2] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[1] top.tb_steiner_wrapper.steiner_wrapper_inst.steiner_result[0]
+[pattern_trace] 1
+[pattern_trace] 0
