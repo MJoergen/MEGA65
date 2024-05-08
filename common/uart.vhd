@@ -3,6 +3,9 @@ library ieee;
    use ieee.numeric_std.all;
 
 entity uart is
+   generic (
+      G_DIVISOR : natural
+   );
    port (
       clk_i      : in    std_logic;
       rst_i      : in    std_logic;
@@ -19,8 +22,6 @@ end entity uart;
 
 architecture synthesis of uart is
 
-   constant C_COUNTER_MAX : natural := 100000000 / 115200;
-
    type     state_type is (
       IDLE_ST,
       BUSY_ST
@@ -28,11 +29,11 @@ architecture synthesis of uart is
 
    signal   tx_data    : std_logic_vector(9 downto 0);
    signal   tx_state   : state_type := IDLE_ST;
-   signal   tx_counter : natural range 0 to C_COUNTER_MAX;
+   signal   tx_counter : natural range 0 to G_DIVISOR;
 
    signal   rx_data    : std_logic_vector(9 downto 0);
    signal   rx_state   : state_type := IDLE_ST;
-   signal   rx_counter : natural range 0 to C_COUNTER_MAX;
+   signal   rx_counter : natural range 0 to G_DIVISOR;
 
    signal   uart_tx : std_logic;
 
@@ -53,7 +54,7 @@ begin
             when IDLE_ST =>
                if tx_valid_i = '1' then
                   tx_data    <= "1" & tx_data_i & "0";
-                  tx_counter <= C_COUNTER_MAX;
+                  tx_counter <= G_DIVISOR;
                   tx_state   <= BUSY_ST;
                end if;
 
@@ -62,7 +63,7 @@ begin
                   tx_counter <= tx_counter - 1;
                else
                   if or (tx_data(9 downto 1)) = '1' then
-                     tx_counter <= C_COUNTER_MAX;
+                     tx_counter <= G_DIVISOR;
                      tx_data    <= "0" & tx_data(9 downto 1);
                   else
                      tx_data  <= (others => '1');
@@ -77,6 +78,7 @@ begin
             tx_data    <= (others => '1');
             tx_state   <= IDLE_ST;
             tx_counter <= 0;
+            uart_tx_o  <= '1';
          end if;
       end if;
    end process tx_proc;
@@ -93,7 +95,7 @@ begin
             when IDLE_ST =>
                if uart_rx_i = '0' then
                   rx_data    <= uart_rx_i & rx_data(9 downto 1);
-                  rx_counter <= C_COUNTER_MAX / 2;
+                  rx_counter <= G_DIVISOR / 2;
                   rx_state   <= BUSY_ST;
                end if;
 
@@ -101,7 +103,7 @@ begin
                if rx_counter > 0 then
                   rx_counter <= rx_counter - 1;
                else
-                  rx_counter <= C_COUNTER_MAX;
+                  rx_counter <= G_DIVISOR;
                   rx_data    <= uart_rx_i & rx_data(9 downto 1);
                end if;
 

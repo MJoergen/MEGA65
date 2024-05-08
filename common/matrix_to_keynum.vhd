@@ -38,7 +38,7 @@ entity matrix_to_keynum is
    );
 end entity matrix_to_keynum;
 
-architecture beh of matrix_to_keynum is
+architecture synthesis of matrix_to_keynum is
 
    -- Number of the highest key to read from the hardware controller's matrix RAM
    constant C_MAXKEY : integer                                       := 79;
@@ -274,5 +274,5 @@ begin
       end if;
    end process kbd_proc;
 
-end architecture beh;
+end architecture synthesis;
 

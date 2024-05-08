@@ -27,7 +27,7 @@ entity axi_merger is
    );
 end entity axi_merger;
 
-architecture rtl of axi_merger is
+architecture synthesis of axi_merger is
 
 begin
 
@@ -55,5 +55,5 @@ begin
       end if;
    end process output_proc;
 
-end architecture rtl;
+end architecture synthesis;
 

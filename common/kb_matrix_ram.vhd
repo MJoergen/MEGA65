@@ -19,7 +19,7 @@ entity kb_matrix_ram is
    );
 end entity kb_matrix_ram;
 
-architecture behavioral of kb_matrix_ram is
+architecture synthesis of kb_matrix_ram is
 
    type            ram_type is array (0 to 15) of std_logic_vector(7 downto 0);
    shared variable ram_v : ram_type := (others => x"FF");
@@ -45,5 +45,5 @@ begin
       dob_o <= ram_v(addressb_i);
    end process read_proc;
 
-end architecture behavioral;
+end architecture synthesis;
 

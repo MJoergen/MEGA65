@@ -13,17 +13,18 @@ end entity tb_divexact;
 
 architecture behavioral of tb_divexact is
 
-   constant C_SIZE : integer    := 8;
+   constant C_DATA_SIZE : integer := 8;
 
-   signal   running : std_logic := '1';
-   signal   rst     : std_logic := '1';
-   signal   clk     : std_logic := '1';
-   signal   val1    : std_logic_vector(C_SIZE - 1 downto 0);
-   signal   val2    : std_logic_vector(C_SIZE - 1 downto 0);
-   signal   start   : std_logic;
-   signal   res     : std_logic_vector(C_SIZE - 1 downto 0);
-   signal   valid   : std_logic;
-   signal   ready   : std_logic;
+   signal   running : std_logic   := '1';
+   signal   rst     : std_logic   := '1';
+   signal   clk     : std_logic   := '1';
+   signal   s_valid : std_logic;
+   signal   s_ready : std_logic;
+   signal   s_val1  : std_logic_vector(C_DATA_SIZE - 1 downto 0);
+   signal   s_val2  : std_logic_vector(C_DATA_SIZE - 1 downto 0);
+   signal   m_valid : std_logic;
+   signal   m_ready : std_logic;
+   signal   m_res   : std_logic_vector(C_DATA_SIZE - 1 downto 0);
 
 begin
 
@@ -32,46 +33,52 @@ begin
 
    divexact_inst : entity work.divexact
       generic map (
-         G_VAL_SIZE => C_SIZE
+         G_DATA_SIZE => C_DATA_SIZE
       )
       port map (
-         clk_i   => clk,
-         rst_i   => rst,
-         val1_i  => val1,
-         val2_i  => val2,
-         start_i => start,
-         res_o   => res,
-         valid_o => valid,
-         ready_i => ready
+         clk_i     => clk,
+         rst_i     => rst,
+         s_valid_i => s_valid,
+         s_ready_o => s_ready,
+         s_data1_i => s_val1,
+         s_data2_i => s_val2,
+         m_valid_o => m_valid,
+         m_ready_i => m_ready,
+         m_data_o  => m_res
       );
 
-   ready <= '1';
+   m_ready <= '1';
 
    test_proc : process
       --
 
       procedure verify_divexact (
-         val1_v : integer;
-         val2_v : integer;
-         res_v  : integer
+         val1_v    : integer;
+         val2_v    : integer;
+         exp_res_v : integer
       ) is
       begin
-         val1  <= to_stdlogicvector(val1_v, C_SIZE);
-         val2  <= to_stdlogicvector(val2_v, C_SIZE);
-         start <= '1';
+         s_val1  <= to_stdlogicvector(val1_v, C_DATA_SIZE);
+         s_val2  <= to_stdlogicvector(val2_v, C_DATA_SIZE);
+         s_valid <= '1';
          wait until clk = '1';
-         start <= '0';
 
-         while valid /= '1' loop
+         while s_ready = '0' loop
+            wait until clk = '1';
+         end loop;
+
+         s_valid <= '0';
+
+         while m_valid /= '1' loop
             wait until clk = '1';
          end loop;
 
          report "gcd(" & integer'image(val1_v)
                 & "," & integer'image(val2_v)
-                & ") -> " & integer'image(to_integer(res));
-         assert res = to_stdlogicvector(res_v, C_SIZE);
+                & ") -> " & integer'image(to_integer(m_res));
+         assert m_res = to_stdlogicvector(exp_res_v, C_DATA_SIZE);
 
-         while valid = '1' loop
+         while m_valid = '1' loop
             wait until clk = '1';
          end loop;
 
@@ -80,7 +87,7 @@ begin
 
    --
    begin
-      start   <= '0';
+      s_valid <= '0';
       wait until rst = '0';
       wait for 100 ns;
       wait until clk = '1';

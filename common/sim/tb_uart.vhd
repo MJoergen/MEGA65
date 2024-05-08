@@ -7,6 +7,8 @@ end entity tb_uart;
 
 architecture simulation of tb_uart is
 
+   constant C_DIVISOR : natural := 10;
+
    signal running  : std_logic := '1';
    signal clk      : std_logic := '1';
    signal rst      : std_logic := '1';
@@ -54,6 +56,9 @@ begin
    end process test_proc;
 
    uart_tx_inst : entity work.uart
+      generic map (
+         G_DIVISOR => C_DIVISOR
+      )
       port map (
          clk_i      => clk,
          rst_i      => rst,
@@ -68,6 +73,9 @@ begin
       ); -- uart_inst
 
    uart_rx_inst : entity work.uart
+      generic map (
+         G_DIVISOR => C_DIVISOR
+      )
       port map (
          clk_i      => clk,
          rst_i      => rst,

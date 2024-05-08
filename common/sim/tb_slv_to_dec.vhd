@@ -7,15 +7,15 @@ end entity tb_slv_to_dec;
 
 architecture simulation of tb_slv_to_dec is
 
-   constant C_SIZE : integer    := 16;
+   constant C_DATA_SIZE : integer := 16;
 
-   signal   running : std_logic := '1';
-   signal   rst     : std_logic := '1';
-   signal   clk     : std_logic := '1';
+   signal   running : std_logic   := '1';
+   signal   rst     : std_logic   := '1';
+   signal   clk     : std_logic   := '1';
 
    signal   slv_valid : std_logic;
    signal   slv_ready : std_logic;
-   signal   slv_data  : std_logic_vector(C_SIZE - 1 downto 0);
+   signal   slv_data  : std_logic_vector(C_DATA_SIZE - 1 downto 0);
    signal   dec_valid : std_logic;
    signal   dec_last  : std_logic;
    signal   dec_ready : std_logic;
@@ -32,18 +32,18 @@ begin
 
    slv_to_dec_inst : entity work.slv_to_dec
       generic map (
-         G_SIZE => C_SIZE
+         G_DATA_SIZE => C_DATA_SIZE
       )
       port map (
-         clk_i       => clk,
-         rst_i       => rst,
-         slv_valid_i => slv_valid,
-         slv_ready_o => slv_ready,
-         slv_data_i  => slv_data,
-         dec_valid_o => dec_valid,
-         dec_ready_i => dec_ready,
-         dec_data_o  => dec_data,
-         dec_last_o  => dec_last
+         clk_i     => clk,
+         rst_i     => rst,
+         s_valid_i => slv_valid,
+         s_ready_o => slv_ready,
+         s_data_i  => slv_data,
+         m_valid_o => dec_valid,
+         m_ready_i => dec_ready,
+         m_data_o  => dec_data,
+         m_last_o  => dec_last
       );
 
    lfsr_inst : entity work.lfsr
@@ -69,7 +69,7 @@ begin
          arg : integer
       ) is
       begin
-         slv_data  <= to_stdlogicvector(arg, C_SIZE);
+         slv_data  <= to_stdlogicvector(arg, C_DATA_SIZE);
          slv_valid <= '1';
          wait until clk = '1';
 

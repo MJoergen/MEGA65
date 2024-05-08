@@ -47,7 +47,7 @@ entity m2m_keyb is
    );
 end entity m2m_keyb;
 
-architecture beh of m2m_keyb is
+architecture synthesis of m2m_keyb is
 
    signal matrix_col     : std_logic_vector(7 downto 0);
    signal matrix_col_idx : integer range 0 to 9          := 0;
@@ -161,5 +161,5 @@ begin
       end if;
    end process handle_qnice_keys_proc;
 
-end architecture beh;
+end architecture synthesis;
 

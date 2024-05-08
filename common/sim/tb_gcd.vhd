@@ -8,16 +8,16 @@ end entity tb_gcd;
 
 architecture simulation of tb_gcd is
 
-   constant C_SIZE  : integer   := 8;
+   constant C_DATA_SIZE : integer := 8;
 
    -- Clock, reset, and enable
-   signal   running : std_logic := '1';
-   signal   rst     : std_logic := '1';
-   signal   clk     : std_logic := '1';
-   signal   val1    : std_logic_vector(C_SIZE - 1 downto 0);
-   signal   val2    : std_logic_vector(C_SIZE - 1 downto 0);
+   signal   running : std_logic   := '1';
+   signal   rst     : std_logic   := '1';
+   signal   clk     : std_logic   := '1';
+   signal   val1    : std_logic_vector(C_DATA_SIZE - 1 downto 0);
+   signal   val2    : std_logic_vector(C_DATA_SIZE - 1 downto 0);
    signal   start   : std_logic;
-   signal   res     : std_logic_vector(C_SIZE - 1 downto 0);
+   signal   res     : std_logic_vector(C_DATA_SIZE - 1 downto 0);
    signal   valid   : std_logic;
 
 begin
@@ -27,16 +27,18 @@ begin
 
    gcd_inst : entity work.gcd
       generic map (
-         G_SIZE => C_SIZE
+         G_DATA_SIZE => C_DATA_SIZE
       )
       port map (
-         clk_i   => clk,
-         rst_i   => rst,
-         val1_i  => val1,
-         val2_i  => val2,
-         start_i => start,
-         res_o   => res,
-         valid_o => valid
+         clk_i     => clk,
+         rst_i     => rst,
+         s_valid_i => start,
+         s_ready_o => open,
+         s_data1_i => val1,
+         s_data2_i => val2,
+         m_valid_o => valid,
+         m_ready_i => '1',
+         m_data_o  => res
       );
 
    test_proc : process
@@ -48,8 +50,8 @@ begin
          res_v  : integer
       ) is
       begin
-         val1  <= to_stdlogicvector(val1_v, C_SIZE);
-         val2  <= to_stdlogicvector(val2_v, C_SIZE);
+         val1  <= to_stdlogicvector(val1_v, C_DATA_SIZE);
+         val2  <= to_stdlogicvector(val2_v, C_DATA_SIZE);
          start <= '1';
          wait until clk = '1';
          start <= '0';
@@ -61,7 +63,7 @@ begin
          report "gcd(" & integer'image(val1_v)
                 & "," & integer'image(val2_v)
                 & ") -> " & integer'image(to_integer(res));
-         assert res = to_stdlogicvector(res_v, C_SIZE);
+         assert res = to_stdlogicvector(res_v, C_DATA_SIZE);
 
          while valid = '1' loop
             wait until clk = '1';

@@ -150,6 +150,9 @@ begin
       );
 
    uart_inst : entity work.uart
+      generic map (
+         G_DIVISOR => 100000000 / 115200
+      )
       port map (
          clk_i      => clk_o,
          rst_i      => rst_o,

@@ -38,7 +38,7 @@ entity mega65kbd_to_matrix is
    );
 end entity mega65kbd_to_matrix;
 
-architecture behavioural of mega65kbd_to_matrix is
+architecture synthesis of mega65kbd_to_matrix is
 
    signal matrix_col   : std_logic_vector(7 downto 0) := (others => '1');
    signal restore      : std_logic                    := '1';
@@ -224,5 +224,5 @@ begin  -- behavioural
       end if;
    end process kbd_proc;
 
-end architecture behavioural;
+end architecture synthesis;
 
