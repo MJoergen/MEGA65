@@ -1,0 +1,66 @@
+vunit i_gcd(gcd(synthesis))
+{
+   -- set all declarations to run on clk_i
+   default clock is rising_edge(clk_i);
+
+   -- Additional signals used during formal verification
+   signal f_val1  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal f_val2  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal f_valid : std_logic;
+
+   -- Keep track of input data
+   input_proc : process (clk_i)
+   begin
+      if rising_edge(clk_i) then
+         if s_valid_i and s_ready_o then
+            f_val1 <= s_data1_i;
+            f_val2 <= s_data2_i;
+            f_valid <= '1';
+         end if;
+
+         if rst_i then
+            f_valid <= '0';
+         end if;
+      end if;
+   end process input_proc;
+
+
+   --------------------------------------------
+   -- ASSERTIONS ABOUT OUTPUTS
+   --------------------------------------------
+
+   -- Output must be empty after reset
+   f_after_reset : assert always {rst_i} |=> {not m_valid_o};
+
+   -- Output must be stable until accepted
+   f_output_stable : assert always {m_valid_o and not m_ready_i and not rst_i} |=>
+      {stable(m_valid_o) and stable(m_data_o)};
+
+   -- Verify correct output
+   f_res_nonzero : assert always {m_valid_o and not rst_i and f_valid and (or(f_val1) and or(f_val2))} |-> 
+      {to_integer(f_val1) mod to_integer(m_data_o) = 0 and
+       to_integer(f_val2) mod to_integer(m_data_o) = 0};
+   f_res_zero : assert always {m_valid_o and not rst_i and f_valid and not (or(f_val1) and or(f_val2))} |-> 
+      {to_integer(m_data_o) = 0};
+
+
+   --------------------------------------------
+   -- ASSUMPTIONS ABOUT INPUTS
+   --------------------------------------------
+
+   -- Require reset at startup.
+   f_reset : assume {rst_i};
+
+   f_input_stable : assume always {s_valid_i and not s_ready_o and not rst_i} |=>
+      {stable(s_valid_i) and stable(s_data1_i) and stable(s_data2_i)};
+
+
+   --------------------------------------------
+   -- COVER STATEMENTS TO VERIFY REACHABILITY
+   --------------------------------------------
+
+   f_full_to_empty : cover {m_valid_o and not rst_i;
+                            not m_valid_o};
+
+} -- vunit i_gcd(gcd(synthesis))
+

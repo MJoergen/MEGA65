@@ -1,0 +1,76 @@
+vunit i_axi_merger(axi_merger(synthesis))
+{
+   -- set all declarations to run on clk_i
+   default clock is rising_edge(clk_i);
+
+   -- Additional signals used during formal verification
+   signal f_data1  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal f_valid1 : std_logic;
+   signal f_data2  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal f_valid2 : std_logic;
+
+   -- Process inputs
+   input_proc : process (clk_i)
+   begin
+      if rising_edge(clk_i) then
+         if s1_valid_i and s1_ready_o then
+            f_data1  <= s1_data_i;
+            f_valid1 <= '1';
+         end if;
+         if s2_valid_i and s2_ready_o then
+            f_data2  <= s2_data_i;
+            f_valid2 <= '1';
+         end if;
+         if m_ready_i = '1' then
+            f_valid1 <= '0';
+            f_valid2 <= '0';
+         end if;
+
+         if rst_i then
+            f_valid1 <= '0';
+            f_valid2 <= '0';
+         end if;
+      end if;
+   end process input_proc;
+
+
+   --------------------------------------------
+   -- ASSERTIONS ABOUT OUTPUTS
+   --------------------------------------------
+
+   -- Output must be empty after reset
+   f_after_reset : assert always {rst_i} |=> {not m_valid_o};
+
+   -- Output must be stable until accepted
+   f_output_stable : assert always {m_valid_o and not m_ready_i and not rst_i} |=>
+      {stable(m_valid_o) and stable(m_data_o)};
+
+   f_output1 : assert always {f_valid1 and not rst_i} |->
+      {m_valid_o = '1' and m_data_o = f_data1};
+
+   f_output2 : assert always {f_valid2 and not rst_i} |->
+      {m_valid_o = '1' and m_data_o = f_data2};
+
+
+   --------------------------------------------
+   -- ASSUMPTIONS ABOUT INPUTS
+   --------------------------------------------
+
+   -- Require reset at startup.
+   f_reset : assume {rst_i};
+
+   f_input_stable1 : assume always {s1_valid_i and not s1_ready_o and not rst_i} |=>
+      {stable(s1_valid_i) and stable(s1_data_i)};
+   f_input_stable2 : assume always {s2_valid_i and not s2_ready_o and not rst_i} |=>
+      {stable(s2_valid_i) and stable(s2_data_i)};
+
+
+   --------------------------------------------
+   -- COVER STATEMENTS TO VERIFY REACHABILITY
+   --------------------------------------------
+
+   f_full_to_empty : cover {m_valid_o and not rst_i;
+                            not m_valid_o};
+
+} -- vunit i_axi_merger(axi_merger(synthesis))
+

@@ -1,0 +1,52 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Wed May  8 07:05:09 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/common/formal/merginator_prove/engine_0/trace.vcd"
+[dumpfile_mtime] "Wed May  8 07:03:33 2024"
+[dumpfile_size] 2150
+[savefile] "/home/mike/git/MJoergen/MEGA65/common/formal/merginator.gtkw"
+[timestart] 0
+[size] 1100 600
+[pos] -1 -1
+*-3.839017 17 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] merginator.
+[sst_width] 249
+[signals_width] 231
+[sst_expanded] 1
+[sst_vpaned_height] 143
+@28
+merginator.clk_i
+merginator.rst_i
+[color] 2
+merginator.s1_valid_i
+[color] 6
+merginator.s1_ready_o
+@22
+merginator.s1_data_i[7:0]
+@28
+[color] 2
+merginator.s2_valid_i
+[color] 6
+merginator.s2_ready_o
+@22
+merginator.s2_data_i[7:0]
+@28
+[color] 2
+merginator.m_valid_o
+[color] 6
+merginator.m_ready_i
+@22
+merginator.m_data_o[7:0]
+@28
+merginator.state
+merginator.new_state
+merginator.i_merginator.f_valid1
+@22
+merginator.i_merginator.f_data1[7:0]
+@28
+merginator.i_merginator.f_valid2
+@22
+merginator.i_merginator.f_data2[7:0]
+[pattern_trace] 1
+[pattern_trace] 0

@@ -1,0 +1,36 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Tue May  7 14:33:55 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/common/formal/gcd_prove/engine_0/trace.vcd"
+[dumpfile_mtime] "Tue May  7 14:32:46 2024"
+[dumpfile_size] 2398
+[savefile] "/home/mike/git/MJoergen/MEGA65/common/formal/gcd.gtkw"
+[timestart] 0
+[size] 1101 600
+[pos] -1 -1
+*-3.913945 34 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 249
+[signals_width] 222
+[sst_expanded] 1
+[sst_vpaned_height] 143
+@28
+gcd.clk_i
+gcd.rst_i
+gcd.s_valid_i
+gcd.s_ready_o
+@22
+gcd.s_val1_i[7:0]
+gcd.s_val2_i[7:0]
+@28
+gcd.m_valid_o
+gcd.m_ready_i
+@22
+gcd.m_res_o[7:0]
+gcd.val1[7:0]
+gcd.val2[7:0]
+@28
+gcd.state[1:0]
+gcd.shift[2:0]
+[pattern_trace] 1
+[pattern_trace] 0

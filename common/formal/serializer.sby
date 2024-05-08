@@ -1,0 +1,21 @@
+[tasks]
+cover
+prove
+
+[options]
+cover: mode cover
+cover: depth 8
+prove: mode bmc
+prove: depth 8
+
+[engines]
+smtbmc
+
+[script]
+ghdl --std=08 -gG_DATA_SIZE_IN=8 -gG_DATA_SIZE_OUT=4 serializer.vhd serializer.psl -e serializer
+prep -top serializer
+
+[files]
+serializer.psl
+../serializer.vhd
+

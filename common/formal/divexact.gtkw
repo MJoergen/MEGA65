@@ -1,0 +1,38 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Mon May  6 15:30:32 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/common/divexact_prove/engine_0/trace.vcd"
+[dumpfile_mtime] "Mon May  6 15:30:12 2024"
+[dumpfile_size] 3560
+[savefile] "/home/mike/git/MJoergen/MEGA65/common/divexact.gtkw"
+[timestart] 0
+[size] 1194 712
+[pos] -1 -1
+*-4.328037 56 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] divexact.
+[sst_width] 249
+[signals_width] 191
+[sst_expanded] 1
+[sst_vpaned_height] 182
+@28
+divexact.clk_i
+divexact.rst_i
+divexact.s_valid_i
+divexact.s_ready_o
+@22
+divexact.s_val1_i[7:0]
+divexact.s_val2_i[7:0]
+@28
+divexact.m_valid_o
+divexact.m_ready_i
+@22
+divexact.m_res_o[7:0]
+@28
+divexact.state[1:0]
+divexact.i_divexact.f_valid
+@22
+divexact.i_divexact.f_val1[7:0]
+divexact.i_divexact.f_val2[7:0]
+[pattern_trace] 1
+[pattern_trace] 0

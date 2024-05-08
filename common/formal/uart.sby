@@ -1,0 +1,21 @@
+[tasks]
+cover
+prove
+
+[options]
+cover: mode cover
+cover: depth 40
+prove: mode bmc
+prove: depth 8
+
+[engines]
+smtbmc
+
+[script]
+ghdl --std=08 -gG_DIVISOR=3 uart.vhd uart.psl -e uart
+prep -top uart
+
+[files]
+uart.psl
+../uart.vhd
+

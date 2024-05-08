@@ -1,0 +1,21 @@
+[tasks]
+cover
+prove
+
+[options]
+cover: mode cover
+cover: depth 8
+prove: mode bmc
+prove: depth 8
+
+[engines]
+smtbmc
+
+[script]
+ghdl --std=08 -gG_DATA_SIZE=8 merginator.vhd merginator.psl -e merginator
+prep -top merginator
+
+[files]
+merginator.psl
+../merginator.vhd
+

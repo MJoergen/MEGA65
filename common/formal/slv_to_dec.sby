@@ -1,0 +1,21 @@
+[tasks]
+cover
+prove
+
+[options]
+cover: mode cover
+prove: mode bmc
+prove: depth 8
+
+[engines]
+smtbmc
+
+[script]
+ghdl --std=08 -gG_DATA_SIZE=16 slv_to_dec.vhd divexact.vhd slv_to_dec.psl -e slv_to_dec
+prep -top slv_to_dec
+
+[files]
+slv_to_dec.psl
+../slv_to_dec.vhd
+../divexact.vhd
+

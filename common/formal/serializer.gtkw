@@ -1,0 +1,35 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Wed May  8 07:27:18 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/common/formal/serializer_prove/engine_0/trace.vcd"
+[dumpfile_mtime] "Wed May  8 07:26:42 2024"
+[dumpfile_size] 1166
+[savefile] "/home/mike/git/MJoergen/MEGA65/common/formal/serializer.gtkw"
+[timestart] 0
+[size] 1000 600
+[pos] -1 -1
+*-2.015825 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 249
+[signals_width] 160
+[sst_expanded] 1
+[sst_vpaned_height] 143
+@28
+serializer.clk_i
+serializer.rst_i
+serializer.s_valid_i
+serializer.s_ready_o
+@22
+serializer.s_data_i[7:0]
+@28
+serializer.m_valid_o
+serializer.m_ready_i
+@22
+serializer.m_data_o[3:0]
+@28
+serializer.state
+serializer.count
+@22
+serializer.data[7:0]
+[pattern_trace] 1
+[pattern_trace] 0

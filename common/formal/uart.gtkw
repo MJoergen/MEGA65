@@ -1,0 +1,44 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Wed May  8 06:27:03 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/common/formal/uart_prove/engine_0/trace.vcd"
+[dumpfile_mtime] "Wed May  8 06:25:41 2024"
+[dumpfile_size] 1951
+[savefile] "/home/mike/git/MJoergen/MEGA65/common/formal/uart.gtkw"
+[timestart] 0
+[size] 1617 808
+[pos] -1 -1
+*-2.209625 15 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] uart.
+[sst_width] 249
+[signals_width] 274
+[sst_expanded] 1
+[sst_vpaned_height] 216
+@28
+uart.clk_i
+uart.rst_i
+uart.uart_tx_o
+uart.uart_rx_i
+uart.tx_valid_i
+uart.tx_ready_o
+@22
+uart.tx_data_i[7:0]
+@28
+uart.rx_valid_o
+uart.rx_ready_i
+@22
+uart.rx_data_o[7:0]
+@28
+uart.tx_state
+@22
+uart.tx_data[9:0]
+uart.tx_counter[9:0]
+@28
+uart.uart_tx
+uart.rx_state
+@22
+uart.rx_counter[9:0]
+uart.rx_data[9:0]
+[pattern_trace] 1
+[pattern_trace] 0
