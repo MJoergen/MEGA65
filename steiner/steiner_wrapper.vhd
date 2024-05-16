@@ -63,6 +63,9 @@ begin
    -- User Interface
    controller_inst : entity work.controller
       generic map (
+         G_N           => G_N,
+         G_K           => G_K,
+         G_T           => G_T,
          G_RESULT_SIZE => C_RESULT_SIZE
       )
       port map (

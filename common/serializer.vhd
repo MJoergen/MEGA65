@@ -35,7 +35,8 @@ begin
 
    s_ready_o <= '1' when state = IDLE_ST else
                 '0';
-   m_data_o  <= data(G_DATA_SIZE_IN - 1 downto G_DATA_SIZE_IN - G_DATA_SIZE_OUT);
+   m_data_o  <= data(G_DATA_SIZE_IN - 1 downto G_DATA_SIZE_IN - G_DATA_SIZE_OUT) when m_valid_o = '1' else
+                (others => '0');
 
    fsm_proc : process (clk_i)
    begin

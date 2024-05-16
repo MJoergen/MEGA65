@@ -27,7 +27,7 @@ architecture simulation of tb_steiner_wrapper is
    signal   vga_blank  : std_logic;
    signal   vga_rgb    : std_logic_vector(7 downto 0);
 
-   signal   uart_tx_str : string(1 to 10);
+   signal   uart_tx_str : string(1 to 40) := (others => ' ');
 
 begin
 
@@ -62,10 +62,14 @@ begin
    begin
       if rising_edge(clk) then
          if uart_tx_valid = '1' then
-            uart_tx_str <= uart_tx_str(2 to 10) & character'val(to_integer(uart_tx_data));
+            uart_tx_str <= uart_tx_str(2 to uart_tx_str'right) & character'val(to_integer(uart_tx_data));
+         end if;
+         if uart_tx_str(uart_tx_str'right) = character'val(10) then
+            report uart_tx_str;
+            uart_tx_str <= (others => ' ');
          end if;
          if uart_rx_valid = '1' then
-            uart_tx_str <= "          ";
+            uart_tx_str <= (others => ' ');
          end if;
       end if;
    end process uart_tx_str_proc;

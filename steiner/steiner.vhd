@@ -30,7 +30,14 @@
 -- 12 | 6 | 5 || 132 |  66 |    924 |
 -- 24 | 8 | 5 || 759 | 253 | 735471 |
 --
--- For the parameters (7, 3, 2) we get 30 solutions.
+-- For the parameters (7, 3, 2) we get 30 solutions, one of which is:
+--  0 ***....
+--  9 *..**..
+-- 14 *....**
+-- 20 .*.*.*.
+-- 23 .*..*.*
+-- 27 ..**..*
+-- 28 ..*.**.
 --
 -- For the parameters (9, 3, 2) we get 840 solutions, one of which is the following.
 -- The number on the left marks which of the C_NUM_COMBS = 84 is chosen.
@@ -188,38 +195,40 @@ begin
    begin
       if rising_edge(clk_i) then
          valid_o <= '0';
-         if remove = '1' then
-            cur_index             <= positions(num_placed) + 1;
-            positions(num_placed) <= C_NUM_COMBS;
-            remove                <= '0';
-         else
-            if num_placed = C_B then
-               result_o <= (others => '0');
-               res_loop : for i in 0 to C_B - 1 loop
-                  result_o(positions(i)) <= '1';
-               end loop res_loop;
-               valid_o    <= '1';
-
-               -- We remove the previous piece
-               num_placed <= num_placed - 1;
-               remove     <= '1';
-            end if;
-
-            if cur_index < C_NUM_COMBS and valid(cur_index) = '1' then
-               -- We place the next piece
-               num_placed            <= num_placed + 1;
-               positions(num_placed) <= cur_index;
+         if step_i = '1' then
+            if remove = '1' then
+               cur_index             <= positions(num_placed) + 1;
+               positions(num_placed) <= C_NUM_COMBS;
+               remove                <= '0';
             else
-               if cur_index < C_NUM_COMBS - 1 and unsigned(valid) /= 0 then
-                  -- Go to next potential position
-                  cur_index <= cur_index + 1;
+               if num_placed = C_B then
+                  result_o <= (others => '0');
+                  res_loop : for i in 0 to C_B - 1 loop
+                     result_o(positions(i)) <= '1';
+                  end loop res_loop;
+                  valid_o    <= '1';
+
+                  -- We remove the previous piece
+                  num_placed <= num_placed - 1;
+                  remove     <= '1';
+               end if;
+
+               if cur_index < C_NUM_COMBS and valid(cur_index) = '1' then
+                  -- We place the next piece
+                  num_placed            <= num_placed + 1;
+                  positions(num_placed) <= cur_index;
                else
-                  if num_placed > 0 then
-                     -- We remove the previous piece
-                     num_placed <= num_placed - 1;
-                     remove     <= '1';
+                  if cur_index < C_NUM_COMBS - 1 and unsigned(valid) /= 0 then
+                     -- Go to next potential position
+                     cur_index <= cur_index + 1;
                   else
-                     done_o <= '1';
+                     if num_placed > 0 then
+                        -- We remove the previous piece
+                        num_placed <= num_placed - 1;
+                        remove     <= '1';
+                     else
+                        done_o <= '1';
+                     end if;
                   end if;
                end if;
             end if;
