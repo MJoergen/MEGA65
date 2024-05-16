@@ -61,7 +61,7 @@ architecture synthesis of controller is
                exit loop_j;
             end if;
             if ii_v < binom(n - j - 1, kk_v - 1) then
-               res_v(i)(j) := '1';
+               res_v(i)(G_N-1-j) := '1';
                kk_v        := kk_v - 1;
             else
                ii_v := ii_v - binom(n - j - 1, kk_v - 1);
@@ -71,17 +71,6 @@ architecture synthesis of controller is
       report "combination_init done.";
       return res_v;
    end function combination_init;
-
-   pure function reverse (
-      arg : std_logic_vector
-   ) return std_logic_vector is
-      variable res_v : std_logic_vector(arg'range);
-   begin
-      for i in arg'range loop
-         res_v(i) := arg(arg'left-arg'right-i);
-      end loop;
-      return res_v;
-   end function reverse;
 
    -- Each row contains exactly "k" ones, except the last which is just zero.
    constant C_COMBINATIONS : ram_type(G_RESULT_SIZE downto 0) := combination_init(G_N, G_K);
@@ -137,7 +126,7 @@ begin
             when ROW_ST =>
                if hex_ready = '1' and eol_ready = '1' then
                   if result(row) = '1' then
-                     hex_data  <= reverse(C_COMBINATIONS(row));
+                     hex_data  <= C_COMBINATIONS(row);
                      hex_valid <= '1';
                   end if;
                   if row < G_RESULT_SIZE then
