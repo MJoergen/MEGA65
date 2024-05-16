@@ -135,7 +135,7 @@ begin
                end if;
 
             when ROW_ST =>
-               if hex_ready = '1' then
+               if hex_ready = '1' and eol_ready = '1' then
                   if result(row) = '1' then
                      hex_data  <= reverse(C_COMBINATIONS(row));
                      hex_valid <= '1';
