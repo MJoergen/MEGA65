@@ -43,6 +43,10 @@ architecture synthesis of steiner_wrapper is
    signal steiner_result : std_logic_vector(G_N * G_B - 1 downto 0);
    signal steiner_done   : std_logic;
 
+   signal steiner_rx_valid : std_logic;
+   signal steiner_rx_ready : std_logic;
+   signal steiner_rx_data  : std_logic_vector(7 downto 0);
+
    signal sys_valid  : std_logic;
    signal sys_ready  : std_logic;
    signal sys_result : std_logic_vector(G_N * G_B - 1 downto 0);
@@ -142,10 +146,21 @@ begin
          s_valid_i => uart_rx_valid_i,
          s_data_i  => uart_rx_data_i,
          m_clk_i   => steiner_clk,
-         m_ready_i => '1',
-         m_valid_o => steiner_step,
-         m_data_o  => open
+         m_ready_i => steiner_rx_ready,
+         m_valid_o => steiner_rx_valid,
+         m_data_o  => steiner_rx_data
       ); -- axi_fifo_step_inst
+
+   controller_inst : entity work.controller
+      port map (
+         clk_i      => steiner_clk,
+         rst_i      => steiner_rst,
+         rx_valid_i => steiner_rx_valid,
+         rx_ready_o => steiner_rx_ready,
+         rx_data_i  => steiner_rx_data,
+         valid_i    => steiner_valid,
+         step_o     => steiner_step
+      ); -- controller_inst
 
    xpm_cdc_array_single_inst : component xpm_cdc_array_single
       generic map (

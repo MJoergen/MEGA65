@@ -81,6 +81,7 @@ begin
    test_proc : process
    begin
       uart_rx_valid <= '1';
+      uart_rx_data <= X"45";
       wait until rst = '0';
       wait for 2000 ns;
       wait until clk = '1';

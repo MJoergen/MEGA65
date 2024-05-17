@@ -28,6 +28,7 @@ SOURCES += ../$(PROJECT).vhd
 SOURCES += ../$(PROJECT)_wrapper.vhd
 SOURCES += ../$(PROJECT)_clk.vhd
 SOURCES += ../valid.vhd
+SOURCES += ../controller.vhd
 SOURCES += ../uart_wrapper.vhd
 SOURCES += ../vga_wrapper.vhd
 SOURCES += $(TB).vhd
