@@ -18,10 +18,10 @@ entity uart_wrapper is
       uart_tx_valid_o : out   std_logic;
       uart_tx_ready_i : in    std_logic;
       uart_tx_data_o  : out   std_logic_vector(7 downto 0);
-      result_i        : in    std_logic_vector(G_N*G_B-1 downto 0);
       valid_i         : in    std_logic;
-      done_i          : in    std_logic;
-      step_o          : out   std_logic
+      ready_o         : out   std_logic;
+      result_i        : in    std_logic_vector(G_N*G_B-1 downto 0);
+      done_i          : in    std_logic
    );
 end entity uart_wrapper;
 
@@ -50,8 +50,8 @@ begin
 
    uart_rx_ready_o <= '1';
 
-   step_o          <= '1' when uart_tx_state = IDLE_ST else
-                      '0';
+   ready_o          <= '1' when uart_tx_state = IDLE_ST else
+                       '0';
 
    uart_tx_proc : process (clk_i)
    begin

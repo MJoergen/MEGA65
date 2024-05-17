@@ -8,8 +8,8 @@ XPM_DIR = ../../../../fransschreuder/xpm_vhdl
 
 PROJECT = steiner
 
-TB       = tb_$(PROJECT)
-#TB       = tb_$(PROJECT)_wrapper
+#TB       = tb_$(PROJECT)
+TB       = tb_$(PROJECT)_wrapper
 SOURCES  = ../../common/uart.vhd
 SOURCES += ../../common/clk.vhd
 SOURCES += ../../common/serializer.vhd
@@ -22,8 +22,10 @@ SOURCES += ../../common/kb_matrix_ram.vhd
 SOURCES += ../../common/video_sync.vhd
 SOURCES += ../../common/video_modes_pkg.vhd
 SOURCES += ../../common/font.vhd
+SOURCES += ../../common/axi_fifo.vhd
 SOURCES += ../$(PROJECT).vhd
 SOURCES += ../$(PROJECT)_wrapper.vhd
+SOURCES += ../$(PROJECT)_clk.vhd
 SOURCES += ../valid.vhd
 SOURCES += ../uart_wrapper.vhd
 SOURCES += $(TB).vhd
@@ -45,7 +47,7 @@ GENERICS += -gG_N=$(VAL_N) -gG_K=$(VAL_K) -gG_T=$(VAL_T) -gG_B=$(VAL_B)
 sim: $(SOURCES) unisim-obj08.cf xpm-obj08.cf
 	ghdl -i --std=08 -frelaxed-rules -fsynopsys $(SOURCES)
 	ghdl -m --std=08 -frelaxed-rules -fsynopsys $(TB)
-	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) $(GENERICS) --wave=$(WAVE) --stop-time=1100ms
+	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) $(GENERICS) --wave=$(WAVE) --stop-time=120us
 
 unisim-obj08.cf:
 	ghdl -i --std=08 --work=unisim -frelaxed-rules -fsynopsys $(XILINX_DIR)/data/vhdl/src/unisims/unisim_VCOMP.vhd

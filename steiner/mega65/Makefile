@@ -6,6 +6,7 @@ SRCS  = $(PROJECT)_mega65.vhd
 SRCS += ../valid.vhd
 SRCS += ../uart_wrapper.vhd
 SRCS += ../$(PROJECT).vhd
+SRCS += ../$(PROJECT)_clk.vhd
 SRCS += ../$(PROJECT)_wrapper.vhd
 SRCS += ../../common/clk.vhd
 SRCS += ../../common/uart.vhd
@@ -19,6 +20,7 @@ SRCS += ../../common/kb_matrix_ram.vhd
 SRCS += ../../common/video_sync.vhd
 SRCS += ../../common/video_modes_pkg.vhd
 SRCS += ../../common/axi_merger.vhd
+SRCS += ../../common/axi_fifo.vhd
 
 XDC = ../../common/mega65.xdc
 
@@ -29,7 +31,7 @@ $(PROJECT)_mega65.tcl: Makefile
 	echo "# This is a tcl command script for the Vivado tool chain" > $@
 	echo "read_vhdl -vhdl2008 { $(SRCS) }" >> $@
 	echo "read_xdc $(XDC)" >> $@
-	echo "set_property XPM_LIBRARIES {XPM_CDC} [current_project]" >> $@
+	echo "set_property XPM_LIBRARIES {XPM_CDC XPM_FIFO} [current_project]" >> $@
 	echo "synth_design -top $(PROJECT)_mega65 -part xc7a200tfbg484-2 -flatten_hierarchy none" >> $@
 	echo "write_checkpoint -force post_synth.dcp" >> $@
 	echo "source ../../common/debug.tcl" >> $@

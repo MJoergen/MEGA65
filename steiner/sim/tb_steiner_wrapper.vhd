@@ -90,6 +90,7 @@ begin
 
       running       <= '0';
       report "Test finished";
+      wait;
    end process test_proc;
 
 end architecture simulation;
