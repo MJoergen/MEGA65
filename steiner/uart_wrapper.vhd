@@ -4,10 +4,10 @@ library ieee;
 
 entity uart_wrapper is
    generic (
-      G_N           : natural;
-      G_K           : natural;
-      G_T           : natural;
-      G_B           : natural
+      G_N : natural;
+      G_K : natural;
+      G_T : natural;
+      G_B : natural
    );
    port (
       clk_i           : in    std_logic;
@@ -20,38 +20,40 @@ entity uart_wrapper is
       uart_tx_data_o  : out   std_logic_vector(7 downto 0);
       valid_i         : in    std_logic;
       ready_o         : out   std_logic;
-      result_i        : in    std_logic_vector(G_N*G_B-1 downto 0);
+      result_i        : in    std_logic_vector(G_N * G_B - 1 downto 0);
       done_i          : in    std_logic
    );
 end entity uart_wrapper;
 
 architecture synthesis of uart_wrapper is
 
-   type     uart_tx_state_type is (IDLE_ST, ROW_ST, EOL_ST, END_ST);
-   signal   uart_tx_state : uart_tx_state_type                := IDLE_ST;
+   type   uart_tx_state_type is (IDLE_ST, ROW_ST, EOL_ST, END_ST);
+   signal uart_tx_state : uart_tx_state_type := IDLE_ST;
 
-   signal   row    : natural range 0 to G_B-1;
-   signal   result : std_logic_vector(G_N*G_B-1 downto 0);
+   signal row    : natural range 0 to G_B - 1;
+   signal result : std_logic_vector(G_N * G_B - 1 downto 0);
 
-   signal   hex_valid : std_logic;
-   signal   hex_ready : std_logic;
-   signal   hex_data  : std_logic_vector(G_N - 1 downto 0);
-   signal   ser_data  : std_logic_vector(8 * G_N - 1 downto 0);
+   signal hex_valid : std_logic;
+   signal hex_ready : std_logic;
+   signal hex_data  : std_logic_vector(G_N - 1 downto 0);
+   signal ser_data  : std_logic_vector(8 * G_N - 1 downto 0);
 
-   signal   eol_valid : std_logic;
-   signal   eol_ready : std_logic;
+   signal eol_valid : std_logic;
+   signal eol_ready : std_logic;
 
-   signal   uart_tx_hex_valid : std_logic;
-   signal   uart_tx_hex_data  : std_logic_vector(7 downto 0);
-   signal   uart_tx_eol_valid : std_logic;
-   signal   uart_tx_eol_data  : std_logic_vector(7 downto 0);
+   signal uart_tx_hex_valid : std_logic;
+   signal uart_tx_hex_data  : std_logic_vector(7 downto 0);
+   signal uart_tx_eol_valid : std_logic;
+   signal uart_tx_eol_data  : std_logic_vector(7 downto 0);
+
+   signal result_count : natural range 0 to 1023;
 
 begin
 
    uart_rx_ready_o <= '1';
 
-   ready_o          <= '1' when uart_tx_state = IDLE_ST else
-                       '0';
+   ready_o         <= '1' when uart_tx_state = IDLE_ST else
+                      '0';
 
    uart_tx_proc : process (clk_i)
    begin
@@ -70,16 +72,16 @@ begin
                   result        <= result_i;
                   row           <= 0;
                   uart_tx_state <= ROW_ST;
-               end if;
-               if done_i = '1' then
+                  result_count  <= result_count + 1;
+               elsif done_i = '1' then
                   uart_tx_state <= END_ST;
                end if;
 
             when ROW_ST =>
                if hex_ready = '1' and eol_ready = '1' then
-                  hex_data <= result(G_N*(row+1)-1 downto G_N*row);
+                  hex_data  <= result(G_N * (row + 1) - 1 downto G_N * row);
                   hex_valid <= '1';
-                  if row < G_B-1 then
+                  if row < G_B - 1 then
                      row <= row + 1;
                   else
                      uart_tx_state <= EOL_ST;
@@ -101,6 +103,7 @@ begin
          end case;
 
          if rst_i = '1' then
+            result_count  <= 0;
             uart_tx_state <= IDLE_ST;
          end if;
       end if;
