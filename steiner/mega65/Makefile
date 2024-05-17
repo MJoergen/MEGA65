@@ -22,6 +22,13 @@ SRCS += ../../common/video_modes_pkg.vhd
 SRCS += ../../common/axi_merger.vhd
 SRCS += ../../common/axi_fifo.vhd
 
+VAL_N = 9
+VAL_K = 3
+VAL_T = 2
+VAL_B = 12
+
+GENERICS += -generic G_N=$(VAL_N) -generic G_K=$(VAL_K) -generic G_T=$(VAL_T) -generic G_B=$(VAL_B)
+
 XDC = ../../common/mega65.xdc
 
 $(PROJECT)_mega65.bit: $(PROJECT)_mega65.tcl $(SRCS) $(XDC) Makefile
@@ -32,7 +39,7 @@ $(PROJECT)_mega65.tcl: Makefile
 	echo "read_vhdl -vhdl2008 { $(SRCS) }" >> $@
 	echo "read_xdc $(XDC)" >> $@
 	echo "set_property XPM_LIBRARIES {XPM_CDC XPM_FIFO} [current_project]" >> $@
-	echo "synth_design -top $(PROJECT)_mega65 -part xc7a200tfbg484-2 -flatten_hierarchy none" >> $@
+	echo "synth_design -top $(PROJECT)_mega65 -part xc7a200tfbg484-2 -flatten_hierarchy none $(GENERICS)" >> $@
 	echo "write_checkpoint -force post_synth.dcp" >> $@
 	echo "source ../../common/debug.tcl" >> $@
 	echo "opt_design" >> $@

@@ -7,7 +7,8 @@ library work;
 
 entity mega65 is
    generic (
-      G_VIDEO_MODE : video_modes_type
+      G_UART_DIVISOR : natural;
+      G_VIDEO_MODE   : video_modes_type
    );
    port (
       -- MEGA65 I/O ports
@@ -151,7 +152,7 @@ begin
 
    uart_inst : entity work.uart
       generic map (
-         G_DIVISOR => 100000000 / 115200
+         G_DIVISOR => G_UART_DIVISOR
       )
       port map (
          clk_i      => clk_o,

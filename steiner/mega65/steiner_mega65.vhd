@@ -10,10 +10,10 @@ library work;
 
 entity steiner_mega65 is
    generic (
-      G_N : natural := 7;
-      G_K : natural := 3;
-      G_T : natural := 2;
-      G_B : natural := 7
+      G_N : natural;
+      G_K : natural;
+      G_T : natural;
+      G_B : natural
    );
    port (
       -- Clock
@@ -60,7 +60,9 @@ begin
 
    mega65_inst : entity work.mega65
       generic map (
-         G_VIDEO_MODE => C_VIDEO_MODE
+         --G_UART_DIVISOR => 100_000_000 / 115_200,
+         G_UART_DIVISOR => 100_000_000 / 2_000_000,
+         G_VIDEO_MODE   => C_VIDEO_MODE
       )
       port map (
          -- MEGA65 I/O ports
