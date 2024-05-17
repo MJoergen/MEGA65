@@ -100,14 +100,14 @@ entity steiner is
       G_N           : natural;
       G_K           : natural;
       G_T           : natural;
-      G_RESULT_SIZE : natural
+      G_B           : natural
    );
    port (
       clk_i    : in    std_logic;
       rst_i    : in    std_logic;
       step_i   : in    std_logic;
       valid_o  : out   std_logic;
-      result_o : out   std_logic_vector(G_RESULT_SIZE downto 0);
+      result_o : out   std_logic_vector(G_N*G_B-1 downto 0);
       done_o   : out   std_logic
    );
 end entity steiner;
@@ -145,9 +145,72 @@ architecture synthesis of steiner is
 
    signal   remove : std_logic;
 
+   -- Count number of 1's in a vector
+
+   pure function count_ones (
+      arg : std_logic_vector
+   ) return natural is
+      variable res_v : natural := 0;
+   begin
+      for i in arg'low to arg'high loop
+         if arg(i) = '1' then
+            res_v := res_v + 1;
+         end if;
+      end loop;
+      return res_v;
+   end function count_ones;
+
+   -- Each row has length "n".
+   type     ram_type is array (natural range <>) of std_logic_vector(G_N - 1 downto 0);
+
+   -- This calculates an array of all possible combinations of N choose K.
+
+   pure function combination_init (
+      n : natural;
+      k : natural
+   ) return ram_type is
+      variable res_v : ram_type(C_NUM_COMBS downto 0) := (others => (others => '0'));
+      variable kk_v  : natural                       := k;
+      variable ii_v  : natural                       := 0;
+   begin
+      report "combination_init: n=" & to_string(n) & ", k=" & to_string(k);
+      loop_i : for i in 0 to C_NUM_COMBS - 1 loop
+         kk_v := k;
+         ii_v := i;
+         loop_j : for j in 0 to G_N - 1 loop
+            if kk_v = 0 then
+               exit loop_j;
+            end if;
+            if ii_v < binom(n - j - 1, kk_v - 1) then
+               res_v(i)(j) := '1';
+               kk_v        := kk_v - 1;
+            else
+               ii_v := ii_v - binom(n - j - 1, kk_v - 1);
+            end if;
+         end loop loop_j;
+         assert (count_ones(res_v(i)) = G_K);
+      end loop loop_i;
+      report "combination_init done.";
+      return res_v;
+   end function combination_init;
+
+   -- Each row contains exactly "k" ones, except the last which is just zero.
+   constant C_COMBINATIONS : ram_type(C_NUM_COMBS downto 0) := combination_init(G_N, G_K);
+
+   pure function reverse(arg : std_logic_vector) return std_logic_vector is
+      variable res_v : std_logic_vector(arg'range);
+   begin
+      for i in arg'range loop
+         res_v(i) := arg(arg'left-arg'right-i);
+      end loop;
+      return res_v;
+   end function reverse;
+
 begin
 
-   assert G_RESULT_SIZE = C_NUM_COMBS;
+   assert G_B = C_B
+      report "Incompatible values. Expected G_B=" & to_string(C_B)
+         severity failure;
 
    valid_vec_gen : for i in 0 to C_B - 1 generate
 
@@ -204,7 +267,7 @@ begin
                if num_placed = C_B then
                   result_o <= (others => '0');
                   res_loop : for i in 0 to C_B - 1 loop
-                     result_o(positions(i)) <= '1';
+                     result_o(G_N*(i+1)-1 downto G_N*i) <= reverse(C_COMBINATIONS(positions(i)));
                   end loop res_loop;
                   valid_o    <= '1';
 

@@ -10,9 +10,10 @@ library work;
 
 entity steiner_mega65 is
    generic (
-      G_N : natural := 9;
+      G_N : natural := 7;
       G_K : natural := 3;
-      G_T : natural := 2
+      G_T : natural := 2;
+      G_B : natural := 7
    );
    port (
       -- Clock
@@ -98,7 +99,8 @@ begin
       generic map (
          G_N           => G_N,
          G_K           => G_K,
-         G_T           => G_T
+         G_T           => G_T,
+         G_B           => G_B
       )
       port map (
          clk_i           => clk,

@@ -25,11 +25,17 @@ SOURCES += ../../common/font.vhd
 SOURCES += ../$(PROJECT).vhd
 SOURCES += ../$(PROJECT)_wrapper.vhd
 SOURCES += ../valid.vhd
-SOURCES += ../controller.vhd
+SOURCES += ../uart_wrapper.vhd
 SOURCES += $(TB).vhd
 SAVE     = $(TB).gtkw
 WAVE     = $(TB).ghw
 
+VAL_N = 7
+VAL_K = 3
+VAL_T = 2
+VAL_B = 7
+
+GENERICS += -gG_N=$(VAL_N) -gG_K=$(VAL_K) -gG_T=$(VAL_T) -gG_B=$(VAL_B)
 
 #####################################
 # Simulation
@@ -39,7 +45,7 @@ WAVE     = $(TB).ghw
 sim: $(SOURCES) unisim-obj08.cf xpm-obj08.cf
 	ghdl -i --std=08 -frelaxed-rules -fsynopsys $(SOURCES)
 	ghdl -m --std=08 -frelaxed-rules -fsynopsys $(TB)
-	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) --wave=$(WAVE) --stop-time=1100ms
+	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) $(GENERICS) --wave=$(WAVE) --stop-time=1100ms
 
 unisim-obj08.cf:
 	ghdl -i --std=08 --work=unisim -frelaxed-rules -fsynopsys $(XILINX_DIR)/data/vhdl/src/unisims/unisim_VCOMP.vhd

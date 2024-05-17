@@ -2,12 +2,12 @@ library ieee;
    use ieee.std_logic_1164.all;
    use ieee.numeric_std_unsigned.all;
 
-entity controller is
+entity uart_wrapper is
    generic (
       G_N           : natural;
       G_K           : natural;
       G_T           : natural;
-      G_RESULT_SIZE : integer
+      G_B           : natural
    );
    port (
       clk_i           : in    std_logic;
@@ -18,68 +18,20 @@ entity controller is
       uart_tx_valid_o : out   std_logic;
       uart_tx_ready_i : in    std_logic;
       uart_tx_data_o  : out   std_logic_vector(7 downto 0);
-      result_i        : in    std_logic_vector(G_RESULT_SIZE downto 0);
+      result_i        : in    std_logic_vector(G_N*G_B-1 downto 0);
       valid_i         : in    std_logic;
       done_i          : in    std_logic;
       step_o          : out   std_logic
    );
-end entity controller;
+end entity uart_wrapper;
 
-architecture synthesis of controller is
-
-   pure function binom (
-      n : natural;
-      k : natural
-   ) return natural is
-      variable res_v : natural := 1;
-   begin
-      for i in 1 to k loop
-         res_v := (res_v * (n + 1 - i)) / i; -- This division will never cause fractions
-      end loop;
-      return res_v;
-   end function binom;
-
-   -- Each row has length "n".
-   type     ram_type is array (natural range <>) of std_logic_vector(G_N - 1 downto 0);
-
-   -- This calculates an array of all possible combinations of N choose K.
-
-   pure function combination_init (
-      n : natural;
-      k : natural
-   ) return ram_type is
-      variable res_v : ram_type(G_RESULT_SIZE downto 0) := (others => (others => '0'));
-      variable kk_v  : natural                          := k;
-      variable ii_v  : natural                          := 0;
-   begin
-      report "combination_init: n=" & to_string(n) & ", k=" & to_string(k);
-      loop_i : for i in 0 to G_RESULT_SIZE - 1 loop
-         kk_v := k;
-         ii_v := i;
-         loop_j : for j in 0 to G_N - 1 loop
-            if kk_v = 0 then
-               exit loop_j;
-            end if;
-            if ii_v < binom(n - j - 1, kk_v - 1) then
-               res_v(i)(G_N-1-j) := '1';
-               kk_v        := kk_v - 1;
-            else
-               ii_v := ii_v - binom(n - j - 1, kk_v - 1);
-            end if;
-         end loop loop_j;
-      end loop loop_i;
-      report "combination_init done.";
-      return res_v;
-   end function combination_init;
-
-   -- Each row contains exactly "k" ones, except the last which is just zero.
-   constant C_COMBINATIONS : ram_type(G_RESULT_SIZE downto 0) := combination_init(G_N, G_K);
+architecture synthesis of uart_wrapper is
 
    type     uart_tx_state_type is (IDLE_ST, ROW_ST, EOL_ST, END_ST);
    signal   uart_tx_state : uart_tx_state_type                := IDLE_ST;
 
-   signal   row    : natural range 0 to G_RESULT_SIZE;
-   signal   result : std_logic_vector(G_RESULT_SIZE downto 0);
+   signal   row    : natural range 0 to G_B-1;
+   signal   result : std_logic_vector(G_N*G_B-1 downto 0);
 
    signal   hex_valid : std_logic;
    signal   hex_ready : std_logic;
@@ -125,11 +77,9 @@ begin
 
             when ROW_ST =>
                if hex_ready = '1' and eol_ready = '1' then
-                  if result(row) = '1' then
-                     hex_data  <= C_COMBINATIONS(row);
-                     hex_valid <= '1';
-                  end if;
-                  if row < G_RESULT_SIZE then
+                  hex_data <= result(G_N*(row+1)-1 downto G_N*row);
+                  hex_valid <= '1';
+                  if row < G_B-1 then
                      row <= row + 1;
                   else
                      uart_tx_state <= EOL_ST;
@@ -137,7 +87,7 @@ begin
                end if;
 
             when EOL_ST =>
-               if hex_ready = '1' then
+               if hex_ready = '1' and hex_valid = '0' then
                   if eol_valid = '1' then
                      uart_tx_state <= IDLE_ST;
                   else

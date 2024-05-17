@@ -4,7 +4,7 @@ PROJECT = steiner
 
 SRCS  = $(PROJECT)_mega65.vhd
 SRCS += ../valid.vhd
-SRCS += ../controller.vhd
+SRCS += ../uart_wrapper.vhd
 SRCS += ../$(PROJECT).vhd
 SRCS += ../$(PROJECT)_wrapper.vhd
 SRCS += ../../common/clk.vhd

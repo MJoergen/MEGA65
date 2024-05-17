@@ -3,31 +3,33 @@ library ieee;
    use ieee.numeric_std_unsigned.all;
 
 entity tb_steiner_wrapper is
+   generic (
+      G_N : natural;
+      G_K : natural;
+      G_T : natural;
+      G_B : natural
+   );
 end entity tb_steiner_wrapper;
 
 architecture simulation of tb_steiner_wrapper is
 
-   constant C_N : natural             := 7;
-   constant C_K : natural             := 3;
-   constant C_T : natural             := 2;
+   signal running       : std_logic     := '1';
+   signal clk           : std_logic     := '1';
+   signal rst           : std_logic     := '1';
+   signal uart_rx_valid : std_logic;
+   signal uart_rx_ready : std_logic;
+   signal uart_rx_data  : std_logic_vector(7 downto 0);
+   signal uart_tx_valid : std_logic;
+   signal uart_tx_ready : std_logic;
+   signal uart_tx_data  : std_logic_vector(7 downto 0);
 
-   signal   running       : std_logic := '1';
-   signal   clk           : std_logic := '1';
-   signal   rst           : std_logic := '1';
-   signal   uart_rx_valid : std_logic;
-   signal   uart_rx_ready : std_logic;
-   signal   uart_rx_data  : std_logic_vector(7 downto 0);
-   signal   uart_tx_valid : std_logic;
-   signal   uart_tx_ready : std_logic;
-   signal   uart_tx_data  : std_logic_vector(7 downto 0);
+   signal vga_clk    : std_logic        := '1';
+   signal vga_hcount : std_logic_vector(10 downto 0);
+   signal vga_vcount : std_logic_vector(10 downto 0);
+   signal vga_blank  : std_logic;
+   signal vga_rgb    : std_logic_vector(7 downto 0);
 
-   signal   vga_clk    : std_logic    := '1';
-   signal   vga_hcount : std_logic_vector(10 downto 0);
-   signal   vga_vcount : std_logic_vector(10 downto 0);
-   signal   vga_blank  : std_logic;
-   signal   vga_rgb    : std_logic_vector(7 downto 0);
-
-   signal   uart_tx_str : string(1 to 40) := (others => ' ');
+   signal uart_tx_str : string(1 to 40) := (others => ' ');
 
 begin
 
@@ -36,9 +38,10 @@ begin
 
    steiner_wrapper_inst : entity work.steiner_wrapper
       generic map (
-         G_N => C_N,
-         G_K => C_K,
-         G_T => C_T
+         G_N => G_N,
+         G_K => G_K,
+         G_T => G_T,
+         G_B => G_B
       )
       port map (
          clk_i           => clk,
