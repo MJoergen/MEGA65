@@ -5,6 +5,7 @@ PROJECT = steiner
 SRCS  = $(PROJECT)_mega65.vhd
 SRCS += ../valid.vhd
 SRCS += ../uart_wrapper.vhd
+SRCS += ../vga_wrapper.vhd
 SRCS += ../$(PROJECT).vhd
 SRCS += ../$(PROJECT)_clk.vhd
 SRCS += ../$(PROJECT)_wrapper.vhd
@@ -21,6 +22,8 @@ SRCS += ../../common/video_sync.vhd
 SRCS += ../../common/video_modes_pkg.vhd
 SRCS += ../../common/axi_merger.vhd
 SRCS += ../../common/axi_fifo.vhd
+SRCS += ../../common/vga_chars.vhd
+SRCS += ../../common/font.vhd
 
 VAL_N = 9
 VAL_K = 3

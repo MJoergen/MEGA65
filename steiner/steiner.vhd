@@ -97,17 +97,17 @@ library std;
 
 entity steiner is
    generic (
-      G_N           : natural;
-      G_K           : natural;
-      G_T           : natural;
-      G_B           : natural
+      G_N : natural;
+      G_K : natural;
+      G_T : natural;
+      G_B : natural
    );
    port (
       clk_i    : in    std_logic;
       rst_i    : in    std_logic;
       step_i   : in    std_logic;
       valid_o  : out   std_logic;
-      result_o : out   std_logic_vector(G_N*G_B-1 downto 0);
+      result_o : out   std_logic_vector(G_N * G_B - 1 downto 0);
       done_o   : out   std_logic
    );
 end entity steiner;
@@ -122,22 +122,24 @@ architecture synthesis of steiner is
    ) return natural is
       variable res_v : natural := 1;
    begin
+      --
       for i in 1 to k loop
          res_v := (res_v * (n + 1 - i)) / i; -- This division will never cause fractions
       end loop;
+
       return res_v;
    end function binom;
 
-   constant C_NUM_COMBS : natural               := binom(G_N, G_K);
-   constant C_B         : natural               := binom(G_N, G_T) / binom(G_K, G_T);
-   constant C_R         : natural               := binom(G_N - 1, G_T - 1) / binom(G_K - 1, G_T - 1);
+   constant C_NUM_COMBS : natural                           := binom(G_N, G_K);
+   constant C_B         : natural                           := binom(G_N, G_T) / binom(G_K, G_T);
+   constant C_R         : natural                           := binom(G_N - 1, G_T - 1) / binom(G_K - 1, G_T - 1);
 
    signal   cur_index : natural range 0 to C_NUM_COMBS;
 
    signal   valid : std_logic_vector(C_NUM_COMBS - 1 downto 0);
 
    type     pos_type is array (natural range <>) of natural range 0 to C_NUM_COMBS;
-   signal   positions  : pos_type(0 to C_B - 1) := (others => C_NUM_COMBS);
+   signal   positions  : pos_type(0 to C_B - 1)             := (others => C_NUM_COMBS);
    signal   num_placed : natural range 0 to C_B;
 
    type     valid_type is array (natural range <>) of std_logic_vector(C_NUM_COMBS - 1 downto 0);
@@ -152,11 +154,13 @@ architecture synthesis of steiner is
    ) return natural is
       variable res_v : natural := 0;
    begin
+      --
       for i in arg'low to arg'high loop
          if arg(i) = '1' then
             res_v := res_v + 1;
          end if;
       end loop;
+
       return res_v;
    end function count_ones;
 
@@ -170,13 +174,15 @@ architecture synthesis of steiner is
       k : natural
    ) return ram_type is
       variable res_v : ram_type(C_NUM_COMBS downto 0) := (others => (others => '0'));
-      variable kk_v  : natural                       := k;
-      variable ii_v  : natural                       := 0;
+      variable kk_v  : natural                        := k;
+      variable ii_v  : natural                        := 0;
    begin
       report "combination_init: n=" & to_string(n) & ", k=" & to_string(k);
+
       loop_i : for i in 0 to C_NUM_COMBS - 1 loop
          kk_v := k;
          ii_v := i;
+
          loop_j : for j in 0 to G_N - 1 loop
             if kk_v = 0 then
                exit loop_j;
@@ -188,8 +194,10 @@ architecture synthesis of steiner is
                ii_v := ii_v - binom(n - j - 1, kk_v - 1);
             end if;
          end loop loop_j;
+
          assert (count_ones(res_v(i)) = G_K);
       end loop loop_i;
+
       report "combination_init done.";
       return res_v;
    end function combination_init;
@@ -197,12 +205,16 @@ architecture synthesis of steiner is
    -- Each row contains exactly "k" ones, except the last which is just zero.
    constant C_COMBINATIONS : ram_type(C_NUM_COMBS downto 0) := combination_init(G_N, G_K);
 
-   pure function reverse(arg : std_logic_vector) return std_logic_vector is
+   pure function reverse (
+      arg : std_logic_vector
+   ) return std_logic_vector is
       variable res_v : std_logic_vector(arg'range);
    begin
+      --
       for i in arg'range loop
          res_v(i) := arg(arg'left-arg'right-i);
       end loop;
+
       return res_v;
    end function reverse;
 
@@ -210,7 +222,7 @@ begin
 
    assert G_B = C_B
       report "Incompatible values. Expected G_B=" & to_string(C_B)
-         severity failure;
+      severity failure;
 
    valid_vec_gen : for i in 0 to C_B - 1 generate
 
@@ -232,6 +244,7 @@ begin
       variable tmp_v : std_logic_vector(C_NUM_COMBS - 1 downto 0);
    begin
       tmp_v := (others => '1');
+
       for i in 0 to C_B - 1 loop
          tmp_v := tmp_v and valid_vec(i);
 
@@ -251,13 +264,24 @@ begin
             end if;
          end if;
       end loop;
+
       valid <= tmp_v;
    end process valid_proc;
 
    main_proc : process (clk_i)
    begin
       if rising_edge(clk_i) then
-         valid_o <= '0';
+         valid_o  <= '0';
+
+         result_o <= (others => '0');
+
+         res_loop : for i in 0 to C_B - 1 loop
+            result_o(G_N * (i + 1) - 1 downto G_N * i) <= reverse(C_COMBINATIONS(positions(i)));
+            if num_placed = i then
+               result_o(G_N * (i + 1) - 1 downto G_N * i) <= reverse(C_COMBINATIONS(cur_index));
+            end if;
+         end loop res_loop;
+
          if step_i = '1' then
             if remove = '1' then
                cur_index             <= positions(num_placed) + 1;
@@ -265,10 +289,6 @@ begin
                remove                <= '0';
             else
                if num_placed = C_B then
-                  result_o <= (others => '0');
-                  res_loop : for i in 0 to C_B - 1 loop
-                     result_o(G_N*(i+1)-1 downto G_N*i) <= reverse(C_COMBINATIONS(positions(i)));
-                  end loop res_loop;
                   valid_o    <= '1';
 
                   -- We remove the previous piece

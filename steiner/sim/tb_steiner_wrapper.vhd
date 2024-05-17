@@ -38,6 +38,7 @@ begin
 
    steiner_wrapper_inst : entity work.steiner_wrapper
       generic map (
+         G_FONT_PATH  => "../../common/",
          G_N => G_N,
          G_K => G_K,
          G_T => G_T,
@@ -71,7 +72,7 @@ begin
             report uart_tx_str;
             uart_tx_str <= (others => ' ');
          end if;
-         if uart_rx_valid = '1' then
+         if rst = '1' then
             uart_tx_str <= (others => ' ');
          end if;
       end if;
@@ -79,9 +80,9 @@ begin
 
    test_proc : process
    begin
-      uart_rx_valid <= '0';
+      uart_rx_valid <= '1';
       wait until rst = '0';
-      wait for 200 ns;
+      wait for 2000 ns;
       wait until clk = '1';
 
       assert uart_rx_ready = '1';

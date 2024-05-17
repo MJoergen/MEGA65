@@ -5,15 +5,13 @@ library ieee;
 library xpm;
    use xpm.vcomponents.all;
 
-library work;
-   use work.video_modes_pkg.all;
-
 entity steiner_wrapper is
    generic (
-      G_N : natural;
-      G_K : natural;
-      G_T : natural;
-      G_B : natural
+      G_FONT_PATH : string := "";
+      G_N         : natural;
+      G_K         : natural;
+      G_T         : natural;
+      G_B         : natural
    );
    port (
       clk_i           : in    std_logic;
@@ -37,19 +35,20 @@ end entity steiner_wrapper;
 
 architecture synthesis of steiner_wrapper is
 
-   constant C_VIDEO_MODE : video_modes_type := C_VIDEO_MODE_1280_720_60;
+   signal steiner_clk    : std_logic;
+   signal steiner_rst    : std_logic;
+   signal steiner_valid  : std_logic;
+   signal steiner_ready  : std_logic;
+   signal steiner_step   : std_logic;
+   signal steiner_result : std_logic_vector(G_N * G_B - 1 downto 0);
+   signal steiner_done   : std_logic;
 
-   signal   steiner_clk    : std_logic;
-   signal   steiner_rst    : std_logic;
-   signal   steiner_valid  : std_logic;
-   signal   steiner_step   : std_logic;
-   signal   steiner_result : std_logic_vector(G_N * G_B - 1 downto 0);
-   signal   steiner_done   : std_logic;
+   signal sys_valid  : std_logic;
+   signal sys_ready  : std_logic;
+   signal sys_result : std_logic_vector(G_N * G_B - 1 downto 0);
+   signal sys_done   : std_logic;
 
-   signal   sys_valid  : std_logic;
-   signal   sys_ready  : std_logic;
-   signal   sys_result : std_logic_vector(G_N * G_B - 1 downto 0);
-   signal   sys_done   : std_logic;
+   signal vga_result : std_logic_vector(G_N * G_B - 1 downto 0);
 
 begin
 
@@ -71,7 +70,7 @@ begin
       port map (
          clk_i    => steiner_clk,
          rst_i    => steiner_rst,
-         step_i   => steiner_step,
+         step_i   => steiner_step and steiner_ready,
          result_o => steiner_result,
          valid_o  => steiner_valid,
          done_o   => steiner_done
@@ -85,7 +84,7 @@ begin
       port map (
          s_clk_i   => steiner_clk,
          s_rst_i   => steiner_rst,
-         s_ready_o => steiner_step,
+         s_ready_o => steiner_ready,
          s_valid_i => steiner_valid,
          s_data_i  => steiner_result,
          m_clk_i   => clk_i,
@@ -119,9 +118,9 @@ begin
       port map (
          clk_i           => clk_i,
          rst_i           => rst_i,
-         uart_rx_valid_i => uart_rx_valid_i,
-         uart_rx_ready_o => uart_rx_ready_o,
-         uart_rx_data_i  => uart_rx_data_i,
+         uart_rx_valid_i => '0',
+         uart_rx_ready_o => open,
+         uart_rx_data_i  => (others => '0'),
          uart_tx_valid_o => uart_tx_valid_o,
          uart_tx_ready_i => uart_tx_ready_i,
          uart_tx_data_o  => uart_tx_data_o,
@@ -130,6 +129,56 @@ begin
          result_i        => sys_result,
          done_i          => sys_done
       ); -- uart_wrapper_inst
+
+   axi_fifo_step_inst : entity work.axi_fifo
+      generic map (
+         G_DEPTH     => 16,
+         G_DATA_SIZE => 8
+      )
+      port map (
+         s_clk_i   => clk_i,
+         s_rst_i   => rst_i,
+         s_ready_o => uart_rx_ready_o,
+         s_valid_i => uart_rx_valid_i,
+         s_data_i  => uart_rx_data_i,
+         m_clk_i   => steiner_clk,
+         m_ready_i => '1',
+         m_valid_o => steiner_step,
+         m_data_o  => open
+      ); -- axi_fifo_step_inst
+
+   xpm_cdc_array_single_inst : component xpm_cdc_array_single
+      generic map (
+         DEST_SYNC_FF   => 10,
+         INIT_SYNC_FF   => 1,
+         SIM_ASSERT_CHK => 1,
+         SRC_INPUT_REG  => 1,
+         WIDTH          => G_N * G_B
+      )
+      port map (
+         src_clk  => steiner_clk,
+         src_in   => steiner_result,
+         dest_clk => vga_clk_i,
+         dest_out => vga_result
+      ); -- xpm_cdc_array_single_inst
+
+   -- VGA Interface
+   vga_wrapper_inst : entity work.vga_wrapper
+      generic map (
+         G_FONT_PATH => G_FONT_PATH,
+         G_N         => G_N,
+         G_K         => G_K,
+         G_T         => G_T,
+         G_B         => G_B
+      )
+      port map (
+         vga_clk_i    => vga_clk_i,
+         vga_hcount_i => vga_hcount_i,
+         vga_vcount_i => vga_vcount_i,
+         vga_blank_i  => vga_blank_i,
+         vga_rgb_o    => vga_rgb_o,
+         vga_result_i => vga_result
+      ); -- vga_wrapper_inst
 
 end architecture synthesis;
 
