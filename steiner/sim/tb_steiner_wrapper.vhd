@@ -24,6 +24,7 @@ architecture simulation of tb_steiner_wrapper is
    signal uart_tx_data  : std_logic_vector(7 downto 0);
 
    signal vga_clk    : std_logic        := '1';
+   signal vga_rst    : std_logic        := '1';
    signal vga_hcount : std_logic_vector(10 downto 0);
    signal vga_vcount : std_logic_vector(10 downto 0);
    signal vga_blank  : std_logic;
@@ -54,6 +55,7 @@ begin
          uart_tx_ready_i => uart_tx_ready,
          uart_tx_data_o  => uart_tx_data,
          vga_clk_i       => vga_clk,
+         vga_rst_i       => vga_rst,
          vga_hcount_i    => vga_hcount,
          vga_vcount_i    => vga_vcount,
          vga_blank_i     => vga_blank,

@@ -51,6 +51,7 @@ architecture synthesis of steiner_mega65 is
    signal   uart_rx_data  : std_logic_vector(7 downto 0);
 
    signal   vga_clk    : std_logic;
+   signal   vga_rst    : std_logic;
    signal   vga_hcount : std_logic_vector(10 downto 0);
    signal   vga_vcount : std_logic_vector(10 downto 0);
    signal   vga_blank  : std_logic;
@@ -83,6 +84,7 @@ begin
          vdac_sync_n_o   => vdac_sync_n_o,
          -- Connection to design
          vga_clk_o       => vga_clk,
+         vga_rst_o       => vga_rst,
          vga_hcount_o    => vga_hcount,
          vga_vcount_o    => vga_vcount,
          vga_blank_o     => vga_blank,
@@ -114,6 +116,7 @@ begin
          uart_tx_ready_i => uart_tx_ready,
          uart_tx_data_o  => uart_tx_data,
          vga_clk_i       => vga_clk,
+         vga_rst_i       => vga_rst,
          vga_hcount_i    => vga_hcount,
          vga_vcount_i    => vga_vcount,
          vga_blank_i     => vga_blank,

@@ -29,6 +29,7 @@ entity mega65 is
       vdac_sync_n_o   : out   std_logic;
       -- Connection to design
       vga_clk_o       : out   std_logic;
+      vga_rst_o       : out   std_logic;
       vga_hcount_o    : out   std_logic_vector(10 downto 0);
       vga_vcount_o    : out   std_logic_vector(10 downto 0);
       vga_blank_o     : out   std_logic;
@@ -183,6 +184,7 @@ begin
 
    vga_blank_o <= not vga_de;
    vga_clk_o   <= vga_clk;
+   vga_rst_o   <= vga_rst;
 
    delay_proc : process (vga_clk)
    begin

@@ -25,6 +25,8 @@ SRCS += ../../common/axi_merger.vhd
 SRCS += ../../common/axi_fifo.vhd
 SRCS += ../../common/vga_chars.vhd
 SRCS += ../../common/font.vhd
+SRCS += ../../common/slv_to_dec.vhd
+SRCS += ../../common/divexact.vhd
 
 VAL_N = 9
 VAL_K = 3

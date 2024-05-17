@@ -33,18 +33,25 @@ begin
 
             when IDLE_ST =>
                if rx_valid_i = '1' then
+
                   case rx_data_i is
-                     when X"53" =>
+
+                     when X"53" | X"73" =>
                         step_o <= '1';
-                     when X"43" =>
+
+                     when X"43" | X"63" =>
                         step_o <= '1';
                         state  <= CONTINUE_ST;
-                     when X"45" =>
+
+                     when X"45" | X"65" =>
                         step_o <= '1';
                         state  <= END_ST;
+
                      when others =>
                         null;
+
                   end case;
+
                end if;
 
             when CONTINUE_ST =>

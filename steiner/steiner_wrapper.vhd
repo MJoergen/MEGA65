@@ -25,13 +25,13 @@ entity steiner_wrapper is
       uart_tx_data_o  : out   std_logic_vector(7 downto 0);
 
       vga_clk_i       : in    std_logic;
+      vga_rst_i       : in    std_logic;
       vga_hcount_i    : in    std_logic_vector(10 downto 0);
       vga_vcount_i    : in    std_logic_vector(10 downto 0);
       vga_blank_i     : in    std_logic;
       vga_rgb_o       : out   std_logic_vector(7 downto 0)
    );
 end entity steiner_wrapper;
-
 
 architecture synthesis of steiner_wrapper is
 
@@ -42,6 +42,7 @@ architecture synthesis of steiner_wrapper is
    signal steiner_step   : std_logic;
    signal steiner_result : std_logic_vector(G_N * G_B - 1 downto 0);
    signal steiner_done   : std_logic;
+   signal steiner_count  : std_logic_vector(15 downto 0);
 
    signal steiner_rx_valid : std_logic;
    signal steiner_rx_ready : std_logic;
@@ -52,7 +53,9 @@ architecture synthesis of steiner_wrapper is
    signal sys_result : std_logic_vector(G_N * G_B - 1 downto 0);
    signal sys_done   : std_logic;
 
-   signal vga_result : std_logic_vector(G_N * G_B - 1 downto 0);
+   signal vga_count_result : std_logic_vector(G_N * G_B + 15 downto 0);
+   signal vga_result       : std_logic_vector(G_N * G_B - 1 downto 0);
+   signal vga_count        : std_logic_vector(15 downto 0);
 
 begin
 
@@ -79,6 +82,18 @@ begin
          valid_o  => steiner_valid,
          done_o   => steiner_done
       ); -- steiner_inst
+
+   result_count_proc : process (steiner_clk)
+   begin
+      if rising_edge(steiner_clk) then
+         if steiner_valid then
+            steiner_count <= steiner_count + 1;
+         end if;
+         if steiner_rst then
+            steiner_count <= (others => '0');
+         end if;
+      end if;
+   end process result_count_proc;
 
    axi_fifo_inst : entity work.axi_fifo
       generic map (
@@ -168,14 +183,16 @@ begin
          INIT_SYNC_FF   => 1,
          SIM_ASSERT_CHK => 1,
          SRC_INPUT_REG  => 1,
-         WIDTH          => G_N * G_B
+         WIDTH          => G_N * G_B + 16
       )
       port map (
          src_clk  => steiner_clk,
-         src_in   => steiner_result,
+         src_in   => steiner_count & steiner_result,
          dest_clk => vga_clk_i,
-         dest_out => vga_result
+         dest_out => vga_count_result
       ); -- xpm_cdc_array_single_inst
+
+   (vga_count, vga_result) <= vga_count_result;
 
    -- VGA Interface
    vga_wrapper_inst : entity work.vga_wrapper
@@ -188,11 +205,13 @@ begin
       )
       port map (
          vga_clk_i    => vga_clk_i,
+         vga_rst_i    => vga_rst_i,
          vga_hcount_i => vga_hcount_i,
          vga_vcount_i => vga_vcount_i,
          vga_blank_i  => vga_blank_i,
          vga_rgb_o    => vga_rgb_o,
-         vga_result_i => vga_result
+         vga_result_i => vga_result,
+         vga_count_i  => vga_count
       ); -- vga_wrapper_inst
 
 end architecture synthesis;
