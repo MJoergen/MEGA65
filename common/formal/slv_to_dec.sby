@@ -5,13 +5,13 @@ prove
 [options]
 cover: mode cover
 prove: mode bmc
-prove: depth 8
+prove: depth 30
 
 [engines]
 smtbmc
 
 [script]
-ghdl --std=08 -gG_DATA_SIZE=16 slv_to_dec.vhd divexact.vhd slv_to_dec.psl -e slv_to_dec
+ghdl --std=08 -gG_DATA_SIZE=8 slv_to_dec.vhd divexact.vhd slv_to_dec.psl -e slv_to_dec
 prep -top slv_to_dec
 
 [files]

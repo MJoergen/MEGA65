@@ -22,22 +22,24 @@ end entity slv_to_dec;
 
 architecture synthesis of slv_to_dec is
 
-   type   state_type is (INIT_ST, IDLE_ST, BUSY_ST, WAIT_ST);
-   signal state : state_type                                    := INIT_ST;
-   signal first : std_logic;
+   type     state_type is (INIT_ST, IDLE_ST, BUSY_ST, WAIT_ST);
+   signal   state : state_type                                    := INIT_ST;
+   signal   first : std_logic;
 
-   signal pow_ten  : std_logic_vector(G_DATA_SIZE - 1 downto 0) := (others => '0');
-   signal slv_data : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   constant C_ONE : std_logic_vector(G_DATA_SIZE - 1 downto 0)    := (0 => '1', others => '0');
 
-   signal de_in_valid  : std_logic;
-   signal de_in_ready  : std_logic;
-   signal de_out_res   : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal de_out_valid : std_logic;
-   signal de_out_ready : std_logic;
+   signal   pow_ten  : std_logic_vector(G_DATA_SIZE - 1 downto 0) := C_ONE;
+   signal   slv_data : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+
+   signal   de_in_valid  : std_logic;
+   signal   de_in_ready  : std_logic;
+   signal   de_out_res   : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   de_out_valid : std_logic;
+   signal   de_out_ready : std_logic;
 
 begin
 
-   s_ready_o    <= '1' when state = IDLE_ST else
+   s_ready_o    <= m_ready_i when state = IDLE_ST else
                    '0';
 
    fsm_proc : process (clk_i)
@@ -60,7 +62,7 @@ begin
                end if;
 
             when IDLE_ST =>
-               if s_valid_i = '1' then
+               if s_valid_i = '1' and s_ready_o = '1' then
                   slv_data <= s_data_i;
                   first    <= '1';
 
@@ -83,10 +85,8 @@ begin
                         m_valid_o <= '1';
                         first     <= '0';
                      end if;
-                     if or (pow_ten(G_DATA_SIZE - 1 downto 1)) = '0' then
+                     if pow_ten = C_ONE then
                         m_last_o <= '1';
-                        -- Initialize to one.
-                        pow_ten  <= (0 => '1', others => '0');
                         state    <= INIT_ST;
                      else
                         de_in_valid <= '1';
@@ -96,19 +96,17 @@ begin
                end if;
 
             when WAIT_ST =>
-               if m_ready_i = '1' or m_valid_o = '0' then
-                  if de_out_valid = '1' then
-                     pow_ten  <= de_out_res;
-                     m_data_o <= "0000";
-                     state    <= BUSY_ST;
-                  end if;
+               if de_out_valid = '1' and de_out_ready = '1' then
+                  pow_ten  <= de_out_res;
+                  m_data_o <= "0000";
+                  state    <= BUSY_ST;
                end if;
 
          end case;
 
          if rst_i = '1' then
             -- Initialize to one.
-            pow_ten   <= (0 => '1', others => '0');
+            pow_ten   <= C_ONE;
             state     <= INIT_ST;
             m_valid_o <= '0';
          end if;
@@ -131,7 +129,7 @@ begin
          m_valid_o => de_out_valid,
          m_ready_i => de_out_ready,
          m_data_o  => de_out_res
-      );
+      ); -- divexact_inst
 
 end architecture synthesis;
 

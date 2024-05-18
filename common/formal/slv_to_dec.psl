@@ -7,6 +7,7 @@ vunit i_slv_to_dec(slv_to_dec(synthesis))
    signal f_s_data  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal f_s_valid : std_logic;
    signal f_m_data  : integer;
+   signal new_f_m_data  : integer;
 
    -- Process inputs
    input_proc : process (clk_i)
@@ -23,13 +24,15 @@ vunit i_slv_to_dec(slv_to_dec(synthesis))
       end if;
    end process input_proc;
 
+   new_f_m_data <= f_m_data*10 + to_integer(m_data_o);
+
    -- Process outputs
    output_proc : process (clk_i)
    begin
       if rising_edge(clk_i) then
 
          if m_valid_o and m_ready_i then
-            f_m_data <= f_m_data*10 + to_integer(m_data_o);
+            f_m_data <= new_f_m_data;
          end if;
 
          if rst_i then
@@ -55,7 +58,7 @@ vunit i_slv_to_dec(slv_to_dec(synthesis))
 
    -- Verify correct output
    f_res : assert always {m_valid_o and m_last_o and not rst_i} |->
-      {f_s_valid = '1' and f_m_data = to_integer(f_s_data)};
+      {f_s_valid = '1' and new_f_m_data = to_integer(f_s_data)};
 
 
    --------------------------------------------
