@@ -39,7 +39,7 @@ architecture synthesis of slv_to_dec is
 
 begin
 
-   s_ready_o    <= m_ready_i when state = IDLE_ST else
+   s_ready_o    <= not m_valid_o when state = IDLE_ST else
                    '0';
 
    fsm_proc : process (clk_i)
@@ -109,6 +109,7 @@ begin
             pow_ten   <= C_ONE;
             state     <= INIT_ST;
             m_valid_o <= '0';
+            m_last_o  <= '0';
          end if;
       end if;
    end process fsm_proc;
