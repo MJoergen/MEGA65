@@ -3,7 +3,7 @@ library ieee;
 
 entity cards is
    generic (
-      G_PAIRS : natural := 4
+      G_PAIRS : natural
    );
    port (
       clk_i      : in    std_logic;

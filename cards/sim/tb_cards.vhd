@@ -10,11 +10,14 @@ library ieee;
    use ieee.numeric_std_unsigned.all;
 
 entity tb_cards is
+   generic (
+      G_PAIRS : natural
+   );
 end entity tb_cards;
 
 architecture simulation of tb_cards is
 
-   constant C_PAIRS : natural     := 4;
+   constant C_PAIRS : natural     := G_PAIRS;
 
    -- Clock, reset, and enable
    signal   running : std_logic   := '1';

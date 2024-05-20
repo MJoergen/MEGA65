@@ -3,9 +3,8 @@ XILINX_DIR = /opt/Xilinx/Vivado/2023.1
 PROJECT = cards
 
 SRCS  = $(PROJECT)_mega65.vhd
-SRCS += ../disp_cards.vhd
-SRCS += ../bitmap_pkg.vhd
 SRCS += ../controller.vhd
+SRCS += ../vga_wrapper.vhd
 SRCS += ../$(PROJECT).vhd
 SRCS += ../$(PROJECT)_wrapper.vhd
 SRCS += ../../common/clk.vhd
@@ -18,6 +17,14 @@ SRCS += ../../common/kb_matrix_ram.vhd
 SRCS += ../../common/video_sync.vhd
 SRCS += ../../common/video_modes_pkg.vhd
 SRCS += ../../common/axi_merger.vhd
+SRCS += ../../common/vga_chars.vhd
+SRCS += ../../common/font.vhd
+SRCS += ../../common/slv_to_dec.vhd
+SRCS += ../../common/divexact.vhd
+
+VAL_PAIRS = 4
+
+GENERICS += -generic G_PAIRS=$(VAL_PAIRS)
 
 XDC = ../../common/mega65.xdc
 
@@ -28,8 +35,8 @@ $(PROJECT)_mega65.tcl: Makefile
 	echo "# This is a tcl command script for the Vivado tool chain" > $@
 	echo "read_vhdl -vhdl2008 { $(SRCS) }" >> $@
 	echo "read_xdc $(XDC)" >> $@
-	echo "set_property XPM_LIBRARIES {XPM_CDC} [current_project]" >> $@
-	echo "synth_design -top $(PROJECT)_mega65 -part xc7a200tfbg484-2 -flatten_hierarchy none" >> $@
+	echo "set_property XPM_LIBRARIES {XPM_CDC XPM_FIFO} [current_project]" >> $@
+	echo "synth_design -top $(PROJECT)_mega65 -part xc7a200tfbg484-2 -flatten_hierarchy none $(GENERICS)" >> $@
 	echo "write_checkpoint -force post_synth.dcp" >> $@
 	echo "source ../../common/debug.tcl" >> $@
 	echo "opt_design" >> $@
