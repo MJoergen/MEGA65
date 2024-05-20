@@ -20,14 +20,21 @@ SOURCES += ../../common/kb_matrix_ram.vhd
 SOURCES += ../../common/video_sync.vhd
 SOURCES += ../../common/video_modes_pkg.vhd
 SOURCES += ../../common/font.vhd
+SOURCES += ../../common/vga_chars.vhd
+SOURCES += ../../common/slv_to_dec.vhd
+SOURCES += ../../common/divexact.vhd
 SOURCES += ../$(PROJECT).vhd
 SOURCES += ../$(PROJECT)_wrapper.vhd
 SOURCES += ../controller.vhd
-SOURCES += ../digits.vhd
+SOURCES += ../vga_wrapper.vhd
 SOURCES += $(TB).vhd
 SAVE     = $(TB).gtkw
 WAVE     = $(TB).ghw
 
+VAL_ROWS = 7
+VAL_COLS = 8
+
+GENERICS += -gG_ROWS=$(VAL_ROWS) -gG_COLS=$(VAL_COLS)
 
 #####################################
 # Simulation
@@ -37,7 +44,7 @@ WAVE     = $(TB).ghw
 sim: $(SOURCES) unisim-obj08.cf xpm-obj08.cf
 	ghdl -i --std=08 -frelaxed-rules -fsynopsys $(SOURCES)
 	ghdl -m --std=08 -frelaxed-rules -fsynopsys $(TB)
-	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) --wave=$(WAVE) --stop-time=100us
+	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) $(GENERICS) --wave=$(WAVE) --stop-time=12000us
 
 unisim-obj08.cf:
 	ghdl -i --std=08 --work=unisim -frelaxed-rules -fsynopsys $(XILINX_DIR)/data/vhdl/src/unisims/unisim_VCOMP.vhd

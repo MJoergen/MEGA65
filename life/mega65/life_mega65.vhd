@@ -55,6 +55,7 @@ architecture synthesis of life_mega65 is
    signal   uart_rx_data  : std_logic_vector(7 downto 0);
 
    signal   vga_clk    : std_logic;
+   signal   vga_rst    : std_logic;
    signal   vga_hcount : std_logic_vector(10 downto 0);
    signal   vga_vcount : std_logic_vector(10 downto 0);
    signal   vga_blank  : std_logic;
@@ -64,7 +65,8 @@ begin
 
    mega65_inst : entity work.mega65
       generic map (
-         G_VIDEO_MODE => C_VIDEO_MODE
+         G_UART_DIVISOR => 100_000_000 / 2_000_000,
+         G_VIDEO_MODE   => C_VIDEO_MODE
       )
       port map (
          -- MEGA65 I/O ports
@@ -85,18 +87,19 @@ begin
          vdac_sync_n_o   => vdac_sync_n_o,
          -- Connection to design
          vga_clk_o       => vga_clk,
+         vga_rst_o       => vga_rst,
          vga_hcount_o    => vga_hcount,
          vga_vcount_o    => vga_vcount,
          vga_blank_o     => vga_blank,
          vga_rgb_i       => vga_rgb,
          clk_o           => clk,
          rst_o           => rst,
-         uart_rx_valid_o => uart_rx_valid,
-         uart_rx_ready_i => uart_rx_ready,
-         uart_rx_data_o  => uart_rx_data,
          uart_tx_valid_i => uart_tx_valid,
          uart_tx_ready_o => uart_tx_ready,
-         uart_tx_data_i  => uart_tx_data
+         uart_tx_data_i  => uart_tx_data,
+         uart_rx_valid_o => uart_rx_valid,
+         uart_rx_ready_i => uart_rx_ready,
+         uart_rx_data_o  => uart_rx_data
       ); -- mega65_inst
 
    life_wrapper_inst : entity work.life_wrapper
@@ -115,6 +118,7 @@ begin
          uart_tx_ready_i => uart_tx_ready,
          uart_tx_data_o  => uart_tx_data,
          vga_clk_i       => vga_clk,
+         vga_rst_i       => vga_rst,
          vga_hcount_i    => vga_hcount,
          vga_vcount_i    => vga_vcount,
          vga_blank_i     => vga_blank,
