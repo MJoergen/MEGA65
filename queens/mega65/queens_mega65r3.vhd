@@ -8,7 +8,7 @@ library xpm;
 library work;
    use work.video_modes_pkg.all;
 
-entity queens_mega65 is
+entity queens_mega65r3 is
    generic (
       G_NUM_QUEENS : integer := 8
    );
@@ -30,10 +30,9 @@ entity queens_mega65 is
       kb_io1_o       : out   std_logic;
       kb_io2_i       : in    std_logic
    );
-end entity queens_mega65;
+end entity queens_mega65r3;
 
-
-architecture synthesis of queens_mega65 is
+architecture synthesis of queens_mega65r3 is
 
    constant C_VIDEO_MODE : video_modes_type := C_VIDEO_MODE_1280_720_60;
 

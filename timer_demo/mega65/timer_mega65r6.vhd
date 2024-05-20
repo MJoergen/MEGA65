@@ -8,17 +8,11 @@ library xpm;
 library work;
    use work.video_modes_pkg.all;
 
-entity steiner_mega65 is
-   generic (
-      G_N : natural;
-      G_K : natural;
-      G_T : natural;
-      G_B : natural
-   );
+entity timer_mega65r6 is
    port (
       -- Clock
       sys_clk_i      : in    std_logic; -- 100 MHz
-      sys_rstn_i     : in    std_logic;
+      sys_rst_i      : in    std_logic;
       uart_rxd_i     : in    std_logic;
       uart_txd_o     : out   std_logic;
       vga_red_o      : out   std_logic_vector(7 downto 0);
@@ -28,15 +22,15 @@ entity steiner_mega65 is
       vga_vs_o       : out   std_logic;
       vdac_clk_o     : out   std_logic;
       vdac_blank_n_o : out   std_logic;
+      vdac_psave_n_o : out   std_logic;
       vdac_sync_n_o  : out   std_logic;
       kb_io0_o       : out   std_logic;
       kb_io1_o       : out   std_logic;
       kb_io2_i       : in    std_logic
    );
-end entity steiner_mega65;
+end entity timer_mega65r6;
 
-
-architecture synthesis of steiner_mega65 is
+architecture synthesis of timer_mega65r6 is
 
    constant C_VIDEO_MODE : video_modes_type := C_VIDEO_MODE_1280_720_60;
 
@@ -59,16 +53,17 @@ architecture synthesis of steiner_mega65 is
 
 begin
 
+   vdac_psave_n_o <= '1';
+
    mega65_inst : entity work.mega65
       generic map (
-         --G_UART_DIVISOR => 100_000_000 / 115_200,
          G_UART_DIVISOR => 100_000_000 / 2_000_000,
          G_VIDEO_MODE   => C_VIDEO_MODE
       )
       port map (
          -- MEGA65 I/O ports
          sys_clk_i       => sys_clk_i,
-         sys_rstn_i      => sys_rstn_i,
+         sys_rstn_i      => not sys_rst_i,
          uart_rxd_i      => uart_rxd_i,
          uart_txd_o      => uart_txd_o,
          kb_io0_o        => kb_io0_o,
@@ -91,20 +86,17 @@ begin
          vga_rgb_i       => vga_rgb,
          clk_o           => clk,
          rst_o           => rst,
-         uart_tx_valid_i => uart_tx_valid,
-         uart_tx_ready_o => uart_tx_ready,
-         uart_tx_data_i  => uart_tx_data,
          uart_rx_valid_o => uart_rx_valid,
          uart_rx_ready_i => uart_rx_ready,
-         uart_rx_data_o  => uart_rx_data
+         uart_rx_data_o  => uart_rx_data,
+         uart_tx_valid_i => uart_tx_valid,
+         uart_tx_ready_o => uart_tx_ready,
+         uart_tx_data_i  => uart_tx_data
       ); -- mega65_inst
 
-   steiner_wrapper_inst : entity work.steiner_wrapper
+   timer_wrapper_inst : entity work.timer_wrapper
       generic map (
-         G_N           => G_N,
-         G_K           => G_K,
-         G_T           => G_T,
-         G_B           => G_B
+         G_CLK_FREQ_HZ => 100_000_000
       )
       port map (
          clk_i           => clk,
@@ -121,7 +113,7 @@ begin
          vga_vcount_i    => vga_vcount,
          vga_blank_i     => vga_blank,
          vga_rgb_o       => vga_rgb
-      ); -- steiner_wrapper_inst
+      ); -- timer_wrapper_inst
 
 end architecture synthesis;
 

@@ -8,17 +8,9 @@ library xpm;
 library work;
    use work.video_modes_pkg.all;
 
-entity life_mega65 is
+entity cards_mega65r3 is
    generic (
-      G_ROWS       : integer          := 7;
-      G_COLS       : integer          := 8;
-      G_CELLS_INIT : std_logic_vector := "00000000" &
-                                         "00010000" &
-                                         "00001000" &
-                                         "00111000" &
-                                         "00000000" &
-                                         "00000000" &
-                                         "00000000"
+      G_PAIRS : integer
    );
    port (
       -- Clock
@@ -38,9 +30,9 @@ entity life_mega65 is
       kb_io1_o       : out   std_logic;
       kb_io2_i       : in    std_logic
    );
-end entity life_mega65;
+end entity cards_mega65r3;
 
-architecture synthesis of life_mega65 is
+architecture synthesis of cards_mega65r3 is
 
    constant C_VIDEO_MODE : video_modes_type := C_VIDEO_MODE_1280_720_60;
 
@@ -54,11 +46,16 @@ architecture synthesis of life_mega65 is
    signal   uart_rx_ready : std_logic;
    signal   uart_rx_data  : std_logic_vector(7 downto 0);
 
+   signal   cards_board : std_logic_vector(2 * G_PAIRS * G_PAIRS - 1 downto 0);
+   signal   cards_valid : std_logic;
+   signal   cards_done  : std_logic;
+
    signal   vga_clk    : std_logic;
    signal   vga_rst    : std_logic;
    signal   vga_hcount : std_logic_vector(10 downto 0);
    signal   vga_vcount : std_logic_vector(10 downto 0);
    signal   vga_blank  : std_logic;
+   signal   vga_board  : std_logic_vector(2 * G_PAIRS * G_PAIRS - 1 downto 0);
    signal   vga_rgb    : std_logic_vector(7 downto 0);
 
 begin
@@ -102,11 +99,9 @@ begin
          uart_rx_data_o  => uart_rx_data
       ); -- mega65_inst
 
-   life_wrapper_inst : entity work.life_wrapper
+   cards_wrapper_inst : entity work.cards_wrapper
       generic map (
-         G_ROWS       => G_ROWS,
-         G_COLS       => G_COLS,
-         G_CELLS_INIT => G_CELLS_INIT
+         G_PAIRS => G_PAIRS
       )
       port map (
          clk_i           => clk,
@@ -123,7 +118,7 @@ begin
          vga_vcount_i    => vga_vcount,
          vga_blank_i     => vga_blank,
          vga_rgb_o       => vga_rgb
-      ); -- life_wrapper_inst
+      ); -- cards_wrapper_inst
 
 end architecture synthesis;
 

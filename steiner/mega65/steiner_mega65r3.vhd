@@ -8,7 +8,13 @@ library xpm;
 library work;
    use work.video_modes_pkg.all;
 
-entity timer_mega65 is
+entity steiner_mega65r3 is
+   generic (
+      G_N : natural;
+      G_K : natural;
+      G_T : natural;
+      G_B : natural
+   );
    port (
       -- Clock
       sys_clk_i      : in    std_logic; -- 100 MHz
@@ -27,10 +33,9 @@ entity timer_mega65 is
       kb_io1_o       : out   std_logic;
       kb_io2_i       : in    std_logic
    );
-end entity timer_mega65;
+end entity steiner_mega65r3;
 
-
-architecture synthesis of timer_mega65 is
+architecture synthesis of steiner_mega65r3 is
 
    constant C_VIDEO_MODE : video_modes_type := C_VIDEO_MODE_1280_720_60;
 
@@ -55,6 +60,7 @@ begin
 
    mega65_inst : entity work.mega65
       generic map (
+         --G_UART_DIVISOR => 100_000_000 / 115_200,
          G_UART_DIVISOR => 100_000_000 / 2_000_000,
          G_VIDEO_MODE   => C_VIDEO_MODE
       )
@@ -84,17 +90,20 @@ begin
          vga_rgb_i       => vga_rgb,
          clk_o           => clk,
          rst_o           => rst,
-         uart_rx_valid_o => uart_rx_valid,
-         uart_rx_ready_i => uart_rx_ready,
-         uart_rx_data_o  => uart_rx_data,
          uart_tx_valid_i => uart_tx_valid,
          uart_tx_ready_o => uart_tx_ready,
-         uart_tx_data_i  => uart_tx_data
+         uart_tx_data_i  => uart_tx_data,
+         uart_rx_valid_o => uart_rx_valid,
+         uart_rx_ready_i => uart_rx_ready,
+         uart_rx_data_o  => uart_rx_data
       ); -- mega65_inst
 
-   timer_wrapper_inst : entity work.timer_wrapper
+   steiner_wrapper_inst : entity work.steiner_wrapper
       generic map (
-         G_CLK_FREQ_HZ => 100_000_000
+         G_N           => G_N,
+         G_K           => G_K,
+         G_T           => G_T,
+         G_B           => G_B
       )
       port map (
          clk_i           => clk,
@@ -111,7 +120,7 @@ begin
          vga_vcount_i    => vga_vcount,
          vga_blank_i     => vga_blank,
          vga_rgb_o       => vga_rgb
-      ); -- timer_wrapper_inst
+      ); -- steiner_wrapper_inst
 
 end architecture synthesis;
 

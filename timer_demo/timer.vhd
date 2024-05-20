@@ -62,7 +62,7 @@ begin
                         timer_m10 <= timer_m10 + C_ONE;
                      else
                         timer_m10 <= C_ZERO;
-                        if (timer_h1 < C_TWO and timer_h10 < C_NINE) or (timer_h1 = C_TWO and timer_h10 < C_THREE) then
+                        if (timer_h10 < C_TWO and timer_h1 < C_NINE) or (timer_h10 = C_TWO and timer_h1 < C_THREE) then
                            timer_h1 <= timer_h1 + C_ONE;
                         else
                            timer_h1 <= C_ZERO;
