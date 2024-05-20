@@ -3,15 +3,18 @@ library ieee;
    use ieee.numeric_std_unsigned.all;
 
 entity tb_queens_wrapper is
+   generic (
+      G_NUM_QUEENS : natural
+   );
 end entity tb_queens_wrapper;
 
 architecture simulation of tb_queens_wrapper is
 
-   constant C_NUM_QUEENS : integer                                        := 8;
+   constant C_NUM_QUEENS : natural               := G_NUM_QUEENS;
 
-   signal   running       : std_logic                                     := '1';
-   signal   clk           : std_logic                                     := '1';
-   signal   rst           : std_logic                                     := '1';
+   signal   running       : std_logic            := '1';
+   signal   clk           : std_logic            := '1';
+   signal   rst           : std_logic            := '1';
    signal   uart_rx_valid : std_logic;
    signal   uart_rx_ready : std_logic;
    signal   uart_rx_data  : std_logic_vector(7 downto 0);
@@ -19,13 +22,14 @@ architecture simulation of tb_queens_wrapper is
    signal   uart_tx_ready : std_logic;
    signal   uart_tx_data  : std_logic_vector(7 downto 0);
 
-   signal   vga_clk    : std_logic                                        := '1';
+   signal   vga_clk    : std_logic               := '1';
+   signal   vga_rst    : std_logic               := '1';
    signal   vga_hcount : std_logic_vector(10 downto 0);
    signal   vga_vcount : std_logic_vector(10 downto 0);
    signal   vga_blank  : std_logic;
    signal   vga_rgb    : std_logic_vector(7 downto 0);
 
-   constant C_STR_LEN : natural := (C_NUM_QUEENS+2)*C_NUM_QUEENS;
+   constant C_STR_LEN   : natural                := (C_NUM_QUEENS + 2) * C_NUM_QUEENS;
    signal   uart_tx_str : string(1 to C_STR_LEN) := (others => ' ');
 
 begin
@@ -35,6 +39,7 @@ begin
 
    queens_wrapper_inst : entity work.queens_wrapper
       generic map (
+         G_FONT_PATH  => "../../common/",
          G_NUM_QUEENS => C_NUM_QUEENS
       )
       port map (
@@ -47,6 +52,7 @@ begin
          uart_tx_ready_i => uart_tx_ready,
          uart_tx_data_o  => uart_tx_data,
          vga_clk_i       => vga_clk,
+         vga_rst_i       => vga_rst,
          vga_hcount_i    => vga_hcount,
          vga_vcount_i    => vga_vcount,
          vga_blank_i     => vga_blank,
@@ -85,8 +91,8 @@ begin
       wait for 1000 ns;
       wait until clk = '1';
 
-      for row in 0 to C_NUM_QUEENS-1 loop
-         assert uart_tx_str(row*(C_NUM_QUEENS+2)+1 to row*(C_NUM_QUEENS+2) + C_NUM_QUEENS) = C_EXP_STR
+      for row in 0 to C_NUM_QUEENS - 1 loop
+         assert uart_tx_str(row * (C_NUM_QUEENS + 2) + 1 to row * (C_NUM_QUEENS + 2) + C_NUM_QUEENS) = C_EXP_STR
             report "Error row " & to_string(row);
       end loop;
 

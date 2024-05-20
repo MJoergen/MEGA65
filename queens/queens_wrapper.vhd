@@ -10,7 +10,8 @@ library work;
 
 entity queens_wrapper is
    generic (
-      G_NUM_QUEENS : integer := 8
+      G_FONT_PATH  : string := "";
+      G_NUM_QUEENS : integer
    );
    port (
       clk_i           : in    std_logic;
@@ -24,6 +25,7 @@ entity queens_wrapper is
       uart_tx_data_o  : out   std_logic_vector(7 downto 0);
 
       vga_clk_i       : in    std_logic;
+      vga_rst_i       : in    std_logic;
       vga_hcount_i    : in    std_logic_vector(10 downto 0);
       vga_vcount_i    : in    std_logic_vector(10 downto 0);
       vga_blank_i     : in    std_logic;
@@ -35,12 +37,15 @@ architecture synthesis of queens_wrapper is
 
    constant C_VIDEO_MODE : video_modes_type := C_VIDEO_MODE_1280_720_60;
 
-   signal queens_step  : std_logic;
-   signal queens_board : std_logic_vector(G_NUM_QUEENS * G_NUM_QUEENS - 1 downto 0);
-   signal queens_valid : std_logic;
-   signal queens_done  : std_logic;
+   signal   queens_step  : std_logic;
+   signal   queens_board : std_logic_vector(G_NUM_QUEENS * G_NUM_QUEENS - 1 downto 0);
+   signal   queens_count : std_logic_vector(15 downto 0);
+   signal   queens_valid : std_logic;
+   signal   queens_done  : std_logic;
 
-   signal vga_board : std_logic_vector(G_NUM_QUEENS * G_NUM_QUEENS - 1 downto 0);
+   signal   vga_count       : std_logic_vector(15 downto 0);
+   signal   vga_board       : std_logic_vector(G_NUM_QUEENS * G_NUM_QUEENS - 1 downto 0);
+   signal   vga_count_board : std_logic_vector(G_NUM_QUEENS * G_NUM_QUEENS + 15  downto 0);
 
 begin
 
@@ -77,30 +82,44 @@ begin
          done_o  => queens_done
       ); -- queens_inst
 
+   queens_count_proc : process (clk_i)
+   begin
+      if rising_edge(clk_i) then
+         if queens_step and queens_valid then
+            queens_count <= queens_count + 1;
+         end if;
+         if rst_i then
+            queens_count <= (others => '0');
+         end if;
+      end if;
+   end process queens_count_proc;
+
    xpm_cdc_array_single_inst : component xpm_cdc_array_single
       generic map (
-         WIDTH => G_NUM_QUEENS * G_NUM_QUEENS
+         WIDTH => G_NUM_QUEENS * G_NUM_QUEENS + 16
       )
       port map (
          src_clk  => clk_i,
-         src_in   => queens_board,
+         src_in   => queens_count & queens_board,
          dest_clk => vga_clk_i,
-         dest_out => vga_board
+         dest_out => vga_count_board
       ); -- xpm_cdc_array_single_inst
 
+   (vga_count, vga_board) <= vga_count_board;
 
-   -- This generates the image
-   disp_queens_inst : entity work.disp_queens
+   vga_wrapper_inst : entity work.vga_wrapper
       generic map (
-         G_VIDEO_MODE => C_VIDEO_MODE,
+         G_FONT_PATH  => G_FONT_PATH,
          G_NUM_QUEENS => G_NUM_QUEENS
       )
       port map (
          vga_clk_i    => vga_clk_i,
+         vga_rst_i    => vga_rst_i,
          vga_hcount_i => vga_hcount_i,
          vga_vcount_i => vga_vcount_i,
          vga_blank_i  => vga_blank_i,
          vga_board_i  => vga_board,
+         vga_count_i  => vga_count,
          vga_rgb_o    => vga_rgb_o
       ); -- disp_queens_inst
 

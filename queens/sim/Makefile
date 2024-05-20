@@ -8,8 +8,8 @@ XPM_DIR = ../../../../fransschreuder/xpm_vhdl
 
 PROJECT = queens
 
-TB       = tb_$(PROJECT)
-#TB       = tb_$(PROJECT)_wrapper
+#TB       = tb_$(PROJECT)
+TB       = tb_$(PROJECT)_wrapper
 SOURCES  = ../../common/uart.vhd
 SOURCES += ../../common/clk.vhd
 SOURCES += ../../common/mega65.vhd
@@ -20,15 +20,20 @@ SOURCES += ../../common/kb_matrix_ram.vhd
 SOURCES += ../../common/video_sync.vhd
 SOURCES += ../../common/video_modes_pkg.vhd
 SOURCES += ../../common/font.vhd
+SOURCES += ../../common/vga_chars.vhd
+SOURCES += ../../common/slv_to_dec.vhd
+SOURCES += ../../common/divexact.vhd
 SOURCES += ../$(PROJECT).vhd
 SOURCES += ../$(PROJECT)_wrapper.vhd
 SOURCES += ../controller.vhd
-SOURCES += ../disp_queens.vhd
-SOURCES += ../bitmap_pkg.vhd
+SOURCES += ../vga_wrapper.vhd
 SOURCES += $(TB).vhd
 SAVE     = $(TB).gtkw
 WAVE     = $(TB).ghw
 
+VAL_NUM_QUEENS = 4
+
+GENERICS += -gG_NUM_QUEENS=$(VAL_NUM_QUEENS)
 
 #####################################
 # Simulation
@@ -38,7 +43,7 @@ WAVE     = $(TB).ghw
 sim: $(SOURCES) unisim-obj08.cf xpm-obj08.cf
 	ghdl -i --std=08 -frelaxed-rules -fsynopsys $(SOURCES)
 	ghdl -m --std=08 -frelaxed-rules -fsynopsys $(TB)
-	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) --wave=$(WAVE) --stop-time=100us
+	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) $(GENERICS) --wave=$(WAVE) --stop-time=100us
 
 unisim-obj08.cf:
 	ghdl -i --std=08 --work=unisim -frelaxed-rules -fsynopsys $(XILINX_DIR)/data/vhdl/src/unisims/unisim_VCOMP.vhd

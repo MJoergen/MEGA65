@@ -7,8 +7,8 @@ library work;
 
 entity vga_wrapper is
    generic (
-      G_FONT_PATH : string := "";
-      G_PAIRS     : integer
+      G_FONT_PATH  : string := "";
+      G_NUM_QUEENS : integer
    );
    port (
       vga_clk_i    : in    std_logic;
@@ -17,7 +17,7 @@ entity vga_wrapper is
       vga_vcount_i : in    std_logic_vector(10 downto 0);
       vga_blank_i  : in    std_logic;
       vga_rgb_o    : out   std_logic_vector(7 downto 0);
-      vga_cards_i  : in    std_logic_vector(2 * G_PAIRS * G_PAIRS - 1 downto 0);
+      vga_board_i  : in    std_logic_vector(G_NUM_QUEENS * G_NUM_QUEENS - 1 downto 0);
       vga_count_i  : in    std_logic_vector(15 downto 0)
    );
 end entity vga_wrapper;
@@ -33,8 +33,8 @@ architecture synthesis of vga_wrapper is
    constant C_PIXEL_GREY  : std_logic_vector(7 downto 0) := B"010_010_01";
    constant C_PIXEL_LIGHT : std_logic_vector(7 downto 0) := B"100_100_10";
 
-   constant C_START_X : std_logic_vector(7 downto 0)     := to_stdlogicvector(C_VIDEO_MODE.H_PIXELS / 64 - G_PAIRS, 8);
-   constant C_START_Y : std_logic_vector(7 downto 0)     := to_stdlogicvector(C_VIDEO_MODE.V_PIXELS / 64 - G_PAIRS / 2, 8);
+   constant C_START_X : std_logic_vector(7 downto 0)     := to_stdlogicvector(C_VIDEO_MODE.H_PIXELS / 64 - G_NUM_QUEENS / 2, 8);
+   constant C_START_Y : std_logic_vector(7 downto 0)     := to_stdlogicvector(C_VIDEO_MODE.V_PIXELS / 64 - G_NUM_QUEENS / 2, 8);
 
    signal   vga_x      : std_logic_vector(7 downto 0);
    signal   vga_y      : std_logic_vector(7 downto 0);
@@ -50,31 +50,31 @@ architecture synthesis of vga_wrapper is
 begin
 
    char_proc : process (vga_clk_i)
-      variable vga_index_v     : natural range 0 to 2 * G_PAIRS * G_PAIRS - 1;
+      variable vga_index_v     : natural range 0 to G_NUM_QUEENS * G_NUM_QUEENS - 1;
       variable vga_dec_index_v : natural range 0 to 4;
    begin
       if rising_edge(vga_clk_i) then
          vga_colors <= "10110110" & "10110110";
          vga_char   <= X"20";
 
-         if vga_x >= C_START_X and vga_x < C_START_X + 2 * G_PAIRS and
-            vga_y >= C_START_Y and vga_y < C_START_Y + G_PAIRS then
-            vga_index_v := to_integer((G_PAIRS - 1 - (vga_y - C_START_Y)) * 2 * G_PAIRS + (2 * G_PAIRS - 1 - (vga_x - C_START_X)));
-            if vga_cards_i(vga_index_v) = '1' then
-               vga_char <= X"31" + (G_PAIRS - 1 - (vga_y - C_START_Y));
+         if vga_x >= C_START_X and vga_x < C_START_X + G_NUM_QUEENS and
+            vga_y >= C_START_Y and vga_y < C_START_Y + G_NUM_QUEENS then
+            vga_index_v := to_integer((G_NUM_QUEENS - 1 - (vga_y - C_START_Y)) * G_NUM_QUEENS + (G_NUM_QUEENS - 1 - (vga_x - C_START_X)));
+            if vga_board_i(vga_index_v) = '1' then
+               vga_char <= X"51";
             else
                vga_char <= X"2E";
             end if;
             vga_colors <= C_PIXEL_DARK & C_PIXEL_LIGHT;
          end if;
          if vga_x >= C_START_X and vga_x < C_START_X + 5 and
-            vga_y = C_START_Y + G_PAIRS then
+            vga_y = C_START_Y + G_NUM_QUEENS then
             vga_dec_index_v := to_integer(vga_x - C_START_X);
             vga_char        <= vga_dec_str(8 * vga_dec_index_v + 7 downto 8 * vga_dec_index_v);
             vga_colors      <= C_PIXEL_DARK & C_PIXEL_LIGHT;
          end if;
-         if vga_x >= C_START_X + 5 and vga_x < C_START_X + 2 * G_PAIRS and
-            vga_y = C_START_Y + G_PAIRS then
+         if vga_x >= C_START_X + 5 and vga_x < C_START_X + G_NUM_QUEENS and
+            vga_y = C_START_Y + G_NUM_QUEENS then
             vga_colors <= C_PIXEL_DARK & C_PIXEL_LIGHT;
          end if;
       end if;

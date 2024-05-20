@@ -10,11 +10,14 @@ library ieee;
    use ieee.numeric_std_unsigned.all;
 
 entity tb_queens is
+   generic (
+      G_NUM_QUEENS : natural
+   );
 end entity tb_queens;
 
 architecture simulation of tb_queens is
 
-   constant C_NUM_QUEENS : natural := 4;
+   constant C_NUM_QUEENS : natural := G_NUM_QUEENS;
 
    -- Clock, reset, and enable
    signal   running : std_logic    := '1';

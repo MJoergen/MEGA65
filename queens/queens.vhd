@@ -4,7 +4,7 @@ library ieee;
 
 entity queens is
    generic (
-      G_NUM_QUEENS : integer := 4
+      G_NUM_QUEENS : integer
    );
    port (
       clk_i   : in    std_logic;

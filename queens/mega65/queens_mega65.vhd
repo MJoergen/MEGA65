@@ -37,27 +37,29 @@ architecture synthesis of queens_mega65 is
 
    constant C_VIDEO_MODE : video_modes_type := C_VIDEO_MODE_1280_720_60;
 
-   signal clk : std_logic;
-   signal rst : std_logic;
+   signal   clk : std_logic;
+   signal   rst : std_logic;
 
-   signal uart_tx_valid : std_logic;
-   signal uart_tx_ready : std_logic;
-   signal uart_tx_data  : std_logic_vector(7 downto 0);
-   signal uart_rx_valid : std_logic;
-   signal uart_rx_ready : std_logic;
-   signal uart_rx_data  : std_logic_vector(7 downto 0);
+   signal   uart_tx_valid : std_logic;
+   signal   uart_tx_ready : std_logic;
+   signal   uart_tx_data  : std_logic_vector(7 downto 0);
+   signal   uart_rx_valid : std_logic;
+   signal   uart_rx_ready : std_logic;
+   signal   uart_rx_data  : std_logic_vector(7 downto 0);
 
-   signal vga_clk    : std_logic;
-   signal vga_hcount : std_logic_vector(10 downto 0);
-   signal vga_vcount : std_logic_vector(10 downto 0);
-   signal vga_blank  : std_logic;
-   signal vga_rgb    : std_logic_vector(7 downto 0);
+   signal   vga_clk    : std_logic;
+   signal   vga_rst    : std_logic;
+   signal   vga_hcount : std_logic_vector(10 downto 0);
+   signal   vga_vcount : std_logic_vector(10 downto 0);
+   signal   vga_blank  : std_logic;
+   signal   vga_rgb    : std_logic_vector(7 downto 0);
 
 begin
 
    mega65_inst : entity work.mega65
       generic map (
-         G_VIDEO_MODE => C_VIDEO_MODE
+         G_UART_DIVISOR => 100_000_000 / 2_000_000,
+         G_VIDEO_MODE   => C_VIDEO_MODE
       )
       port map (
          -- MEGA65 I/O ports
@@ -78,6 +80,7 @@ begin
          vdac_sync_n_o   => vdac_sync_n_o,
          -- Connection to design
          vga_clk_o       => vga_clk,
+         vga_rst_o       => vga_rst,
          vga_hcount_o    => vga_hcount,
          vga_vcount_o    => vga_vcount,
          vga_blank_o     => vga_blank,
@@ -106,6 +109,7 @@ begin
          uart_tx_ready_i => uart_tx_ready,
          uart_tx_data_o  => uart_tx_data,
          vga_clk_i       => vga_clk,
+         vga_rst_i       => vga_rst,
          vga_hcount_i    => vga_hcount,
          vga_vcount_i    => vga_vcount,
          vga_blank_i     => vga_blank,
