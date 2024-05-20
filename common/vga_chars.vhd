@@ -18,7 +18,8 @@ entity vga_chars is
       vga_rgb_o    : out   std_logic_vector(7 downto 0);
       vga_x_o      : out   std_logic_vector(7 downto 0);
       vga_y_o      : out   std_logic_vector(7 downto 0);
-      vga_char_i   : in    std_logic_vector(7 downto 0)
+      vga_char_i   : in    std_logic_vector(7 downto 0);
+      vga_colors_i : in    std_logic_vector(15 downto 0)
    );
 end entity vga_chars;
 
@@ -26,13 +27,6 @@ architecture synthesis of vga_chars is
 
    -- A single character bitmap is defined by 8x8 = 64 bits.
    subtype  BITMAP_TYPE is std_logic_vector(63 downto 0);
-
-   -- Define colours
-   constant C_PIXEL_BLACK : std_logic_vector(7 downto 0) := B"000_000_00";
-   constant C_PIXEL_DARK  : std_logic_vector(7 downto 0) := B"001_001_01";
-   constant C_PIXEL_GREY  : std_logic_vector(7 downto 0) := B"010_010_01";
-   constant C_PIXEL_LIGHT : std_logic_vector(7 downto 0) := B"100_100_10";
-   constant C_PIXEL_WHITE : std_logic_vector(7 downto 0) := B"111_111_11";
 
    -- Stage 0
    signal   black_0    : std_logic;
@@ -51,6 +45,7 @@ architecture synthesis of vga_chars is
    signal   char_nibble_1 : std_logic_vector(7 downto 0);
    signal   char_txt_1    : std_logic_vector(7 downto 0);
    signal   char_1        : std_logic_vector(7 downto 0);
+   signal   colors_1      : std_logic_vector(15 downto 0);
 
    -- Stage 2
    signal   black_2        : std_logic;
@@ -61,6 +56,7 @@ architecture synthesis of vga_chars is
    signal   pix_row_2      : integer range 0 to 7;
    signal   bitmap_index_2 : integer range 0 to 63;
    signal   pix_2          : std_logic;
+   signal   colors_2       : std_logic_vector(15 downto 0);
 
    -- Stage 3
    signal   pixel_3 : std_logic_vector(7 downto 0);
@@ -100,6 +96,7 @@ begin
 
    -- Calculate character to display at current position
    char_1     <= vga_char_i;
+   colors_1   <= vga_colors_i;
 
 
    --------------------------------------------------
@@ -125,6 +122,7 @@ begin
          char_row_2 <= char_row_1;
          pix_col_2  <= pix_col_1;
          pix_row_2  <= pix_row_1;
+         colors_2   <= colors_1;
       end if;
    end process stage2_proc;
 
@@ -142,14 +140,14 @@ begin
    begin
       if rising_edge(vga_clk_i) then
          if pix_2 = '1' then
-            pixel_3 <= C_PIXEL_LIGHT; -- Text foreground colour.
+            pixel_3 <= colors_2(7 downto 0);
          else
-            pixel_3 <= C_PIXEL_DARK;  -- Text background colour.
+            pixel_3 <= colors_2(15 downto 8);
          end if;
 
          -- Make sure colour is black outside visible screen
          if black_2 = '1' then
-            pixel_3 <= C_PIXEL_BLACK;
+            pixel_3 <= (others => '0');
          end if;
       end if;
    end process stage3_proc;

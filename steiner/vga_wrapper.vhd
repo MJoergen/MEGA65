@@ -31,6 +31,10 @@ architecture synthesis of vga_wrapper is
    constant C_VIDEO_MODE : video_modes_type          := C_VIDEO_MODE_1280_720_60;
    constant C_FONT_FILE  : string                    := G_FONT_PATH & "font8x8.txt";
 
+   -- Define colours
+   constant C_PIXEL_DARK  : std_logic_vector(7 downto 0) := B"001_001_01";
+   constant C_PIXEL_LIGHT : std_logic_vector(7 downto 0) := B"100_100_10";
+
    constant C_START_X : std_logic_vector(7 downto 0) := to_stdlogicvector(C_VIDEO_MODE.H_PIXELS / 64 - G_N / 2, 8);
    constant C_START_Y : std_logic_vector(7 downto 0) := to_stdlogicvector(C_VIDEO_MODE.V_PIXELS / 64 - G_B / 2, 8);
 
@@ -83,7 +87,8 @@ begin
          vga_rgb_o    => vga_rgb_o,
          vga_x_o      => vga_x,
          vga_y_o      => vga_y,
-         vga_char_i   => vga_char
+         vga_char_i   => vga_char,
+         vga_colors_i => C_PIXEL_DARK & C_PIXEL_LIGHT
       ); -- vga_chars_inst
 
    slv_to_dec_inst : entity work.slv_to_dec
