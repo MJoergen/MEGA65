@@ -8,8 +8,8 @@ XPM_DIR = ../../../../fransschreuder/xpm_vhdl
 
 PROJECT = queens
 
-#TB       = tb_$(PROJECT)
-TB       = tb_$(PROJECT)_wrapper
+TB       = tb_$(PROJECT)
+#TB       = tb_$(PROJECT)_wrapper
 SOURCES  = ../../common/uart.vhd
 SOURCES += ../../common/clk.vhd
 SOURCES += ../../common/mega65.vhd

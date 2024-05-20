@@ -7,23 +7,24 @@ end entity tb_timer_wrapper;
 
 architecture simulation of tb_timer_wrapper is
 
-   signal   running       : std_logic                                     := '1';
-   signal   clk           : std_logic                                     := '1';
-   signal   rst           : std_logic                                     := '1';
-   signal   uart_rx_valid : std_logic;
-   signal   uart_rx_ready : std_logic;
-   signal   uart_rx_data  : std_logic_vector(7 downto 0);
-   signal   uart_tx_valid : std_logic;
-   signal   uart_tx_ready : std_logic;
-   signal   uart_tx_data  : std_logic_vector(7 downto 0);
+   signal running       : std_logic := '1';
+   signal clk           : std_logic := '1';
+   signal rst           : std_logic := '1';
+   signal uart_rx_valid : std_logic;
+   signal uart_rx_ready : std_logic;
+   signal uart_rx_data  : std_logic_vector(7 downto 0);
+   signal uart_tx_valid : std_logic;
+   signal uart_tx_ready : std_logic;
+   signal uart_tx_data  : std_logic_vector(7 downto 0);
 
-   signal   vga_clk    : std_logic                                        := '1';
-   signal   vga_hcount : std_logic_vector(10 downto 0);
-   signal   vga_vcount : std_logic_vector(10 downto 0);
-   signal   vga_blank  : std_logic;
-   signal   vga_rgb    : std_logic_vector(7 downto 0);
+   signal vga_clk    : std_logic    := '1';
+   signal vga_rst    : std_logic    := '1';
+   signal vga_hcount : std_logic_vector(10 downto 0);
+   signal vga_vcount : std_logic_vector(10 downto 0);
+   signal vga_blank  : std_logic;
+   signal vga_rgb    : std_logic_vector(7 downto 0);
 
-   signal   uart_tx_str : string(1 to 8);
+   signal uart_tx_str : string(1 to 8);
 
 begin
 
@@ -32,6 +33,7 @@ begin
 
    timer_wrapper_inst : entity work.timer_wrapper
       generic map (
+         G_FONT_PATH   => "../../common/",
          G_CLK_FREQ_HZ => 10
       )
       port map (
@@ -44,6 +46,7 @@ begin
          uart_tx_ready_i => uart_tx_ready,
          uart_tx_data_o  => uart_tx_data,
          vga_clk_i       => vga_clk,
+         vga_rst_i       => vga_rst,
          vga_hcount_i    => vga_hcount,
          vga_vcount_i    => vga_vcount,
          vga_blank_i     => vga_blank,
@@ -66,26 +69,32 @@ begin
    end process uart_tx_str_proc;
 
    test_proc : process
-      pure function str_to_integer(arg : string) return integer is
+      pure function str_to_integer (
+         arg : string
+      ) return integer is
          variable res_v : integer := 0;
       begin
          for i in 1 to 6 loop
             res_v := res_v * 10 + character'pos(arg(i)) - character'pos('0');
          end loop;
+
          return res_v;
       end function str_to_integer;
+
    begin
       uart_rx_valid <= '0';
       wait until rst = '0';
       wait until clk = '1';
+
       for i in 1 to 110 loop
          wait until clk = '1';
          if uart_tx_str(uart_tx_str'length-1) = character'val(13) and
             uart_tx_str(uart_tx_str'length)   = character'val(10) then
-            assert str_to_integer(uart_tx_str) + 1 = i/10;
+            assert str_to_integer(uart_tx_str) + 1 = i / 10;
          end if;
       end loop;
-      running       <= '0';
+
+      running <= '0';
       report "Test finished";
    end process test_proc;
 

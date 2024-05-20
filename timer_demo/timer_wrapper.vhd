@@ -5,11 +5,9 @@ library ieee;
 library xpm;
    use xpm.vcomponents.all;
 
-library work;
-   use work.bitmap_pkg.all;
-
 entity timer_wrapper is
    generic (
+      G_FONT_PATH   : string := "";
       G_CLK_FREQ_HZ : natural
    );
    port (
@@ -24,6 +22,7 @@ entity timer_wrapper is
       uart_tx_data_o  : out   std_logic_vector(7 downto 0);
 
       vga_clk_i       : in    std_logic;
+      vga_rst_i       : in    std_logic;
       vga_hcount_i    : in    std_logic_vector(10 downto 0);
       vga_vcount_i    : in    std_logic_vector(10 downto 0);
       vga_blank_i     : in    std_logic;
@@ -33,7 +32,7 @@ end entity timer_wrapper;
 
 architecture structural of timer_wrapper is
 
-   constant C_COUNTER_MAX : natural               := G_CLK_FREQ_HZ-1;
+   constant C_COUNTER_MAX : natural := G_CLK_FREQ_HZ - 1;
    signal   counter       : natural range 0 to C_COUNTER_MAX;
    signal   step          : std_logic;
 
@@ -53,18 +52,6 @@ architecture structural of timer_wrapper is
    signal   vga_timer_s10 : std_logic_vector(3 downto 0);
    signal   vga_timer_s1  : std_logic_vector(3 downto 0);
 
-   signal   vga_bg  : std_logic_vector(7 downto 0);
-   signal   vga_s1  : std_logic_vector(7 downto 0);
-   signal   vga_s10 : std_logic_vector(7 downto 0);
-   signal   vga_m1  : std_logic_vector(7 downto 0);
-   signal   vga_m10 : std_logic_vector(7 downto 0);
-   signal   vga_h1  : std_logic_vector(7 downto 0);
-
-   type     digits_vector_type is array(natural range <>) of bitmap_type;
-
-   constant C_DIGITS : digits_vector_type(0 to 9) := (C_BITMAP_0, C_BITMAP_1, C_BITMAP_2, C_BITMAP_3, C_BITMAP_4,
-                                                        C_BITMAP_5, C_BITMAP_6, C_BITMAP_7, C_BITMAP_8, C_BITMAP_9);
-
    signal   uart_tx_data  : std_logic_vector(63 downto 0);
    signal   uart_tx_valid : std_logic;
 
@@ -80,7 +67,7 @@ begin
             counter <= 0;
          else
             counter <= counter + 1;
-            step <= '0';
+            step    <= '0';
          end if;
       end if;
    end process counter_proc;
@@ -140,100 +127,24 @@ begin
 
    (vga_timer_h10 , vga_timer_h1 , vga_timer_m10 , vga_timer_m1 , vga_timer_s10 , vga_timer_s1) <= vga_timer_all;
 
-
-   -- This generates the background image
-   disp_background_inst : entity work.disp_background
+   vga_wrapper_inst : entity work.vga_wrapper
+      generic map (
+         G_FONT_PATH => G_FONT_PATH
+      )
       port map (
-         vga_clk_i => vga_clk_i,
-         hcount_i  => vga_hcount_i,
-         vcount_i  => vga_vcount_i,
-         blank_i   => vga_blank_i,
-         vga_o     => vga_bg
-      );
-
-   -- The generates the sprite for the unit's seconds.
-   bitmap_s1_inst : entity work.bitmap
-      port map (
-         vga_clk_i => vga_clk_i,
-         xpos_i    => to_stdlogicvector(204, 10),
-         ypos_i    => to_stdlogicvector(204, 10),
-         bitmap_i  => C_DIGITS(to_integer(vga_timer_s1)),
-         hcount_i  => vga_hcount_i,
-         vcount_i  => vga_vcount_i,
-         blank_i   => vga_blank_i,
-         vga_i     => vga_bg,
-         vga_o     => vga_s1
-      );
-
-   -- The generates the sprite for the ten's seconds.
-   bitmap_s10_inst : entity work.bitmap
-      port map (
-         vga_clk_i => vga_clk_i,
-         xpos_i    => to_stdlogicvector(172, 10),
-         ypos_i    => to_stdlogicvector(204, 10),
-         bitmap_i  => C_DIGITS(to_integer(vga_timer_s10)),
-         hcount_i  => vga_hcount_i,
-         vcount_i  => vga_vcount_i,
-         blank_i   => vga_blank_i,
-         vga_i     => vga_s1,
-         vga_o     => vga_s10
-      );
-
-   -- The generates the sprite for the unit's minutes.
-   bitmap_m1_inst : entity work.bitmap
-      port map (
-         vga_clk_i => vga_clk_i,
-         xpos_i    => to_stdlogicvector(140, 10),
-         ypos_i    => to_stdlogicvector(204, 10),
-         bitmap_i  => C_DIGITS(to_integer(vga_timer_m1)),
-         hcount_i  => vga_hcount_i,
-         vcount_i  => vga_vcount_i,
-         blank_i   => vga_blank_i,
-         vga_i     => vga_s10,
-         vga_o     => vga_m1
-      );
-
-   -- The generates the sprite for the ten's minutes.
-   bitmap_m10_inst : entity work.bitmap
-      port map (
-         vga_clk_i => vga_clk_i,
-         xpos_i    => to_stdlogicvector(108, 10),
-         ypos_i    => to_stdlogicvector(204, 10),
-         bitmap_i  => C_DIGITS(to_integer(vga_timer_m10)),
-         hcount_i  => vga_hcount_i,
-         vcount_i  => vga_vcount_i,
-         blank_i   => vga_blank_i,
-         vga_i     => vga_m1,
-         vga_o     => vga_m10
-      );
-
-   -- The generates the sprite for the unit's hours.
-   bitmap_h1_inst : entity work.bitmap
-      port map (
-         vga_clk_i => vga_clk_i,
-         xpos_i    => to_stdlogicvector( 76, 10),
-         ypos_i    => to_stdlogicvector(204, 10),
-         bitmap_i  => C_DIGITS(to_integer(vga_timer_h1)),
-         hcount_i  => vga_hcount_i,
-         vcount_i  => vga_vcount_i,
-         blank_i   => vga_blank_i,
-         vga_i     => vga_m10,
-         vga_o     => vga_h1
-      );
-
-   -- The generates the sprite for the ten's hours.
-   bitmap_h10_inst : entity work.bitmap
-      port map (
-         vga_clk_i => vga_clk_i,
-         xpos_i    => to_stdlogicvector( 44, 10),
-         ypos_i    => to_stdlogicvector(204, 10),
-         bitmap_i  => C_DIGITS(to_integer(vga_timer_h10)),
-         hcount_i  => vga_hcount_i,
-         vcount_i  => vga_vcount_i,
-         blank_i   => vga_blank_i,
-         vga_i     => vga_h1,
-         vga_o     => vga_rgb_o
-      );
+         vga_clk_i       => vga_clk_i,
+         vga_rst_i       => vga_rst_i,
+         vga_hcount_i    => vga_hcount_i,
+         vga_vcount_i    => vga_vcount_i,
+         vga_blank_i     => vga_blank_i,
+         vga_timer_h10_i => vga_timer_h10,
+         vga_timer_h1_i  => vga_timer_h1,
+         vga_timer_m10_i => vga_timer_m10,
+         vga_timer_m1_i  => vga_timer_m1,
+         vga_timer_s10_i => vga_timer_s10,
+         vga_timer_s1_i  => vga_timer_s1,
+         vga_rgb_o       => vga_rgb_o
+      ); -- vga_wrapper_inst
 
 end architecture structural;
 

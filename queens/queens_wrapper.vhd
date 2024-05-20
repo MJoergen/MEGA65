@@ -121,7 +121,7 @@ begin
          vga_board_i  => vga_board,
          vga_count_i  => vga_count,
          vga_rgb_o    => vga_rgb_o
-      ); -- disp_queens_inst
+      ); -- vga_wrapper_inst
 
 end architecture synthesis;
 
