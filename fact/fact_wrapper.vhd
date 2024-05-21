@@ -93,18 +93,18 @@ begin
 
    slv_to_dec_inst : entity work.slv_to_dec
       generic map (
-         G_SIZE => G_SIZE
+         G_DATA_SIZE => G_SIZE
       )
       port map (
-         clk_i       => clk_i,
-         rst_i       => rst_i,
-         slv_valid_i => ctrl_valid,
-         slv_ready_o => ctrl_ready,
-         slv_data_i  => ctrl_val2,
-         dec_valid_o => dec_valid,
-         dec_ready_i => dec_ready,
-         dec_data_o  => dec_data,
-         dec_last_o  => dec_last
+         clk_i     => clk_i,
+         rst_i     => rst_i,
+         s_valid_i => ctrl_valid,
+         s_ready_o => ctrl_ready,
+         s_data_i  => ctrl_val2,
+         m_valid_o => dec_valid,
+         m_ready_i => dec_ready,
+         m_data_o  => dec_data,
+         m_last_o  => dec_last
       ); -- slv_to_dec_inst
 
    serializer_inst : entity work.serializer

@@ -1,8 +1,8 @@
 XILINX_DIR = /opt/Xilinx/Vivado/2023.1
 
 PROJECT = life
-PLATFORM = mega65r3
-#PLATFORM = mega65r6
+#PLATFORM = mega65r3
+PLATFORM = mega65r6
 
 TOP = $(PROJECT)_$(PLATFORM)
 

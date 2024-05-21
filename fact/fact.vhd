@@ -11,12 +11,12 @@ entity fact is
    port (
       clk_i            : in    std_logic;
       rst_i            : in    std_logic;
-      epp_val2_i       : in    std_logic_vector(G_VAL_SIZE-1 downto 0);
+      epp_val2_i       : in    std_logic_vector(G_VAL_SIZE - 1 downto 0);
       epp_start_i      : in    std_logic;
-      ctrl_val2_o      : out   std_logic_vector(G_SIZE-1 downto 0);
+      ctrl_val2_o      : out   std_logic_vector(G_SIZE - 1 downto 0);
       ctrl_valid_o     : out   std_logic;
       ctrl_ready_i     : in    std_logic;
-      ctrl_state_log_o : out   std_logic_vector(G_LOG_SIZE-1 downto 0)
+      ctrl_state_log_o : out   std_logic_vector(G_LOG_SIZE - 1 downto 0)
    );
 end entity fact;
 
@@ -41,33 +41,36 @@ begin
    -- Calculate the GCD between the input value and "val1" above.
    gcd_inst : entity work.gcd
       generic map (
-         G_SIZE => G_SIZE
+         G_DATA_SIZE => G_SIZE
       )
       port map (
-         clk_i   => clk_i,
-         rst_i   => rst_i,
-         val1_i  => ctrl_val1,
-         val2_i  => ctrl_val2_o,
-         start_i => ctrl_start_gcd,
-         res_o   => gcd_res,
-         valid_o => gcd_valid
-      );
+         clk_i     => clk_i,
+         rst_i     => rst_i,
+         s_valid_i => ctrl_start_gcd,
+         s_ready_o => open,
+         s_data1_i => ctrl_val1,
+         s_data2_i => ctrl_val2_o,
+         m_valid_o => gcd_valid,
+         m_ready_i => '1',
+         m_data_o  => gcd_res
+      ); -- gcd_inst
 
    -- Perform exact division of the initial value and the GCD.
    divexact_inst : entity work.divexact
       generic map (
-         G_VAL_SIZE => G_VAL_SIZE
+         G_DATA_SIZE => G_VAL_SIZE
       )
       port map (
-         clk_i   => clk_i,
-         rst_i   => rst_i,
-         val1_i  => ctrl_val1(G_VAL_SIZE - 1 downto 0),
-         val2_i  => ctrl_val2_o(G_VAL_SIZE - 1 downto 0),
-         start_i => ctrl_start_div,
-         res_o   => div_res,
-         valid_o => div_valid,
-         ready_i => div_ready
-      );
+         clk_i     => clk_i,
+         rst_i     => rst_i,
+         s_valid_i => ctrl_start_div,
+         s_ready_o => open,
+         s_data1_i => ctrl_val1(G_VAL_SIZE - 1 downto 0),
+         s_data2_i => ctrl_val2_o(G_VAL_SIZE - 1 downto 0),
+         m_valid_o => div_valid,
+         m_ready_i => div_ready,
+         m_data_o  => div_res
+      ); -- divexact_inst
 
    div_ready <= '1';
 
