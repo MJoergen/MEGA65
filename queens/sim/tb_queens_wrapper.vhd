@@ -29,7 +29,7 @@ architecture simulation of tb_queens_wrapper is
    signal   vga_blank  : std_logic;
    signal   vga_rgb    : std_logic_vector(7 downto 0);
 
-   constant C_STR_LEN   : natural                := (C_NUM_QUEENS + 2) * C_NUM_QUEENS;
+   constant C_STR_LEN   : natural                := (C_NUM_QUEENS + 2) * C_NUM_QUEENS + 2;
    signal   uart_tx_str : string(1 to C_STR_LEN) := (others => ' ');
 
 begin
@@ -74,7 +74,7 @@ begin
    end process uart_tx_str_proc;
 
    test_proc : process
-      constant C_EXP_STR : string(1 to C_NUM_QUEENS) := (1 => 'X', others => '.');
+      constant C_EXP_STR : string(1 to C_NUM_QUEENS) := (1 => '1', others => '0');
    begin
       uart_rx_valid <= '0';
       wait until rst = '0';
@@ -88,19 +88,20 @@ begin
       uart_rx_valid <= '0';
       wait until clk = '1';
 
-      wait for 1000 ns;
-      wait until clk = '1';
-
-      for row in 0 to C_NUM_QUEENS - 1 loop
-         assert uart_tx_str(row * (C_NUM_QUEENS + 2) + 1 to row * (C_NUM_QUEENS + 2) + C_NUM_QUEENS) = C_EXP_STR
-            report "Error row " & to_string(row);
-      end loop;
-
       uart_rx_data  <= X"53";
       uart_rx_valid <= '1';
       wait until clk = '1';
       uart_rx_valid <= '0';
       wait until clk = '1';
+
+      wait for 1000 ns;
+      wait until clk = '1';
+
+      for row in 0 to C_NUM_QUEENS - 1 loop
+         assert uart_tx_str(row * (C_NUM_QUEENS + 2) + 1 to row * (C_NUM_QUEENS + 2) + C_NUM_QUEENS) = C_EXP_STR
+            report "Error row " & to_string(row)
+               & ". Got " & uart_tx_str(row * (C_NUM_QUEENS + 2) + 1 to row * (C_NUM_QUEENS + 2) + C_NUM_QUEENS);
+      end loop;
 
       wait for 1000 ns;
       wait until clk = '1';

@@ -6,10 +6,6 @@ PLATFORM = mega65r3
 
 TOP = $(PROJECT)_$(PLATFORM)
 
-SRCS  = $(TOP).vhd
-SRCS += ../$(PROJECT).vhd
-SRCS += ../$(PROJECT)_wrapper.vhd
-SRCS += ../vga_wrapper.vhd
 SRCS += ../../common/axi_merger.vhd
 SRCS += ../../common/clk.vhd
 SRCS += ../../common/font.vhd
@@ -23,6 +19,10 @@ SRCS += ../../common/uart.vhd
 SRCS += ../../common/vga_chars.vhd
 SRCS += ../../common/video_modes_pkg.vhd
 SRCS += ../../common/video_sync.vhd
+SRCS += ../$(PROJECT).vhd
+SRCS += ../$(PROJECT)_wrapper.vhd
+SRCS += ../vga_wrapper.vhd
+SRCS += $(TOP).vhd
 
 XDC = ../../common/$(PLATFORM).xdc
 

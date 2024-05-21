@@ -1,16 +1,11 @@
 XILINX_DIR = /opt/Xilinx/Vivado/2023.1
 
 PROJECT = queens
-PLATFORM = mega65r3
-#PLATFORM = mega65r6
+#PLATFORM = mega65r3
+PLATFORM = mega65r6
 
 TOP = $(PROJECT)_$(PLATFORM)
 
-SRCS  = $(TOP).vhd
-SRCS += ../$(PROJECT).vhd
-SRCS += ../$(PROJECT)_wrapper.vhd
-SRCS += ../controller.vhd
-SRCS += ../vga_wrapper.vhd
 SRCS += ../../common/axi_merger.vhd
 SRCS += ../../common/clk.vhd
 SRCS += ../../common/divexact.vhd
@@ -20,13 +15,21 @@ SRCS += ../../common/m2m_keyb.vhd
 SRCS += ../../common/matrix_to_keynum.vhd
 SRCS += ../../common/mega65kbd_to_matrix.vhd
 SRCS += ../../common/mega65.vhd
+SRCS += ../../common/serializer.vhd
 SRCS += ../../common/slv_to_dec.vhd
+SRCS += ../../common/stringifier.vhd
 SRCS += ../../common/uart.vhd
 SRCS += ../../common/vga_chars.vhd
 SRCS += ../../common/video_modes_pkg.vhd
 SRCS += ../../common/video_sync.vhd
+SRCS += ../$(PROJECT).vhd
+SRCS += ../$(PROJECT)_wrapper.vhd
+SRCS += ../controller.vhd
+SRCS += ../uart_wrapper.vhd
+SRCS += ../vga_wrapper.vhd
+SRCS += $(TOP).vhd
 
-VAL_NUM_QUEENS = 4
+VAL_NUM_QUEENS = 8
 
 GENERICS += -generic G_NUM_QUEENS=$(VAL_NUM_QUEENS)
 

@@ -1,4 +1,3 @@
-# This Makefile is used for simulation testing of the module LIFE.
 # Simulation is done using the program ghdl. It may be available
 # in your OS repository, otherwise it may be downloaded from here:
 # https://github.com/ghdl/ghdl
@@ -8,26 +7,26 @@ XPM_DIR = ../../../../fransschreuder/xpm_vhdl
 
 PROJECT = timer
 
-TB       = tb_$(PROJECT)
-#TB       = tb_$(PROJECT)_wrapper
-SOURCES  = ../../common/uart.vhd
-SOURCES += ../../common/clk.vhd
-SOURCES += ../../common/serializer.vhd
-SOURCES += ../../common/mega65.vhd
-SOURCES += ../../common/m2m_keyb.vhd
-SOURCES += ../../common/matrix_to_keynum.vhd
-SOURCES += ../../common/mega65kbd_to_matrix.vhd
-SOURCES += ../../common/kb_matrix_ram.vhd
-SOURCES += ../../common/video_sync.vhd
-SOURCES += ../../common/video_modes_pkg.vhd
-SOURCES += ../../common/font.vhd
-SOURCES += ../../common/vga_chars.vhd
-SOURCES += ../$(PROJECT).vhd
-SOURCES += ../$(PROJECT)_wrapper.vhd
-SOURCES += ../vga_wrapper.vhd
-SOURCES += $(TB).vhd
-SAVE     = $(TB).gtkw
-WAVE     = $(TB).ghw
+TB    = tb_$(PROJECT)
+#TB    = tb_$(PROJECT)_wrapper
+SRCS += ../../common/clk.vhd
+SRCS += ../../common/font.vhd
+SRCS += ../../common/kb_matrix_ram.vhd
+SRCS += ../../common/m2m_keyb.vhd
+SRCS += ../../common/matrix_to_keynum.vhd
+SRCS += ../../common/mega65kbd_to_matrix.vhd
+SRCS += ../../common/mega65.vhd
+SRCS += ../../common/serializer.vhd
+SRCS += ../../common/uart.vhd
+SRCS += ../../common/vga_chars.vhd
+SRCS += ../../common/video_modes_pkg.vhd
+SRCS += ../../common/video_sync.vhd
+SRCS += ../$(PROJECT).vhd
+SRCS += ../$(PROJECT)_wrapper.vhd
+SRCS += ../vga_wrapper.vhd
+SRCS += $(TB).vhd
+SAVE  = $(TB).gtkw
+WAVE  = $(TB).ghw
 
 
 #####################################
@@ -35,8 +34,8 @@ WAVE     = $(TB).ghw
 #####################################
 
 .PHONY: sim
-sim: $(SOURCES) unisim-obj08.cf xpm-obj08.cf
-	ghdl -i --std=08 -frelaxed-rules -fsynopsys $(SOURCES)
+sim: $(SRCS) unisim-obj08.cf xpm-obj08.cf
+	ghdl -i --std=08 -frelaxed-rules -fsynopsys $(SRCS)
 	ghdl -m --std=08 -frelaxed-rules -fsynopsys $(TB)
 	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) $(GENERICS) --wave=$(WAVE) --stop-time=100us
 

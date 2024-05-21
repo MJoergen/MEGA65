@@ -41,6 +41,7 @@ architecture synthesis of queens_wrapper is
    signal   queens_board : std_logic_vector(G_NUM_QUEENS * G_NUM_QUEENS - 1 downto 0);
    signal   queens_count : std_logic_vector(15 downto 0);
    signal   queens_valid : std_logic;
+   signal   queens_ready : std_logic;
    signal   queens_done  : std_logic;
 
    signal   vga_count       : std_logic_vector(15 downto 0);
@@ -49,26 +50,6 @@ architecture synthesis of queens_wrapper is
 
 begin
 
-   -- User Interface
-   controller_inst : entity work.controller
-      generic map (
-         G_NUM_QUEENS => G_NUM_QUEENS
-      )
-      port map (
-         clk_i           => clk_i,
-         rst_i           => rst_i,
-         uart_rx_valid_i => uart_rx_valid_i,
-         uart_rx_ready_o => uart_rx_ready_o,
-         uart_rx_data_i  => uart_rx_data_i,
-         uart_tx_valid_o => uart_tx_valid_o,
-         uart_tx_ready_i => uart_tx_ready_i,
-         uart_tx_data_o  => uart_tx_data_o,
-         board_i         => queens_board,
-         valid_i         => queens_valid,
-         done_i          => queens_done,
-         step_o          => queens_step
-      ); -- controller_inst
-
    queens_inst : entity work.queens
       generic map (
          G_NUM_QUEENS => G_NUM_QUEENS
@@ -76,7 +57,7 @@ begin
       port map (
          clk_i   => clk_i,
          rst_i   => rst_i,
-         en_i    => queens_step,
+         en_i    => queens_step and queens_ready,
          board_o => queens_board,
          valid_o => queens_valid,
          done_o  => queens_done
@@ -93,6 +74,39 @@ begin
          end if;
       end if;
    end process queens_count_proc;
+
+
+   -- UART Interface
+   uart_wrapper_inst : entity work.uart_wrapper
+      generic map (
+         G_NUM_QUEENS => G_NUM_QUEENS
+      )
+      port map (
+         clk_i           => clk_i,
+         rst_i           => rst_i,
+         uart_rx_valid_i => '0',
+         uart_rx_ready_o => open,
+         uart_rx_data_i  => (others => '0'),
+         uart_tx_valid_o => uart_tx_valid_o,
+         uart_tx_ready_i => uart_tx_ready_i,
+         uart_tx_data_o  => uart_tx_data_o,
+         valid_i         => queens_valid,
+         ready_o         => queens_ready,
+         result_i        => queens_board,
+         done_i          => queens_done
+      ); -- uart_wrapper_inst
+
+   -- User Interface
+   controller_inst : entity work.controller
+      port map (
+         clk_i      => clk_i,
+         rst_i      => rst_i,
+         rx_valid_i => uart_rx_valid_i,
+         rx_ready_o => uart_rx_ready_o,
+         rx_data_i  => uart_rx_data_i,
+         valid_i    => queens_valid,
+         step_o     => queens_step
+      ); -- controller_inst
 
    xpm_cdc_array_single_inst : component xpm_cdc_array_single
       generic map (
