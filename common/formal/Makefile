@@ -2,7 +2,7 @@
 # Type 'make synth' to run synthesis
 
 DUT  = divexact
-#DUT  = slv_to_dec
+DUT  = slv_to_dec
 #DUT  = gcd
 #DUT  = uart
 #DUT  = merginator
@@ -28,6 +28,9 @@ $(DUT)_cover/PASS: $(DUT).sby $(DUT).psl $(SRC)
 
 show_prove:
 	gtkwave $(DUT)_prove/engine_0/trace.vcd $(DUT).gtkw
+
+show_cover3:
+	gtkwave $(DUT)_cover/engine_0/trace3.vcd $(DUT).gtkw
 
 
 #######################

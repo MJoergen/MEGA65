@@ -1,20 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Sat May 18 05:32:47 2024
+[*] Tue May 21 08:54:35 2024
 [*]
 [dumpfile] "/home/mike/git/MJoergen/MEGA65/common/formal/slv_to_dec_prove/engine_0/trace.vcd"
-[dumpfile_mtime] "Sat May 18 05:32:17 2024"
-[dumpfile_size] 12494
+[dumpfile_mtime] "Tue May 21 08:53:49 2024"
+[dumpfile_size] 17420
 [savefile] "/home/mike/git/MJoergen/MEGA65/common/formal/slv_to_dec.gtkw"
 [timestart] 0
-[size] 1091 600
+[size] 1596 735
 [pos] -1 -1
-*-6.104783 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-5.605571 46 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] slv_to_dec.
 [sst_width] 249
 [signals_width] 269
 [sst_expanded] 1
-[sst_vpaned_height] 143
+[sst_vpaned_height] 188
 @28
 slv_to_dec.clk_i
 slv_to_dec.rst_i
@@ -34,5 +34,14 @@ slv_to_dec.de_out_valid
 slv_to_dec.de_out_ready
 slv_to_dec.first
 slv_to_dec.state[1:0]
+@22
+slv_to_dec.pow_ten[7:0]
+slv_to_dec.slv_data[7:0]
+@28
+slv_to_dec.i_slv_to_dec.f_s_valid
+@22
+slv_to_dec.i_slv_to_dec.f_s_data[7:0]
+@23
+slv_to_dec.i_slv_to_dec.new_f_m_data[31:0]
 [pattern_trace] 1
 [pattern_trace] 0

@@ -22,20 +22,40 @@ end entity slv_to_dec;
 
 architecture synthesis of slv_to_dec is
 
-   type     state_type is (INIT_ST, IDLE_ST, BUSY_ST, WAIT_ST);
-   signal   state : state_type                                    := INIT_ST;
+   type     state_type is (IDLE_ST, BUSY_ST, WAIT_ST);
+   signal   state : state_type                                    := IDLE_ST;
    signal   first : std_logic;
 
    constant C_ONE : std_logic_vector(G_DATA_SIZE - 1 downto 0)    := (0 => '1', others => '0');
-
-   signal   pow_ten  : std_logic_vector(G_DATA_SIZE - 1 downto 0) := C_ONE;
-   signal   slv_data : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
    signal   de_in_valid  : std_logic;
    signal   de_in_ready  : std_logic;
    signal   de_out_res   : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal   de_out_valid : std_logic;
    signal   de_out_ready : std_logic;
+
+   pure function largest_pow_ten (
+      size : natural
+   ) return std_logic_vector is
+      variable res_v : std_logic_vector(size - 1 downto 0);
+      variable new_v : std_logic_vector(size downto 0);
+   begin
+      --
+      res_v := (0 => '1', others => '0');
+      infinite_loop : loop
+         new_v := ("0" & res_v(size - 4 downto 0) & "000") +
+                  ("0" & res_v(size - 2 downto 0) & "0");
+         if new_v(size) = '1' or res_v(size-1 downto size-2) /= "00" then
+            return res_v;
+         end if;
+         res_v := new_v(size-1 downto 0);
+      end loop infinite_loop;
+
+   --
+   end function largest_pow_ten;
+
+   signal   pow_ten  : std_logic_vector(G_DATA_SIZE - 1 downto 0) := largest_pow_ten(G_DATA_SIZE);
+   signal   slv_data : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
 begin
 
@@ -52,14 +72,6 @@ begin
          end if;
 
          case state is
-
-            when INIT_ST =>
-               if pow_ten(G_DATA_SIZE - 1 downto G_DATA_SIZE - 3) = "000" then
-                  pow_ten <= (pow_ten(G_DATA_SIZE - 4 downto 0) & "000") +
-                             (pow_ten(G_DATA_SIZE - 2 downto 0) & "0");
-               else
-                  state <= IDLE_ST;
-               end if;
 
             when IDLE_ST =>
                if s_valid_i = '1' and s_ready_o = '1' then
@@ -87,7 +99,8 @@ begin
                      end if;
                      if pow_ten = C_ONE then
                         m_last_o <= '1';
-                        state    <= INIT_ST;
+                        pow_ten  <= largest_pow_ten(G_DATA_SIZE);
+                        state    <= IDLE_ST;
                      else
                         de_in_valid <= '1';
                         state       <= WAIT_ST;
@@ -106,8 +119,8 @@ begin
 
          if rst_i = '1' then
             -- Initialize to one.
-            pow_ten   <= C_ONE;
-            state     <= INIT_ST;
+            pow_ten   <= largest_pow_ten(G_DATA_SIZE);
+            state     <= IDLE_ST;
             m_valid_o <= '0';
             m_last_o  <= '0';
          end if;
