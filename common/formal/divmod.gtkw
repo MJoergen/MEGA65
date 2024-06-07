@@ -1,0 +1,47 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri Jun  7 07:18:36 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/common/formal/divmod_prove/engine_0/trace.vcd"
+[dumpfile_mtime] "Fri Jun  7 07:14:58 2024"
+[dumpfile_size] 2224
+[savefile] "/home/mike/git/MJoergen/MEGA65/common/formal/divmod.gtkw"
+[timestart] 0
+[size] 1524 796
+[pos] -1 -1
+*-2.746155 16 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] divmod.
+[sst_width] 249
+[signals_width] 233
+[sst_expanded] 1
+[sst_vpaned_height] 211
+@28
+divmod.clk_i
+divmod.rst_i
+divmod.s_ready_o
+divmod.s_valid_i
+@22
+divmod.s_val_n_i[7:0]
+divmod.s_val_d_i[7:0]
+@28
+divmod.m_ready_i
+divmod.m_valid_o
+@22
+divmod.m_res_q_o[7:0]
+divmod.m_res_r_o[7:0]
+@28
+divmod.state[1:0]
+@22
+divmod.val_d[8:0]
+@28
+divmod.shift[2:0]
+@22
+divmod.res_q[7:0]
+divmod.res_r[8:0]
+@28
+divmod.divmod_inst.f_valid
+@22
+divmod.divmod_inst.f_val_n[7:0]
+divmod.divmod_inst.f_val_d[7:0]
+[pattern_trace] 1
+[pattern_trace] 0

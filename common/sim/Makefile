@@ -7,6 +7,7 @@ PROJECT = uart
 PROJECT = gcd
 PROJECT = divexact
 PROJECT = slv_to_dec
+PROJECT = divmod
 
 TB       = tb_$(PROJECT)
 SOURCES  = ../../common/uart.vhd
@@ -14,6 +15,7 @@ SOURCES += ../../common/slv_to_dec.vhd
 SOURCES += ../../common/divexact.vhd
 SOURCES += ../../common/gcd.vhd
 SOURCES += ../../common/lfsr.vhd
+SOURCES += ../../common/divmod.vhd
 SOURCES += $(TB).vhd
 SAVE     = $(TB).gtkw
 WAVE     = $(TB).ghw

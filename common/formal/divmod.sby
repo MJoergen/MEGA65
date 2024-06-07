@@ -1,0 +1,21 @@
+[tasks]
+cover
+prove
+
+[options]
+cover: mode cover
+cover: depth 20
+prove: mode bmc
+prove: depth 20
+
+[engines]
+smtbmc
+
+[script]
+ghdl --std=08 -gG_DATA_SIZE=8 divmod.vhd divmod.psl -e divmod
+prep -top divmod
+
+[files]
+divmod.psl
+../divmod.vhd
+

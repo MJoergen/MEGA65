@@ -1,8 +1,9 @@
 # Type 'make formal' to run formal verification
 # Type 'make synth' to run synthesis
 
-DUT  = divexact
-DUT  = slv_to_dec
+DUT  = divmod
+#DUT  = divexact
+#DUT  = slv_to_dec
 #DUT  = gcd
 #DUT  = uart
 #DUT  = merginator
