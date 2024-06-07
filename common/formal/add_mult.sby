@@ -1,0 +1,21 @@
+[tasks]
+cover
+prove
+
+[options]
+cover: mode cover
+cover: depth 20
+prove: mode bmc
+prove: depth 9
+
+[engines]
+smtbmc
+
+[script]
+ghdl --std=08 -gG_DATA_SIZE=8 add_mult.vhd add_mult.psl -e add_mult
+prep -top add_mult
+
+[files]
+add_mult.psl
+../math/add_mult.vhd
+

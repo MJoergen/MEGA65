@@ -1,7 +1,8 @@
 # Type 'make formal' to run formal verification
 # Type 'make synth' to run synthesis
 
-DUT  = amm
+DUT  = add_mult
+#DUT  = amm
 #DUT  = divexp
 #DUT  = sqrt
 #DUT  = divmod
