@@ -2,6 +2,7 @@
 # Type 'make synth' to run synthesis
 
 DUT  = divmod
+DUT  = jacobi
 #DUT  = divexact
 #DUT  = slv_to_dec
 #DUT  = gcd
@@ -11,6 +12,7 @@ DUT  = divmod
 #DUT  = serializer
 
 #SRC += ../divexact.vhd
+SRC += ../divmod.vhd
 SRC += ../$(DUT).vhd
 
 #GENERICS = -gG_DATA_SIZE_IN=32 -gG_DATA_SIZE_OUT=8

@@ -1,0 +1,113 @@
+vunit jacobi_inst(jacobi(synthesis))
+{
+-- set all declarations to run on clk_i
+   default clock is rising_edge(clk_i);
+
+-- Additional signals used during formal verification
+   signal f_val_n : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal f_val_k : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal f_valid : std_logic;
+   signal f_res   : integer;
+
+-- Process inputs
+   input_proc : process (clk_i)
+      pure function jacobi (
+         arg_n : natural;
+         arg_k : natural
+      ) return integer
+      is
+         variable n_v : natural;
+         variable k_v : natural;
+         variable t_v : integer;
+         variable r_v : natural;
+      begin
+         n_v := arg_n;
+         k_v := arg_k;
+         n_v := n_v mod k_v;
+         t_v := 1;
+
+         i_loop : for i in 1 to G_DATA_SIZE loop
+            if n_v = 0 then
+               exit i_loop;
+            end if;
+   --
+            j_loop : for j in 1 to G_DATA_SIZE loop
+               if n_v mod 2 /= 0 then
+                  exit j_loop;
+               end if;
+               n_v := n_v / 2;
+               r_v := k_v mod 8;
+               if r_v = 3 or r_v = 5 then
+                  t_v := - t_v;
+               end if;
+            end loop j_loop;
+
+            r_v := n_v;
+            n_v := k_v;
+            k_v := r_v;
+            if n_v mod 4 = 3 and k_v mod 4 = 3 then
+               t_v := - t_v;
+            end if;
+            n_v := n_v mod k_v;
+         end loop i_loop;
+
+         if k_v = 1 then
+            return t_v;
+         else
+            return 0;
+         end if;
+      end function jacobi;
+
+   begin
+      if rising_edge(clk_i) then
+         if s_valid_i and s_ready_o then
+            f_val_n <= s_val_n_i;
+            f_val_k <= s_val_k_i;
+            f_valid <= '1';
+            f_res   <= jacobi(to_integer(s_val_n_i), to_integer(s_val_k_i));
+         end if;
+
+         if rst_i then
+            f_valid <= '0';
+         end if;
+      end if;
+   end process input_proc;
+
+
+--------------------------------------------
+-- ASSERTIONS ABOUT OUTPUTS
+--------------------------------------------
+
+-- Output must be empty after reset
+   f_after_reset : assert always {rst_i} |=> {not m_valid_o};
+
+-- Output must be stable until accepted
+   f_output_stable : assert always {m_valid_o and not m_ready_i and not rst_i} |=>
+      {stable(m_valid_o) and stable(m_res_o)};
+
+-- Verify correct output
+   f_output : assert always {m_valid_o and not rst_i and f_valid} |->
+      {to_integer(m_res_o+1) = f_res+1};
+
+--------------------------------------------
+-- ASSUMPTIONS ABOUT INPUTS
+--------------------------------------------
+
+-- Require reset at startup.
+   f_reset : assume {rst_i};
+
+   f_nonzero : assume always {s_val_k_i /= 0};
+   f_odd : assume always {s_val_k_i mod 2 /= 0};
+
+   f_input_stable : assume always {s_valid_i and not s_ready_o and not rst_i} |=>
+      {stable(s_valid_i) and stable(s_val_n_i) and stable(s_val_k_i)};
+
+--------------------------------------------
+-- COVER STATEMENTS TO VERIFY REACHABILITY
+--------------------------------------------
+
+   f_full_to_empty : cover {m_valid_o and not rst_i;
+                            not m_valid_o};
+
+} -- vunit jacobi_inst(jacobi(synthesis))
+

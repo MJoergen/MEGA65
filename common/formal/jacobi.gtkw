@@ -1,0 +1,53 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri Jun  7 08:41:31 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/common/formal/jacobi_prove/engine_0/trace.vcd"
+[dumpfile_mtime] "Fri Jun  7 08:38:49 2024"
+[dumpfile_size] 13952
+[savefile] "/home/mike/git/MJoergen/MEGA65/common/formal/jacobi.gtkw"
+[timestart] 0
+[size] 1458 783
+[pos] -1 -1
+*-5.306074 175 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] jacobi.
+[treeopen] jacobi.divmod_inst.
+[sst_width] 249
+[signals_width] 247
+[sst_expanded] 1
+[sst_vpaned_height] 206
+@28
+jacobi.clk_i
+jacobi.rst_i
+jacobi.s_ready_o
+jacobi.s_valid_i
+@22
+jacobi.s_val_n_i[7:0]
+jacobi.s_val_k_i[7:0]
+@28
+jacobi.m_ready_i
+jacobi.m_valid_o
+@22
+jacobi.m_res_o[7:0]
+@28
+jacobi.state[1:0]
+jacobi.dm_s_valid
+@22
+jacobi.dm_s_val_n[7:0]
+jacobi.dm_s_val_d[7:0]
+@28
+jacobi.dm_m_valid
+jacobi.dm_m_ready
+@22
+jacobi.dm_m_res_r[7:0]
+jacobi.val_n[7:0]
+jacobi.val_k[7:0]
+jacobi.res[7:0]
+@28
+jacobi.jacobi_inst.f_valid
+@22
+jacobi.jacobi_inst.f_val_n[7:0]
+@23
+jacobi.jacobi_inst.f_val_k[7:0]
+[pattern_trace] 1
+[pattern_trace] 0
