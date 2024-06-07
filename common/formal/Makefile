@@ -6,16 +6,16 @@ DUT  = divexp
 #DUT  = divmod
 #DUT  = jacobi
 #DUT  = divexact
-#DUT  = slv_to_dec
 #DUT  = gcd
+#DUT  = slv_to_dec
 #DUT  = uart
 #DUT  = merginator
 #DUT  = axi_merger
 #DUT  = serializer
 
-#SRC += ../divexact.vhd
-SRC += ../divmod.vhd
-SRC += ../$(DUT).vhd
+#SRC += ../math/divexact.vhd
+SRC += ../math/divmod.vhd
+SRC += ../math/$(DUT).vhd
 
 #GENERICS = -gG_DATA_SIZE_IN=32 -gG_DATA_SIZE_OUT=8
 GENERICS = -gG_DATA_SIZE=8

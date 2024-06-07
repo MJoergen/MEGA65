@@ -17,6 +17,6 @@ prep -top jacobi
 
 [files]
 jacobi.psl
-../jacobi.vhd
-../divmod.vhd
+../math/jacobi.vhd
+../math/divmod.vhd
 

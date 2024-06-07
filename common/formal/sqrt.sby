@@ -17,5 +17,5 @@ prep -top sqrt
 
 [files]
 sqrt.psl
-../sqrt.vhd
+../math/sqrt.vhd
 

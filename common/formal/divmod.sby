@@ -17,5 +17,5 @@ prep -top divmod
 
 [files]
 divmod.psl
-../divmod.vhd
+../math/divmod.vhd
 

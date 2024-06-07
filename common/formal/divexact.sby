@@ -16,5 +16,5 @@ prep -top divexact
 
 [files]
 divexact.psl
-../divexact.vhd
+../math/divexact.vhd
 

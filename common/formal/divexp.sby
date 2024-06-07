@@ -17,6 +17,6 @@ prep -top divexp
 
 [files]
 divexp.psl
-../divmod.vhd
-../divexp.vhd
+../math/divmod.vhd
+../math/divexp.vhd
 

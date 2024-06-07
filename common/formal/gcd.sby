@@ -16,5 +16,5 @@ prep -top gcd
 
 [files]
 gcd.psl
-../gcd.vhd
+../math/gcd.vhd
 

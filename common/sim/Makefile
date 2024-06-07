@@ -4,9 +4,9 @@
 # https://github.com/ghdl/ghdl
 
 PROJECT = uart
-PROJECT = gcd
-PROJECT = divexact
 PROJECT = slv_to_dec
+PROJECT = divexact
+PROJECT = gcd
 PROJECT = divmod
 PROJECT = jacobi
 PROJECT = sqrt
@@ -15,13 +15,13 @@ PROJECT = divexp
 TB       = tb_$(PROJECT)
 SOURCES  = ../../common/uart.vhd
 SOURCES += ../../common/slv_to_dec.vhd
-SOURCES += ../../common/divexact.vhd
-SOURCES += ../../common/gcd.vhd
 SOURCES += ../../common/lfsr.vhd
-SOURCES += ../../common/divmod.vhd
-SOURCES += ../../common/jacobi.vhd
-SOURCES += ../../common/sqrt.vhd
-SOURCES += ../../common/divexp.vhd
+SOURCES += ../../common/math/divexact.vhd
+SOURCES += ../../common/math/gcd.vhd
+SOURCES += ../../common/math/divmod.vhd
+SOURCES += ../../common/math/jacobi.vhd
+SOURCES += ../../common/math/sqrt.vhd
+SOURCES += ../../common/math/divexp.vhd
 SOURCES += $(TB).vhd
 SAVE     = $(TB).gtkw
 WAVE     = $(TB).ghw
