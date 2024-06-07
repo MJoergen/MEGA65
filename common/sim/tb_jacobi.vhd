@@ -11,8 +11,8 @@ architecture simulation of tb_jacobi is
 
    constant C_DATA_SIZE : integer    := 64;
 
-   signal   clk : std_logic;
-   signal   rst : std_logic;
+   signal   clk : std_logic          := '1';
+   signal   rst : std_logic          := '1';
 
    -- Signals conected to DUT
    signal   jb_s_ready : std_logic;
@@ -28,25 +28,8 @@ architecture simulation of tb_jacobi is
 
 begin
 
-   --------------------------------------------------
-   -- Generate clock and reset
-   --------------------------------------------------
-
-   clk_proc : process
-   begin
-      clk <= '1', '0' after 1 ns;
-      wait for 2 ns; -- 50 MHz
-      if test_running = '0' then
-         wait;
-      end if;
-   end process clk_proc;
-
-   rst_proc : process
-   begin
-      rst <= '1', '0' after 20 ns;
-      wait;
-   end process rst_proc;
-
+   clk <= test_running and not clk after 5 ns;
+   rst <= '1', '0' after 100 ns;
 
    --------------------------------------------------
    -- Instantiate DUT
@@ -166,40 +149,41 @@ begin
    begin
       -- Wait until reset is complete
       jb_s_valid   <= '0';
-      wait until clk = '1' and rst = '0';
+      wait until rst = '0';
+      wait until clk = '1';
 
       -- Verify Jacobi
-      verify_jacobi( 1, 1);
-      verify_jacobi( 2, 1);
-      verify_jacobi( 3, 1);
-      verify_jacobi( 4, 1);
-      verify_jacobi( 5, 1);
-      verify_jacobi( 6, 1);
-      verify_jacobi( 7, 1);
+      verify_jacobi(1, 1);
+      verify_jacobi(2, 1);
+      verify_jacobi(3, 1);
+      verify_jacobi(4, 1);
+      verify_jacobi(5, 1);
+      verify_jacobi(6, 1);
+      verify_jacobi(7, 1);
 
-      verify_jacobi( 1, 3);
-      verify_jacobi( 2, 3);
-      verify_jacobi( 3, 3);
-      verify_jacobi( 4, 3);
-      verify_jacobi( 5, 3);
-      verify_jacobi( 6, 3);
-      verify_jacobi( 7, 3);
+      verify_jacobi(1, 3);
+      verify_jacobi(2, 3);
+      verify_jacobi(3, 3);
+      verify_jacobi(4, 3);
+      verify_jacobi(5, 3);
+      verify_jacobi(6, 3);
+      verify_jacobi(7, 3);
 
-      verify_jacobi( 1, 5);
-      verify_jacobi( 2, 5);
-      verify_jacobi( 3, 5);
-      verify_jacobi( 4, 5);
-      verify_jacobi( 5, 5);
-      verify_jacobi( 6, 5);
-      verify_jacobi( 7, 5);
+      verify_jacobi(1, 5);
+      verify_jacobi(2, 5);
+      verify_jacobi(3, 5);
+      verify_jacobi(4, 5);
+      verify_jacobi(5, 5);
+      verify_jacobi(6, 5);
+      verify_jacobi(7, 5);
 
-      verify_jacobi( 5, 21);
-      verify_jacobi( 8, 21);
-      verify_jacobi( 19, 45);
-      verify_jacobi( 30, 7);
-      verify_jacobi( 30, 11);
-      verify_jacobi( 30, 13);
-      verify_jacobi( 1001, 9907);
+      verify_jacobi(5, 21);
+      verify_jacobi(8, 21);
+      verify_jacobi(19, 45);
+      verify_jacobi(30, 7);
+      verify_jacobi(30, 11);
+      verify_jacobi(30, 13);
+      verify_jacobi(1001, 9907);
       wait for 200 ns;
 
       -- Stop test

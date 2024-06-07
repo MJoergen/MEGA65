@@ -1,0 +1,43 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri Jun  7 09:23:38 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/common/formal/sqrt_prove/engine_0/trace.vcd"
+[dumpfile_mtime] "Fri Jun  7 09:22:11 2024"
+[dumpfile_size] 5529
+[savefile] "/home/mike/git/MJoergen/MEGA65/common/formal/sqrt.gtkw"
+[timestart] 0
+[size] 1485 838
+[pos] -1 -1
+*-5.148253 107 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] sqrt.
+[sst_width] 249
+[signals_width] 252
+[sst_expanded] 1
+[sst_vpaned_height] 226
+@28
+sqrt.clk_i
+sqrt.rst_i
+sqrt.s_ready_o
+sqrt.s_valid_i
+@22
+sqrt.s_data_i[15:0]
+@28
+sqrt.m_ready_i
+sqrt.m_valid_o
+@22
+sqrt.m_res_o[7:0]
+sqrt.m_diff_o[7:0]
+@28
+sqrt.state_r
+@22
+sqrt.val_r[15:0]
+sqrt.bit_r[15:0]
+sqrt.res_r[15:0]
+@28
+sqrt.valid_r
+sqrt.sqrt_inst.f_valid
+@22
+sqrt.sqrt_inst.f_data[15:0]
+[pattern_trace] 1
+[pattern_trace] 0

@@ -9,6 +9,7 @@ PROJECT = divexact
 PROJECT = slv_to_dec
 PROJECT = divmod
 PROJECT = jacobi
+PROJECT = sqrt
 
 TB       = tb_$(PROJECT)
 SOURCES  = ../../common/uart.vhd
@@ -18,6 +19,7 @@ SOURCES += ../../common/gcd.vhd
 SOURCES += ../../common/lfsr.vhd
 SOURCES += ../../common/divmod.vhd
 SOURCES += ../../common/jacobi.vhd
+SOURCES += ../../common/sqrt.vhd
 SOURCES += $(TB).vhd
 SAVE     = $(TB).gtkw
 WAVE     = $(TB).ghw
