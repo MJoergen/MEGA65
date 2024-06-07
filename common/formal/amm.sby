@@ -1,0 +1,21 @@
+[tasks]
+cover
+prove
+
+[options]
+cover: mode cover
+cover: depth 20
+prove: mode bmc
+prove: depth 5
+
+[engines]
+smtbmc
+
+[script]
+ghdl --std=08 -gG_DATA_SIZE=8 amm.vhd amm.psl -e amm
+prep -top amm
+
+[files]
+amm.psl
+../math/amm.vhd
+

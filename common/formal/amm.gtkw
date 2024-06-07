@@ -1,0 +1,47 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri Jun  7 18:59:44 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/common/formal/amm_prove/engine_0/trace.vcd"
+[dumpfile_mtime] "Fri Jun  7 18:53:20 2024"
+[dumpfile_size] 4391
+[savefile] "/home/mike/git/MJoergen/MEGA65/common/formal/amm.gtkw"
+[timestart] 0
+[size] 1222 815
+[pos] 0 58
+*-3.954338 45 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] amm.
+[sst_width] 249
+[signals_width] 268
+[sst_expanded] 1
+[sst_vpaned_height] 218
+@28
+amm.clk_i
+amm.rst_i
+amm.s_ready_o
+amm.s_valid_i
+@22
+amm.s_val_a_i[7:0]
+amm.s_val_x_i[15:0]
+amm.s_val_b_i[15:0]
+amm.s_val_n_i[15:0]
+@28
+amm.m_ready_i
+amm.m_valid_o
+@22
+amm.m_res_o[15:0]
+amm.mult_r[7:0]
+amm.add_r[15:0]
+amm.res_r[15:0]
+@23
+amm.val_r[15:0]
+@28
+amm.state_r
+amm.amm_inst.f_valid
+@22
+amm.amm_inst.f_val_a[7:0]
+amm.amm_inst.f_val_x[15:0]
+amm.amm_inst.f_val_b[15:0]
+amm.amm_inst.f_val_n[15:0]
+[pattern_trace] 1
+[pattern_trace] 0

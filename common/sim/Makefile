@@ -11,6 +11,7 @@ PROJECT = divmod
 PROJECT = jacobi
 PROJECT = sqrt
 PROJECT = divexp
+PROJECT = amm
 
 TB       = tb_$(PROJECT)
 SOURCES  = ../../common/uart.vhd
@@ -22,6 +23,7 @@ SOURCES += ../../common/math/divmod.vhd
 SOURCES += ../../common/math/jacobi.vhd
 SOURCES += ../../common/math/sqrt.vhd
 SOURCES += ../../common/math/divexp.vhd
+SOURCES += ../../common/math/amm.vhd
 SOURCES += $(TB).vhd
 SAVE     = $(TB).gtkw
 WAVE     = $(TB).ghw

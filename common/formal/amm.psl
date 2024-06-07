@@ -1,0 +1,78 @@
+vunit amm_inst(amm(synthesis))
+{
+   -- set all declarations to run on clk_i
+   default clock is rising_edge(clk_i);
+
+   -- Additional signals used during formal verification
+   signal f_val_a : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal f_val_x : std_logic_vector(2*G_DATA_SIZE - 1 downto 0);
+   signal f_val_b : std_logic_vector(2*G_DATA_SIZE - 1 downto 0);
+   signal f_val_n : std_logic_vector(2*G_DATA_SIZE - 1 downto 0);
+   signal f_res   : natural;
+   signal f_valid : std_logic;
+
+   -- Process inputs
+   input_proc : process (clk_i)
+   begin
+      if rising_edge(clk_i) then
+         if s_valid_i and s_ready_o then
+            f_val_a <= s_val_a_i;
+            f_val_x <= s_val_x_i;
+            f_val_b <= s_val_b_i;
+            f_val_n <= s_val_n_i;
+            f_res <= (to_integer(s_val_a_i) * to_integer(s_val_x_i) +
+            to_integer(s_val_b_i)) mod to_integer(s_val_n_i);
+            f_valid <= '1';
+         end if;
+
+         if rst_i then
+            f_valid <= '0';
+         end if;
+      end if;
+   end process input_proc;
+
+
+   --------------------------------------------
+   -- ASSERTIONS ABOUT OUTPUTS
+   --------------------------------------------
+
+   -- Output must be empty after reset
+   f_after_reset : assert always {rst_i} |=> {not m_valid_o};
+
+   -- Output must be stable until accepted
+   f_output_stable : assert always {m_valid_o and not m_ready_i and not rst_i} |=>
+      {stable(m_valid_o) and stable(m_res_o)};
+
+   -- Verify correct output
+   f_output : assert always {m_valid_o and not rst_i and f_valid} |->
+      {to_integer(m_res_o) = f_res};
+
+   --------------------------------------------
+   -- ASSUMPTIONS ABOUT INPUTS
+   --------------------------------------------
+
+   -- Require reset at startup.
+   f_reset : assume {rst_i};
+
+   f_nonzero : assume always {s_val_n_i /= 0};
+
+   f_input_valid : assume always {s_val_x_i < s_val_n_i and s_val_b_i < s_val_n_i};
+
+   f_input_stable : assume always {s_valid_i and not s_ready_o and not rst_i} |=>
+      {stable(s_valid_i) and stable(s_val_a_i) and stable(s_val_x_i) and
+                             stable(s_val_b_i) and stable(s_val_n_i)};
+
+   f_input_positive : assume always {s_val_a_i(G_DATA_SIZE-1) = '0' and
+                                     s_val_x_i(2*G_DATA_SIZE-1) = '0' and
+                                     s_val_b_i(2*G_DATA_SIZE-1) = '0' and
+                                     s_val_n_i(2*G_DATA_SIZE-1) = '0'};
+
+   --------------------------------------------
+   -- COVER STATEMENTS TO VERIFY REACHABILITY
+   --------------------------------------------
+
+   f_full_to_empty : cover {m_valid_o and not rst_i;
+                            not m_valid_o};
+
+} -- vunit amm_inst(amm(synthesis))
+
