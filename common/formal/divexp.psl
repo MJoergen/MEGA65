@@ -1,0 +1,84 @@
+vunit divexp_inst(divexp(synthesis))
+{
+   -- set all declarations to run on clk_i
+   default clock is rising_edge(clk_i);
+
+   -- Additional signals used during formal verification
+   signal f_val_n : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal f_val_d : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal f_res   : natural;
+   signal f_valid : std_logic;
+
+   -- Process inputs
+   input_proc : process (clk_i)
+
+      pure function calc_divexp(n : natural; d : natural) return natural is
+         variable n_v : natural;
+         variable res_v : natural;
+      begin
+         n_v := n;
+         res_v := 0;
+         for i in 1 to G_DATA_SIZE loop
+            if n_v mod d /= 0 then
+               return res_v;
+            else
+               n_v := n_v / d;
+               res_v := res_v + 1;
+            end if;
+         end loop;
+      end function calc_divexp;
+
+   begin
+      if rising_edge(clk_i) then
+         if s_valid_i and s_ready_o then
+            f_val_n <= s_val_n_i;
+            f_val_d <= s_val_d_i;
+            f_res   <= calc_divexp(to_integer(s_val_n_i), to_integer(s_val_d_i));
+            f_valid <= '1';
+         end if;
+
+         if rst_i then
+            f_valid <= '0';
+         end if;
+      end if;
+   end process input_proc;
+
+
+   --------------------------------------------
+   -- ASSERTIONS ABOUT OUTPUTS
+   --------------------------------------------
+
+   -- Output must be empty after reset
+   f_after_reset : assert always {rst_i} |=> {not m_valid_o};
+
+   -- Output must be stable until accepted
+   f_output_stable : assert always {m_valid_o and not m_ready_i and not rst_i} |=>
+      {stable(m_valid_o) and stable(m_res_o)};
+
+   -- Verify correct output
+   f_output : assert always {m_valid_o and not rst_i and f_valid} |->
+      {to_integer(m_res_o) = f_res};
+
+   --------------------------------------------
+   -- ASSUMPTIONS ABOUT INPUTS
+   --------------------------------------------
+
+   -- Require reset at startup.
+   f_reset : assume {rst_i};
+
+   f_n_greater_one : assume always {s_val_n_i > 1};
+   f_d_greater_one : assume always {s_val_d_i > 1};
+
+   f_input_stable : assume always {s_valid_i and not s_ready_o and not rst_i} |=>
+      {stable(s_valid_i) and stable(s_val_n_i) and stable(s_val_d_i)};
+
+
+   --------------------------------------------
+   -- COVER STATEMENTS TO VERIFY REACHABILITY
+   --------------------------------------------
+
+   f_full_to_empty : cover {m_valid_o and not rst_i;
+                            not m_valid_o};
+
+} -- vunit divexp_inst(divexp(synthesis))
+
