@@ -9,11 +9,12 @@ end entity tb_divexp;
 
 architecture simulation of tb_divexp is
 
-   constant C_DATA_SIZE : integer                                    := 32;
-   constant C_ZERO      : std_logic_vector(C_DATA_SIZE - 1 downto 0) := (others => '0');
+   constant C_DATA_SIZE : integer    := 32;
+   constant C_EXP_SIZE  : integer    := 4;
 
-   signal   clk : std_logic                                          := '1';
-   signal   rst : std_logic                                          := '1';
+   signal   clk          : std_logic := '1';
+   signal   rst          : std_logic := '1';
+   signal   test_running : std_logic := '1';
 
    -- Signals conected to DUT
    signal   dut_s_ready : std_logic;
@@ -22,10 +23,13 @@ architecture simulation of tb_divexp is
    signal   dut_s_val_d : std_logic_vector(C_DATA_SIZE - 1 downto 0);
    signal   dut_m_ready : std_logic;
    signal   dut_m_valid : std_logic;
-   signal   dut_m_res   : std_logic_vector(C_DATA_SIZE - 1 downto 0);
+   signal   dut_m_quot  : std_logic_vector(C_DATA_SIZE - 1 downto 0);
+   signal   dut_m_exp   : std_logic_vector(C_EXP_SIZE - 1 downto 0);
 
-   -- Signal to control execution of the testbench.
-   signal   test_running : std_logic                                 := '1';
+   type     divexp_res_type is record
+      quot : natural;
+      exp  : natural;
+   end record divexp_res_type;
 
 begin
 
@@ -39,7 +43,8 @@ begin
 
    divexp_inst : entity work.divexp
       generic map (
-         G_DATA_SIZE => C_DATA_SIZE
+         G_DATA_SIZE => C_DATA_SIZE,
+         G_EXP_SIZE  => C_EXP_SIZE
       )
       port map (
          clk_i     => clk,
@@ -50,7 +55,8 @@ begin
          s_val_d_i => dut_s_val_d,
          m_ready_i => dut_m_ready,
          m_valid_o => dut_m_valid,
-         m_res_o   => dut_m_res
+         m_quot_o  => dut_m_quot,
+         m_exp_o   => dut_m_exp
       ); -- divexp_inst
 
 
@@ -65,35 +71,39 @@ begin
          val_n : integer;
          val_d : integer
       ) is
-         variable exp_v : integer;
+         variable res_v : divexp_res_type;
 
          pure function calc_divexp (
             n : integer;
             d : integer
-         ) return integer is
-            variable res_v : integer;
-            variable n_v   : integer;
+         ) return divexp_res_type is
+            variable divexp_res_v : divexp_res_type;
          begin
             assert n > 1;
             assert d > 1;
-            res_v := 0;
-            n_v   := n;
+            divexp_res_v.exp  := 0;
+            divexp_res_v.quot := n;
 
-            while n_v mod d = 0 loop
-               n_v   := n_v / d;
-               res_v := res_v + 1;
+            while divexp_res_v.quot mod d = 0 loop
+               divexp_res_v.quot := divexp_res_v.quot / d;
+               divexp_res_v.exp  := divexp_res_v.exp + 1;
+               if divexp_res_v.exp + 1 = 2**C_EXP_SIZE then
+                  exit;
+               end if;
             end loop;
 
-            return res_v;
+            return divexp_res_v;
          end function calc_divexp;
 
-      begin -- procedure verify_sqrt
+      --
+      begin
          -- Calculate expected response
-         exp_v       := calc_divexp(val_n, val_d);
+         res_v       := calc_divexp(val_n, val_d);
 
-         report "Verify DIVMOD: " & integer'image(val_n) &
+         report "Verify DIVEXP: " & integer'image(val_n) &
                 " / " & integer'image(val_d) &
-                " -> " & integer'image(exp_v);
+                " -> " & integer'image(res_v.quot) &
+                ", " & integer'image(res_v.exp);
 
          -- Start calculation
          dut_s_val_n <= to_stdlogicvector(val_n, C_DATA_SIZE);
@@ -110,7 +120,8 @@ begin
          end loop;
 
          -- Verify received response is correct
-         assert dut_m_res = to_stdlogicvector(exp_v, C_DATA_SIZE);
+         assert dut_m_quot = to_stdlogicvector(res_v.quot, C_DATA_SIZE);
+         assert dut_m_exp  = to_stdlogicvector(res_v.exp, C_EXP_SIZE);
       end procedure verify_divexp;
 
    --
@@ -137,6 +148,7 @@ begin
       verify_divexp(1234567890, 5);
       verify_divexp(1234567890, 7);
       verify_divexp(1234567890, 11);
+      verify_divexp(2**29, 2);
 
       wait for 20 ns;
 

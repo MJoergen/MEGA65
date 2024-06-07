@@ -1,18 +1,18 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Fri Jun  7 10:21:31 2024
+[*] Fri Jun  7 16:24:53 2024
 [*]
 [dumpfile] "/home/mike/git/MJoergen/MEGA65/common/formal/divexp_prove/engine_0/trace.vcd"
-[dumpfile_mtime] "Fri Jun  7 10:19:55 2024"
-[dumpfile_size] 6612
+[dumpfile_mtime] "Fri Jun  7 16:24:02 2024"
+[dumpfile_size] 5103
 [savefile] "/home/mike/git/MJoergen/MEGA65/common/formal/divexp.gtkw"
 [timestart] 0
 [size] 1507 749
-[pos] -1 -1
-*-4.541171 54 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] 0 36
+*-4.541171 6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] divexp.
 [sst_width] 249
-[signals_width] 263
+[signals_width] 396
 [sst_expanded] 1
 [sst_vpaned_height] 195
 @28
@@ -21,29 +21,29 @@ divexp.rst_i
 divexp.s_ready_o
 divexp.s_valid_i
 @22
-divexp.s_val_n_i[7:0]
-divexp.s_val_d_i[7:0]
+divexp.s_val_n_i[31:0]
+divexp.s_val_d_i[31:0]
 @28
 divexp.m_ready_i
 divexp.m_valid_o
 @22
-divexp.m_res_o[7:0]
+divexp.m_quot_o[31:0]
 @28
+divexp.m_exp_o[1:0]
 divexp.dm_s_valid
 @22
-divexp.dm_s_val_n[7:0]
-divexp.dm_s_val_d[7:0]
+divexp.dm_s_val_n[31:0]
+divexp.dm_s_val_d[31:0]
 @28
 divexp.dm_m_ready
 divexp.dm_m_valid
 @22
-divexp.dm_m_res_q[7:0]
-divexp.dm_m_res_r[7:0]
-divexp.m_res[7:0]
+divexp.dm_m_res_q[31:0]
+divexp.dm_m_res_r[31:0]
 @28
 divexp.state
 divexp.divexp_inst.f_valid
 @23
-divexp.divexp_inst.f_res[30:0]
+divexp.divexp_inst.f_res[61:0]
 [pattern_trace] 1
 [pattern_trace] 0

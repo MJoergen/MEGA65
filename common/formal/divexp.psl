@@ -3,29 +3,40 @@ vunit divexp_inst(divexp(synthesis))
    -- set all declarations to run on clk_i
    default clock is rising_edge(clk_i);
 
+   type     divexp_res_type is record
+      quot : natural;
+      exp  : natural;
+   end record divexp_res_type;
+
    -- Additional signals used during formal verification
    signal f_val_n : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal f_val_d : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal f_res   : natural;
+   signal f_res   : divexp_res_type;
    signal f_valid : std_logic;
 
    -- Process inputs
    input_proc : process (clk_i)
 
-      pure function calc_divexp(n : natural; d : natural) return natural is
-         variable n_v : natural;
-         variable res_v : natural;
+      pure function calc_divexp (
+         n : natural;
+         d : natural
+      ) return divexp_res_type is
+         variable res_v : divexp_res_type;
       begin
-         n_v := n;
-         res_v := 0;
+         assert n > 1;
+         assert d > 1;
+         res_v.exp  := 0;
+         res_v.quot := n;
+
          for i in 1 to G_DATA_SIZE loop
-            if n_v mod d /= 0 then
-               return res_v;
-            else
-               n_v := n_v / d;
-               res_v := res_v + 1;
+            if res_v.quot mod d /= 0 then
+               exit;
             end if;
+            res_v.quot := res_v.quot / d;
+            res_v.exp  := res_v.exp + 1;
          end loop;
+
+         return res_v;
       end function calc_divexp;
 
    begin
@@ -53,11 +64,12 @@ vunit divexp_inst(divexp(synthesis))
 
    -- Output must be stable until accepted
    f_output_stable : assert always {m_valid_o and not m_ready_i and not rst_i} |=>
-      {stable(m_valid_o) and stable(m_res_o)};
+      {stable(m_valid_o) and stable(m_quot_o) and stable(m_exp_o)};
 
    -- Verify correct output
    f_output : assert always {m_valid_o and not rst_i and f_valid} |->
-      {to_integer(m_res_o) = f_res};
+      {to_integer(m_quot_o) = f_res.quot and
+       to_integer(m_exp_o)  = f_res.exp};
 
    --------------------------------------------
    -- ASSUMPTIONS ABOUT INPUTS

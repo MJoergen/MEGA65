@@ -7,7 +7,8 @@ library ieee;
 
 entity divexp is
    generic (
-      G_DATA_SIZE : integer
+      G_DATA_SIZE : integer;
+      G_EXP_SIZE  : integer
    );
    port (
       clk_i     : in    std_logic;
@@ -18,7 +19,8 @@ entity divexp is
       s_val_d_i : in    std_logic_vector(G_DATA_SIZE - 1 downto 0);
       m_ready_i : in    std_logic;
       m_valid_o : out   std_logic;
-      m_res_o   : out   std_logic_vector(G_DATA_SIZE - 1 downto 0)
+      m_quot_o  : out   std_logic_vector(G_DATA_SIZE - 1 downto 0);
+      m_exp_o   : out   std_logic_vector(G_EXP_SIZE - 1 downto 0)
    );
 end entity divexp;
 
@@ -35,7 +37,7 @@ architecture synthesis of divexp is
    signal   dm_m_res_q : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal   dm_m_res_r : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
-   signal   m_res : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   m_exp : std_logic_vector(G_EXP_SIZE - 1 downto 0);
 
    type     state_type is (IDLE_ST, BUSY_ST);
    signal   state : state_type;
@@ -63,20 +65,27 @@ begin
                   dm_s_val_n <= s_val_n_i;
                   dm_s_val_d <= s_val_d_i;
                   dm_s_valid <= '1';
-                  m_res      <= (others => '0');
+                  m_quot_o   <= s_val_n_i;
+                  m_exp      <= (others => '0');
                   state      <= BUSY_ST;
                end if;
 
             when BUSY_ST =>
                if dm_m_valid = '1' then
                   if dm_m_res_r /= C_ZERO then
-                     m_res_o   <= m_res;
+                     m_exp_o   <= m_exp;
                      m_valid_o <= '1';
                      state     <= IDLE_ST;
                   else
                      dm_s_val_n <= dm_m_res_q;
+                     m_quot_o   <= dm_m_res_q;
                      dm_s_valid <= '1';
-                     m_res      <= m_res + 1;
+                     m_exp      <= m_exp + 1;
+                     if m_exp + 2 = 0 then
+                        m_exp_o   <= m_exp + 1;
+                        m_valid_o <= '1';
+                        state     <= IDLE_ST;
+                     end if;
                   end if;
                end if;
 
