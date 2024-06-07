@@ -1,0 +1,25 @@
+[tasks]
+cover
+prove
+
+[options]
+cover: mode cover
+cover: depth 20
+prove: mode bmc
+prove: depth 5
+
+[engines]
+smtbmc
+
+[script]
+ghdl --std=08 -gG_DATA_SIZE=8 cf.vhd amm.vhd add_mult.vhd sqrt.vhd divmod.vhd cf.psl -e cf
+prep -top cf
+
+[files]
+cf.psl
+../math/amm.vhd
+../math/add_mult.vhd
+../math/sqrt.vhd
+../math/divmod.vhd
+../math/cf.vhd
+

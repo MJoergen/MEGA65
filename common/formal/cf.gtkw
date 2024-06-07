@@ -1,0 +1,101 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri Jun  7 20:58:28 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/common/formal/cf_prove/engine_0/trace.vcd"
+[dumpfile_mtime] "Fri Jun  7 20:54:51 2024"
+[dumpfile_size] 10954
+[savefile] "/home/mike/git/MJoergen/MEGA65/common/formal/cf.gtkw"
+[timestart] 0
+[size] 1000 887
+[pos] -1399 1
+*-2.746155 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] cf.
+[sst_width] 249
+[signals_width] 250
+[sst_expanded] 1
+[sst_vpaned_height] 243
+@28
+cf.clk_i
+cf.rst_i
+cf.s_start_i
+@22
+cf.s_val_i[15:0]
+@28
+cf.m_ready_i
+cf.m_valid_o
+@22
+cf.m_res_x_o[15:0]
+cf.m_res_p_o[7:0]
+@28
+cf.m_res_w_o
+cf.state[1:0]
+@22
+cf.val_n[15:0]
+cf.val_2root[7:0]
+cf.p_prev[7:0]
+cf.r_prev[7:0]
+cf.x_prev[15:0]
+cf.p_cur[7:0]
+cf.s_cur[7:0]
+@28
+cf.w_cur
+@22
+cf.x_cur[15:0]
+cf.a_cur[7:0]
+cf.r_cur[7:0]
+cf.p_new[7:0]
+cf.s_new[7:0]
+@28
+cf.w_new
+@22
+cf.x_new[15:0]
+@28
+cf.sqrt_s_valid
+@22
+cf.sqrt_s_data[15:0]
+@28
+cf.sqrt_m_ready
+cf.sqrt_m_valid
+@22
+cf.sqrt_m_res[7:0]
+cf.sqrt_m_diff[8:0]
+@28
+cf.divmod_s_ready
+cf.divmod_s_valid
+@22
+cf.divmod_s_val_n[7:0]
+cf.divmod_s_val_d[7:0]
+@28
+cf.divmod_m_ready
+cf.divmod_m_valid
+@22
+cf.divmod_m_res_q[7:0]
+cf.divmod_m_res_r[7:0]
+@28
+cf.amm_s_ready
+cf.amm_s_valid
+@22
+cf.amm_s_val_a[7:0]
+cf.amm_s_val_b[15:0]
+cf.amm_s_val_x[15:0]
+cf.amm_s_val_n[15:0]
+@28
+cf.amm_m_ready
+cf.amm_m_valid
+@22
+cf.amm_m_res[15:0]
+@28
+cf.add_mult_s_ready
+cf.add_mult_s_valid
+@22
+cf.add_mult_s_val_a[7:0]
+cf.add_mult_s_val_x[7:0]
+cf.add_mult_s_val_b[15:0]
+@28
+cf.add_mult_m_ready
+cf.add_mult_m_valid
+@23
+cf.add_mult_m_res[15:0]
+[pattern_trace] 1
+[pattern_trace] 0

@@ -1,7 +1,8 @@
 # Type 'make formal' to run formal verification
 # Type 'make synth' to run synthesis
 
-DUT  = add_mult
+DUT  = cf
+#DUT  = add_mult
 #DUT  = amm
 #DUT  = divexp
 #DUT  = sqrt
@@ -16,7 +17,10 @@ DUT  = add_mult
 #DUT  = serializer
 
 #SRC += ../math/divexact.vhd
-#SRC += ../math/divmod.vhd
+SRC += ../math/amm.vhd
+SRC += ../math/add_mult.vhd
+SRC += ../math/sqrt.vhd
+SRC += ../math/divmod.vhd
 SRC += ../math/$(DUT).vhd
 
 #GENERICS = -gG_DATA_SIZE_IN=32 -gG_DATA_SIZE_OUT=8

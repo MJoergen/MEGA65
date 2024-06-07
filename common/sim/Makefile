@@ -13,6 +13,7 @@ PROJECT = sqrt
 PROJECT = divexp
 PROJECT = amm
 PROJECT = add_mult
+PROJECT = cf
 
 TB       = tb_$(PROJECT)
 SOURCES  = ../../common/uart.vhd
@@ -26,6 +27,7 @@ SOURCES += ../../common/math/sqrt.vhd
 SOURCES += ../../common/math/divexp.vhd
 SOURCES += ../../common/math/amm.vhd
 SOURCES += ../../common/math/add_mult.vhd
+SOURCES += ../../common/math/cf.vhd
 SOURCES += $(TB).vhd
 SAVE     = $(TB).gtkw
 WAVE     = $(TB).ghw
