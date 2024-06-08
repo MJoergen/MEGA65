@@ -31,9 +31,9 @@ entity cf_mega65r6 is
       kb_io1_o       : out   std_logic;
       kb_io2_i       : in    std_logic
    );
-end entity fact_mega65r6;
+end entity cf_mega65r6;
 
-architecture synthesis of fact_mega65r6 is
+architecture synthesis of cf_mega65r6 is
 
    constant C_VIDEO_MODE : video_modes_type := C_VIDEO_MODE_1280_720_60;
 

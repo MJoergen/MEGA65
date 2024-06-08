@@ -48,6 +48,7 @@ begin
 
    uart_rx_ready_o <= '1';
 
+   -- Read decimal number from UART input
    uart_rx_proc : process (clk_i)
    begin
       if rising_edge(clk_i) then
@@ -57,7 +58,9 @@ begin
             if uart_rx_data_i = X"0D" then
                cf_s_start <= '1';
             else
-               cf_s_val <= cf_s_val * 10 + uart_rx_data_i - X"30";
+               cf_s_val <= (cf_s_val(2*G_DATA_SIZE-2 downto 0) & "0") +
+                           (cf_s_val(2*G_DATA_SIZE-4 downto 0) & "000") +
+                           uart_rx_data_i - X"30";
             end if;
          end if;
 
@@ -86,7 +89,7 @@ begin
 
    slv_to_dec_inst : entity work.slv_to_dec
       generic map (
-         G_DATA_SIZE => G_DATA_SIZE
+         G_DATA_SIZE => 2*G_DATA_SIZE
       )
       port map (
          clk_i     => clk_i,

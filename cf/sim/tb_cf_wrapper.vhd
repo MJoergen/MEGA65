@@ -7,7 +7,7 @@ end entity tb_cf_wrapper;
 
 architecture simulation of tb_cf_wrapper is
 
-   constant C_DATA_SIZE : integer     := 32;
+   constant C_DATA_SIZE : integer     := 16;
 
    signal   running       : std_logic := '1';
    signal   clk           : std_logic := '1';
@@ -32,9 +32,7 @@ begin
 
    cf_wrapper_inst : entity work.cf_wrapper
       generic map (
-         G_SIZE     => C_SIZE,
-         G_VAL_SIZE => C_VAL_SIZE,
-         G_LOG_SIZE => C_LOG_SIZE
+         G_DATA_SIZE => C_DATA_SIZE
       )
       port map (
          clk_i           => clk,
@@ -124,11 +122,14 @@ begin
          uart_rx_string(to_string(arg));
          report "cf(" & integer'image(arg)
                 & ")";
+         verify_uart_tx_string("45");
+         verify_uart_tx_string("91");
       end procedure verify_cf;
 
    --
    begin
       uart_rx_valid <= '0';
+      uart_tx_ready <= '1';
       wait until rst = '0';
       wait for 200 ns;
       wait until clk = '1';
@@ -137,7 +138,7 @@ begin
 
       verify_cf(2059);
 
-      wait for 200 ns;
+      wait for 20 us;
 
       running       <= '0';
       report "Test finished";
