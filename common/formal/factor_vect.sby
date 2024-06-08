@@ -1,0 +1,24 @@
+[tasks]
+cover
+prove
+
+[options]
+cover: mode cover
+cover: depth 20
+prove: mode bmc
+prove: depth 5
+
+[engines]
+smtbmc
+
+[script]
+ghdl --std=08 -gG_DATA_SIZE=8 -gG_VECTOR_SIZE=8 factor_vect.vhd primes.vhd divexp.vhd divmod.vhd factor_vect.psl -e factor_vect
+prep -top factor_vect
+
+[files]
+factor_vect.psl
+../math/primes.vhd
+../math/divexp.vhd
+../math/divmod.vhd
+../math/factor_vect.vhd
+

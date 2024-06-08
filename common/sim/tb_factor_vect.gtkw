@@ -1,0 +1,64 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Sat Jun  8 18:51:49 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/common/sim/tb_factor_vect.ghw"
+[dumpfile_mtime] "Sat Jun  8 18:50:53 2024"
+[dumpfile_size] 5602385
+[savefile] "/home/mike/git/MJoergen/MEGA65/common/sim/tb_factor_vect.gtkw"
+[timestart] 0
+[size] 1569 857
+[pos] 0 13
+*-26.964808 230000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.tb_factor_vect.
+[treeopen] top.tb_factor_vect.factor_vect_inst.
+[sst_width] 249
+[signals_width] 312
+[sst_expanded] 1
+[sst_vpaned_height] 231
+@28
+top.tb_factor_vect.factor_vect_inst.clk_i
+top.tb_factor_vect.factor_vect_inst.rst_i
+top.tb_factor_vect.factor_vect_inst.s_ready_o
+top.tb_factor_vect.factor_vect_inst.s_valid_i
+@22
+#{top.tb_factor_vect.factor_vect_inst.s_data_i[15:0]} top.tb_factor_vect.factor_vect_inst.s_data_i[7] top.tb_factor_vect.factor_vect_inst.s_data_i[6] top.tb_factor_vect.factor_vect_inst.s_data_i[5] top.tb_factor_vect.factor_vect_inst.s_data_i[4] top.tb_factor_vect.factor_vect_inst.s_data_i[3] top.tb_factor_vect.factor_vect_inst.s_data_i[2] top.tb_factor_vect.factor_vect_inst.s_data_i[1] top.tb_factor_vect.factor_vect_inst.s_data_i[0]
+@28
+top.tb_factor_vect.factor_vect_inst.m_ready_i
+top.tb_factor_vect.factor_vect_inst.m_valid_o
+top.tb_factor_vect.factor_vect_inst.m_complete_o
+@c00023
+#{top.tb_factor_vect.factor_vect_inst.m_data_o[15:0]} top.tb_factor_vect.factor_vect_inst.m_data_o[7] top.tb_factor_vect.factor_vect_inst.m_data_o[6] top.tb_factor_vect.factor_vect_inst.m_data_o[5] top.tb_factor_vect.factor_vect_inst.m_data_o[4] top.tb_factor_vect.factor_vect_inst.m_data_o[3] top.tb_factor_vect.factor_vect_inst.m_data_o[2] top.tb_factor_vect.factor_vect_inst.m_data_o[1] top.tb_factor_vect.factor_vect_inst.m_data_o[0]
+@28
+top.tb_factor_vect.factor_vect_inst.m_data_o[7]
+top.tb_factor_vect.factor_vect_inst.m_data_o[6]
+top.tb_factor_vect.factor_vect_inst.m_data_o[5]
+top.tb_factor_vect.factor_vect_inst.m_data_o[4]
+top.tb_factor_vect.factor_vect_inst.m_data_o[3]
+top.tb_factor_vect.factor_vect_inst.m_data_o[2]
+top.tb_factor_vect.factor_vect_inst.m_data_o[1]
+top.tb_factor_vect.factor_vect_inst.m_data_o[0]
+@1401201
+-group_end
+@22
+#{top.tb_factor_vect.factor_vect_inst.primes_index[3:0]} top.tb_factor_vect.factor_vect_inst.primes_index[2] top.tb_factor_vect.factor_vect_inst.primes_index[1] top.tb_factor_vect.factor_vect_inst.primes_index[0]
+#{top.tb_factor_vect.factor_vect_inst.primes_data[15:0]} top.tb_factor_vect.factor_vect_inst.primes_data[7] top.tb_factor_vect.factor_vect_inst.primes_data[6] top.tb_factor_vect.factor_vect_inst.primes_data[5] top.tb_factor_vect.factor_vect_inst.primes_data[4] top.tb_factor_vect.factor_vect_inst.primes_data[3] top.tb_factor_vect.factor_vect_inst.primes_data[2] top.tb_factor_vect.factor_vect_inst.primes_data[1] top.tb_factor_vect.factor_vect_inst.primes_data[0]
+@28
+top.tb_factor_vect.factor_vect_inst.divexp_s_ready
+@22
+#{top.tb_factor_vect.factor_vect_inst.divexp_s_val_n[15:0]} top.tb_factor_vect.factor_vect_inst.divexp_s_val_n[7] top.tb_factor_vect.factor_vect_inst.divexp_s_val_n[6] top.tb_factor_vect.factor_vect_inst.divexp_s_val_n[5] top.tb_factor_vect.factor_vect_inst.divexp_s_val_n[4] top.tb_factor_vect.factor_vect_inst.divexp_s_val_n[3] top.tb_factor_vect.factor_vect_inst.divexp_s_val_n[2] top.tb_factor_vect.factor_vect_inst.divexp_s_val_n[1] top.tb_factor_vect.factor_vect_inst.divexp_s_val_n[0]
+#{top.tb_factor_vect.factor_vect_inst.divexp_s_val_d[15:0]} top.tb_factor_vect.factor_vect_inst.divexp_s_val_d[7] top.tb_factor_vect.factor_vect_inst.divexp_s_val_d[6] top.tb_factor_vect.factor_vect_inst.divexp_s_val_d[5] top.tb_factor_vect.factor_vect_inst.divexp_s_val_d[4] top.tb_factor_vect.factor_vect_inst.divexp_s_val_d[3] top.tb_factor_vect.factor_vect_inst.divexp_s_val_d[2] top.tb_factor_vect.factor_vect_inst.divexp_s_val_d[1] top.tb_factor_vect.factor_vect_inst.divexp_s_val_d[0]
+@28
+top.tb_factor_vect.factor_vect_inst.divexp_s_valid
+top.tb_factor_vect.factor_vect_inst.divexp_m_ready
+top.tb_factor_vect.factor_vect_inst.divexp_m_valid
+@22
+#{top.tb_factor_vect.factor_vect_inst.divexp_m_quot[15:0]} top.tb_factor_vect.factor_vect_inst.divexp_m_quot[7] top.tb_factor_vect.factor_vect_inst.divexp_m_quot[6] top.tb_factor_vect.factor_vect_inst.divexp_m_quot[5] top.tb_factor_vect.factor_vect_inst.divexp_m_quot[4] top.tb_factor_vect.factor_vect_inst.divexp_m_quot[3] top.tb_factor_vect.factor_vect_inst.divexp_m_quot[2] top.tb_factor_vect.factor_vect_inst.divexp_m_quot[1] top.tb_factor_vect.factor_vect_inst.divexp_m_quot[0]
+#{top.tb_factor_vect.factor_vect_inst.divexp_m_exp[7:0]} top.tb_factor_vect.factor_vect_inst.divexp_m_exp[7] top.tb_factor_vect.factor_vect_inst.divexp_m_exp[6] top.tb_factor_vect.factor_vect_inst.divexp_m_exp[5] top.tb_factor_vect.factor_vect_inst.divexp_m_exp[4] top.tb_factor_vect.factor_vect_inst.divexp_m_exp[3] top.tb_factor_vect.factor_vect_inst.divexp_m_exp[2] top.tb_factor_vect.factor_vect_inst.divexp_m_exp[1] top.tb_factor_vect.factor_vect_inst.divexp_m_exp[0]
+@420
+top.tb_factor_vect.factor_vect_inst.state
+@22
+#{top.tb_factor_vect.factor_vect_inst.s_data[15:0]} top.tb_factor_vect.factor_vect_inst.s_data[7] top.tb_factor_vect.factor_vect_inst.s_data[6] top.tb_factor_vect.factor_vect_inst.s_data[5] top.tb_factor_vect.factor_vect_inst.s_data[4] top.tb_factor_vect.factor_vect_inst.s_data[3] top.tb_factor_vect.factor_vect_inst.s_data[2] top.tb_factor_vect.factor_vect_inst.s_data[1] top.tb_factor_vect.factor_vect_inst.s_data[0]
+[pattern_trace] 1
+[pattern_trace] 0

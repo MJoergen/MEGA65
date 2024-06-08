@@ -15,6 +15,7 @@ PROJECT = amm
 PROJECT = add_mult
 PROJECT = cf
 PROJECT = primes
+PROJECT = factor_vect
 
 TB       = tb_$(PROJECT)
 SOURCES  = ../../common/uart.vhd
@@ -30,6 +31,7 @@ SOURCES += ../../common/math/amm.vhd
 SOURCES += ../../common/math/add_mult.vhd
 SOURCES += ../../common/math/cf.vhd
 SOURCES += ../../common/math/primes.vhd
+SOURCES += ../../common/math/factor_vect.vhd
 SOURCES += $(TB).vhd
 SAVE     = $(TB).gtkw
 WAVE     = $(TB).ghw
