@@ -27,6 +27,118 @@ architecture simulation of tb_cf is
 
    signal   ready_cnt : std_logic_vector(3 downto 0) := (others => '0');
 
+   type     cf_state_type is record
+      n     : natural;
+      m     : natural;
+
+      p_old : natural;
+      r_old : natural;
+      x_old : natural;
+
+      p     : natural;
+      s     : natural;
+      w     : integer;
+      x     : natural;
+   end record cf_state_type;
+
+   procedure cf_print (
+      cf_state : cf_state_type
+   ) is
+   begin
+      report "n=" & to_string(cf_state.n);
+      report "m=" & to_string(cf_state.m);
+      report "p_old=" & to_string(cf_state.p_old);
+      report "r_old=" & to_string(cf_state.r_old);
+      report "x_old=" & to_string(cf_state.x_old);
+      report "p=" & to_string(cf_state.p);
+      report "s=" & to_string(cf_state.s);
+      report "w=" & to_string(cf_state.w);
+      report "x=" & to_string(cf_state.x);
+   end procedure cf_print;
+
+   -- Calculate integer square
+
+   pure function sqrt (
+      n : natural
+   ) return natural is
+      variable res_v : natural;
+   begin
+      --
+      for i in 1 to n loop
+         --
+         if i * i > n then
+            res_v := i - 1;
+            exit;
+         end if;
+      end loop;
+
+      return res_v;
+   end function sqrt;
+
+   -- Calculate a*x mod n, without risk of overflow
+
+   pure function add_mul (
+      a : natural;
+      x : natural;
+      n : natural
+   ) return natural is
+   begin
+      if a = 0 then
+         return 0;
+      elsif (a mod 2) = 0 then
+         return (add_mul(a / 2, x, n) * 2) mod n;
+      else
+         return (add_mul(a / 2, x, n) * 2 + x) mod n;
+      end if;
+   end function add_mul;
+
+   procedure cf_check (
+      cf_state : cf_state_type
+   ) is
+   begin
+      assert (add_mul(cf_state.x, cf_state.x, cf_state.n) - cf_state.w * cf_state.p) mod cf_state.n = 0;
+   end procedure cf_check;
+
+   pure function cf_init (
+      n : natural
+   ) return cf_state_type is
+      variable res_v : cf_state_type;
+   begin
+      res_v.n     := n;
+      res_v.m     := sqrt(n);
+      res_v.p_old := 1;
+      res_v.r_old := 0;
+      res_v.x_old := 1;
+      res_v.p     := n - res_v.m * res_v.m;
+      res_v.s     := 2 * res_v.m;
+      res_v.w     := -1;
+      res_v.x     := res_v.m;
+      cf_check(res_v);
+      return res_v;
+   end function cf_init;
+
+   pure function cf_next (
+      cf_state : cf_state_type
+   ) return cf_state_type is
+      variable a_v   : natural;
+      variable r_v   : natural;
+      variable res_v : cf_state_type;
+   begin
+      res_v.n     := cf_state.n;
+      res_v.m     := cf_state.m;
+      a_v         := cf_state.s / cf_state.p;
+      r_v         := cf_state.s - a_v * cf_state.p;
+      res_v.s     := 2 * cf_state.m - r_v;
+      res_v.p     := a_v * (r_v - cf_state.r_old) + cf_state.p_old;
+      res_v.w     := -cf_state.w;
+      res_v.x     := (a_v * cf_state.x + cf_state.x_old) mod cf_state.n;
+      res_v.p_old := cf_state.p;
+      res_v.r_old := r_v;
+      res_v.x_old := cf_state.x;
+      cf_check(res_v);
+      return res_v;
+   end function cf_next;
+
 begin
 
    clk        <= test_running and not clk after 5 ns;
@@ -68,25 +180,19 @@ begin
    --------------------------------------------------
 
    main_test_proc : process
-
-      type     res_type is record
-         x : integer;
-         y : integer;
-      end record res_type;
-
-      type     res_vector_type is array (natural range <>) of res_type;
-
       -- Verify CF processing
 
       procedure verify_cf (
-         val_n : integer;
-         res   : res_vector_type
+         val_n : integer
       ) is
-         variable exp_x_v : std_logic_vector(2 * C_DATA_SIZE - 1 downto 0);
-         variable exp_p_v : std_logic_vector(C_DATA_SIZE - 1 downto 0);
-         variable exp_w_v : std_logic;
+         variable exp_x_v    : std_logic_vector(2 * C_DATA_SIZE - 1 downto 0);
+         variable exp_p_v    : std_logic_vector(C_DATA_SIZE - 1 downto 0);
+         variable exp_w_v    : std_logic;
+         variable cf_state_v : cf_state_type;
       begin
          report "Verify CF: N=" & integer'image(val_n);
+
+         cf_state_v := cf_init(val_n);
 
          cf_s_val_n <= to_stdlogicvector(val_n, 2 * C_DATA_SIZE);
          cf_s_start <= '1';
@@ -94,10 +200,7 @@ begin
          cf_s_start <= '0';
          wait until clk = '1';
 
-         for i in 0 to res'length-1 loop
-            report "Verifying response (" & integer'image(res(i).x) &
-                   ", " & integer'image(res(i).y) & ")";
-
+         for i in 0 to 20 loop
             -- Wait for next value
             wait until clk = '1';
 
@@ -105,19 +208,16 @@ begin
                wait until clk = '1';
             end loop;
 
-            -- Verify received response is correct
-            exp_x_v := to_stdlogicvector(res(i).x, 2 * C_DATA_SIZE);
-            if res(i).y > 0 then
-               exp_p_v := to_stdlogicvector(res(i).y, C_DATA_SIZE);
-               exp_w_v := '0';
-            else
-               exp_p_v := to_stdlogicvector(-res(i).y, C_DATA_SIZE);
-               exp_w_v := '1';
-            end if;
+            exp_x_v    := to_stdlogicvector(cf_state_v.x, 2 * C_DATA_SIZE);
+            exp_p_v    := to_stdlogicvector(cf_state_v.p, C_DATA_SIZE);
+            exp_w_v    := '1' when cf_state_v.w = -1 else '0';
+
             assert cf_m_res_x = exp_x_v and
                    cf_m_res_p = exp_p_v and
                    cf_m_res_w = exp_w_v
                report "Received (" & to_string(cf_m_res_x) & ", " & to_string(cf_m_res_w) & ", " & to_string(cf_m_res_p) & ")";
+
+            cf_state_v := cf_next(cf_state_v);
 
          --
          end loop;
@@ -125,198 +225,7 @@ begin
       --
       end procedure verify_cf;
 
-      -- These values are copied from the spread sheet cf.xlsx.
-      constant C_RES2059    : res_vector_type :=
-      (
-         (
-            45,
-            -34
-         ),
-         (
-            91,
-            45
-         ),
-         (
-            136,
-            -35
-         ),
-         (
-            227,
-            54
-         ),
-         (
-            363,
-            -7
-         ),
-         (
-            465,
-            30
-         ),
-         (
-            1293,
-            -59
-         ),
-         (
-            1758,
-            5
-         ),
-         (
-            294,
-            -42
-         ),
-         (
-            287,
-            9
-         ),
-         (
-            818,
-            -51
-         ),
-         (
-            1105,
-            38
-         ),
-         (
-            1923,
-            -35
-         ),
-         (
-            833,
-            6
-         ),
-         (
-            1231,
-            -63
-         ),
-         (
-            5,
-            25
-         )
-      );
-
-      constant C_RES2623    : res_vector_type :=
-      (
-         (
-            51,
-            -22
-         ),
-         (
-            205,
-            57
-         ),
-         (
-            256,
-            -39
-         ),
-         (
-            461,
-            58
-         ),
-         (
-            717,
-            -19
-         ),
-         (
-            706,
-            66
-         ),
-         (
-            1423,
-            -27
-         ),
-         (
-            929,
-            74
-         ),
-         (
-            2352,
-            -3
-         ),
-         (
-            2478,
-            41
-         ),
-         (
-            2062,
-            -39
-         ),
-         (
-            1356,
-            13
-         )
-      );
-
-      constant C_RES3922201 : res_vector_type :=
-      (
-         (
-            1980,
-            -1801
-         ),
-         (
-            3961,
-            717
-         ),
-         (
-            21785,
-            -96
-         ),
-         (
-            897146,
-            307
-         ),
-         (
-            2943135,
-            -3240
-         ),
-         (
-            3840281,
-            489
-         ),
-         (
-            2369695,
-            -685
-         ),
-         (
-            3922153,
-            2304
-         ),
-         (
-            2369647,
-            -1443
-         ),
-         (
-            2369599,
-            2407
-         ),
-         (
-            817045,
-            -376
-         ),
-         (
-            1878602,
-            3217
-         ),
-         (
-            2695647,
-            -453
-         ),
-         (
-            1137126,
-            3000
-         ),
-         (
-            3832773,
-            -655
-         ),
-         (
-            689986,
-            615
-         ),
-         (
-            128287,
-            -1027
-         )
-      );
+   --
    begin
       -- Wait until reset is complete
       cf_s_start   <= '0';
@@ -324,13 +233,13 @@ begin
       wait until clk = '1';
 
       -- Verify CF
-      verify_cf(2623, C_RES2623);
+      verify_cf(2623);
       wait for 200 ns;
 
-      verify_cf(2059, C_RES2059);
+      verify_cf(2059);
       wait for 200 ns;
 
-      verify_cf(3922201, C_RES3922201);
+      verify_cf(3922201);
       wait for 200 ns;
 
       -- Stop test
