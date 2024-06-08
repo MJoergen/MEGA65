@@ -9,12 +9,12 @@ end entity tb_cf;
 
 architecture simulation of tb_cf is
 
-   constant C_DATA_SIZE : integer    := 72;
+   constant C_DATA_SIZE : integer                    := 72;
 
    -- Signal to control execution of the testbench.
-   signal   clk          : std_logic := '1';
-   signal   rst          : std_logic := '1';
-   signal   test_running : std_logic := '1';
+   signal   clk          : std_logic                 := '1';
+   signal   rst          : std_logic                 := '1';
+   signal   test_running : std_logic                 := '1';
 
    -- Signals conected to DUT
    signal   cf_s_start : std_logic;
@@ -25,10 +25,21 @@ architecture simulation of tb_cf is
    signal   cf_m_res_p : std_logic_vector(C_DATA_SIZE - 1 downto 0);
    signal   cf_m_res_w : std_logic;
 
+   signal   ready_cnt : std_logic_vector(3 downto 0) := (others => '0');
+
 begin
 
-   clk <= test_running and not clk after 5 ns;
-   rst <= '1', '0' after 100 ns;
+   clk        <= test_running and not clk after 5 ns;
+   rst        <= '1', '0' after 100 ns;
+
+   ready_cnt_proc : process (clk)
+   begin
+      if rising_edge(clk) then
+         ready_cnt <= ready_cnt + 1;
+      end if;
+   end process ready_cnt_proc;
+
+   cf_m_ready <= and(ready_cnt);
 
 
    --------------------------------------------------
@@ -87,11 +98,14 @@ begin
             report "Verifying response (" & integer'image(res(i).x) &
                    ", " & integer'image(res(i).y) & ")";
 
-            -- Verify received response is correct
-            while cf_m_valid /= '1' loop
+            -- Wait for next value
+            wait until clk = '1';
+
+            while (cf_m_valid and cf_m_ready) /= '1' loop
                wait until clk = '1';
             end loop;
 
+            -- Verify received response is correct
             exp_x_v := to_stdlogicvector(res(i).x, 2 * C_DATA_SIZE);
             if res(i).y > 0 then
                exp_p_v := to_stdlogicvector(res(i).y, C_DATA_SIZE);
@@ -104,10 +118,6 @@ begin
                    cf_m_res_p = exp_p_v and
                    cf_m_res_w = exp_w_v
                report "Received (" & to_string(cf_m_res_x) & ", " & to_string(cf_m_res_w) & ", " & to_string(cf_m_res_p) & ")";
-
-            while cf_m_valid /= '0' loop
-               wait until clk = '1';
-            end loop;
 
          --
          end loop;
@@ -310,7 +320,6 @@ begin
    begin
       -- Wait until reset is complete
       cf_s_start   <= '0';
-      cf_m_ready   <= '1';
       wait until rst = '0';
       wait until clk = '1';
 
