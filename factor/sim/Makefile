@@ -6,17 +6,20 @@
 XILINX_DIR = /opt/Xilinx/Vivado/2023.1
 XPM_DIR = ../../../../fransschreuder/xpm_vhdl
 
-PROJECT = cf
+PROJECT = factor
 
-#TB    = tb_$(PROJECT)
-TB    = tb_$(PROJECT)_wrapper
+TB    = tb_$(PROJECT)
+#TB    = tb_$(PROJECT)_wrapper
 SRCS += ../../common/clk.vhd
 SRCS += ../../common/math/add_mult.vhd
 SRCS += ../../common/math/amm.vhd
 SRCS += ../../common/math/cf.vhd
 SRCS += ../../common/math/divexact.vhd
+SRCS += ../../common/math/divexp.vhd
 SRCS += ../../common/math/divmod.vhd
+SRCS += ../../common/math/factor_vect.vhd
 SRCS += ../../common/math/gcd.vhd
+SRCS += ../../common/math/primes.vhd
 SRCS += ../../common/math/sqrt.vhd
 SRCS += ../../common/font.vhd
 SRCS += ../../common/kb_matrix_ram.vhd
@@ -30,11 +33,16 @@ SRCS += ../../common/slv_to_dec.vhd
 SRCS += ../../common/uart.vhd
 SRCS += ../../common/video_modes_pkg.vhd
 SRCS += ../../common/video_sync.vhd
+SRCS += ../$(PROJECT).vhd
 SRCS += ../$(PROJECT)_wrapper.vhd
 SRCS += $(TB).vhd
 SAVE  = $(TB).gtkw
 WAVE  = $(TB).ghw
 
+VAL_DATA_SIZE = 16
+VAL_VECTOR_SIZE = 8
+
+GENERICS += -gG_DATA_SIZE=$(VAL_DATA_SIZE) -gG_VECTOR_SIZE=$(VAL_VECTOR_SIZE)
 
 #####################################
 # Simulation

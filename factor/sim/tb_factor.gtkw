@@ -1,0 +1,72 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Sun Jun  9 05:27:18 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/factor/sim/tb_factor.ghw"
+[dumpfile_mtime] "Sun Jun  9 05:27:06 2024"
+[dumpfile_size] 49556
+[savefile] "/home/mike/git/MJoergen/MEGA65/factor/sim/tb_factor.gtkw"
+[timestart] 0
+[size] 1611 724
+[pos] -1 -1
+*-31.195652 2950000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.tb_factor.
+[treeopen] top.tb_factor.factor_inst.
+[sst_width] 249
+[signals_width] 316
+[sst_expanded] 1
+[sst_vpaned_height] 182
+@28
+top.tb_factor.factor_inst.clk_i
+top.tb_factor.factor_inst.rst_i
+top.tb_factor.factor_inst.s_start_i
+@24
+#{top.tb_factor.factor_inst.s_val_i[31:0]} top.tb_factor.factor_inst.s_val_i[31] top.tb_factor.factor_inst.s_val_i[30] top.tb_factor.factor_inst.s_val_i[29] top.tb_factor.factor_inst.s_val_i[28] top.tb_factor.factor_inst.s_val_i[27] top.tb_factor.factor_inst.s_val_i[26] top.tb_factor.factor_inst.s_val_i[25] top.tb_factor.factor_inst.s_val_i[24] top.tb_factor.factor_inst.s_val_i[23] top.tb_factor.factor_inst.s_val_i[22] top.tb_factor.factor_inst.s_val_i[21] top.tb_factor.factor_inst.s_val_i[20] top.tb_factor.factor_inst.s_val_i[19] top.tb_factor.factor_inst.s_val_i[18] top.tb_factor.factor_inst.s_val_i[17] top.tb_factor.factor_inst.s_val_i[16] top.tb_factor.factor_inst.s_val_i[15] top.tb_factor.factor_inst.s_val_i[14] top.tb_factor.factor_inst.s_val_i[13] top.tb_factor.factor_inst.s_val_i[12] top.tb_factor.factor_inst.s_val_i[11] top.tb_factor.factor_inst.s_val_i[10] top.tb_factor.factor_inst.s_val_i[9] top.tb_factor.factor_inst.s_val_i[8] top.tb_factor.factor_inst.s_val_i[7] top.tb_factor.factor_inst.s_val_i[6] top.tb_factor.factor_inst.s_val_i[5] top.tb_factor.factor_inst.s_val_i[4] top.tb_factor.factor_inst.s_val_i[3] top.tb_factor.factor_inst.s_val_i[2] top.tb_factor.factor_inst.s_val_i[1] top.tb_factor.factor_inst.s_val_i[0]
+@28
+top.tb_factor.factor_inst.m_ready_i
+top.tb_factor.factor_inst.m_valid_o
+@24
+#{top.tb_factor.factor_inst.m_number_o[31:0]} top.tb_factor.factor_inst.m_number_o[31] top.tb_factor.factor_inst.m_number_o[30] top.tb_factor.factor_inst.m_number_o[29] top.tb_factor.factor_inst.m_number_o[28] top.tb_factor.factor_inst.m_number_o[27] top.tb_factor.factor_inst.m_number_o[26] top.tb_factor.factor_inst.m_number_o[25] top.tb_factor.factor_inst.m_number_o[24] top.tb_factor.factor_inst.m_number_o[23] top.tb_factor.factor_inst.m_number_o[22] top.tb_factor.factor_inst.m_number_o[21] top.tb_factor.factor_inst.m_number_o[20] top.tb_factor.factor_inst.m_number_o[19] top.tb_factor.factor_inst.m_number_o[18] top.tb_factor.factor_inst.m_number_o[17] top.tb_factor.factor_inst.m_number_o[16] top.tb_factor.factor_inst.m_number_o[15] top.tb_factor.factor_inst.m_number_o[14] top.tb_factor.factor_inst.m_number_o[13] top.tb_factor.factor_inst.m_number_o[12] top.tb_factor.factor_inst.m_number_o[11] top.tb_factor.factor_inst.m_number_o[10] top.tb_factor.factor_inst.m_number_o[9] top.tb_factor.factor_inst.m_number_o[8] top.tb_factor.factor_inst.m_number_o[7] top.tb_factor.factor_inst.m_number_o[6] top.tb_factor.factor_inst.m_number_o[5] top.tb_factor.factor_inst.m_number_o[4] top.tb_factor.factor_inst.m_number_o[3] top.tb_factor.factor_inst.m_number_o[2] top.tb_factor.factor_inst.m_number_o[1] top.tb_factor.factor_inst.m_number_o[0]
+@c00022
+#{top.tb_factor.factor_inst.m_primes_o[7:0]} top.tb_factor.factor_inst.m_primes_o[7] top.tb_factor.factor_inst.m_primes_o[6] top.tb_factor.factor_inst.m_primes_o[5] top.tb_factor.factor_inst.m_primes_o[4] top.tb_factor.factor_inst.m_primes_o[3] top.tb_factor.factor_inst.m_primes_o[2] top.tb_factor.factor_inst.m_primes_o[1] top.tb_factor.factor_inst.m_primes_o[0]
+@28
+top.tb_factor.factor_inst.m_primes_o[7]
+top.tb_factor.factor_inst.m_primes_o[6]
+top.tb_factor.factor_inst.m_primes_o[5]
+top.tb_factor.factor_inst.m_primes_o[4]
+top.tb_factor.factor_inst.m_primes_o[3]
+top.tb_factor.factor_inst.m_primes_o[2]
+top.tb_factor.factor_inst.m_primes_o[1]
+top.tb_factor.factor_inst.m_primes_o[0]
+@1401200
+-group_end
+@29
+top.tb_factor.factor_inst.m_parity_o
+@28
+top.tb_factor.factor_inst.cf_s_start
+@22
+#{top.tb_factor.factor_inst.cf_s_val[31:0]} top.tb_factor.factor_inst.cf_s_val[31] top.tb_factor.factor_inst.cf_s_val[30] top.tb_factor.factor_inst.cf_s_val[29] top.tb_factor.factor_inst.cf_s_val[28] top.tb_factor.factor_inst.cf_s_val[27] top.tb_factor.factor_inst.cf_s_val[26] top.tb_factor.factor_inst.cf_s_val[25] top.tb_factor.factor_inst.cf_s_val[24] top.tb_factor.factor_inst.cf_s_val[23] top.tb_factor.factor_inst.cf_s_val[22] top.tb_factor.factor_inst.cf_s_val[21] top.tb_factor.factor_inst.cf_s_val[20] top.tb_factor.factor_inst.cf_s_val[19] top.tb_factor.factor_inst.cf_s_val[18] top.tb_factor.factor_inst.cf_s_val[17] top.tb_factor.factor_inst.cf_s_val[16] top.tb_factor.factor_inst.cf_s_val[15] top.tb_factor.factor_inst.cf_s_val[14] top.tb_factor.factor_inst.cf_s_val[13] top.tb_factor.factor_inst.cf_s_val[12] top.tb_factor.factor_inst.cf_s_val[11] top.tb_factor.factor_inst.cf_s_val[10] top.tb_factor.factor_inst.cf_s_val[9] top.tb_factor.factor_inst.cf_s_val[8] top.tb_factor.factor_inst.cf_s_val[7] top.tb_factor.factor_inst.cf_s_val[6] top.tb_factor.factor_inst.cf_s_val[5] top.tb_factor.factor_inst.cf_s_val[4] top.tb_factor.factor_inst.cf_s_val[3] top.tb_factor.factor_inst.cf_s_val[2] top.tb_factor.factor_inst.cf_s_val[1] top.tb_factor.factor_inst.cf_s_val[0]
+@28
+top.tb_factor.factor_inst.cf_m_ready
+top.tb_factor.factor_inst.cf_m_valid
+@22
+#{top.tb_factor.factor_inst.cf_m_res_x[31:0]} top.tb_factor.factor_inst.cf_m_res_x[31] top.tb_factor.factor_inst.cf_m_res_x[30] top.tb_factor.factor_inst.cf_m_res_x[29] top.tb_factor.factor_inst.cf_m_res_x[28] top.tb_factor.factor_inst.cf_m_res_x[27] top.tb_factor.factor_inst.cf_m_res_x[26] top.tb_factor.factor_inst.cf_m_res_x[25] top.tb_factor.factor_inst.cf_m_res_x[24] top.tb_factor.factor_inst.cf_m_res_x[23] top.tb_factor.factor_inst.cf_m_res_x[22] top.tb_factor.factor_inst.cf_m_res_x[21] top.tb_factor.factor_inst.cf_m_res_x[20] top.tb_factor.factor_inst.cf_m_res_x[19] top.tb_factor.factor_inst.cf_m_res_x[18] top.tb_factor.factor_inst.cf_m_res_x[17] top.tb_factor.factor_inst.cf_m_res_x[16] top.tb_factor.factor_inst.cf_m_res_x[15] top.tb_factor.factor_inst.cf_m_res_x[14] top.tb_factor.factor_inst.cf_m_res_x[13] top.tb_factor.factor_inst.cf_m_res_x[12] top.tb_factor.factor_inst.cf_m_res_x[11] top.tb_factor.factor_inst.cf_m_res_x[10] top.tb_factor.factor_inst.cf_m_res_x[9] top.tb_factor.factor_inst.cf_m_res_x[8] top.tb_factor.factor_inst.cf_m_res_x[7] top.tb_factor.factor_inst.cf_m_res_x[6] top.tb_factor.factor_inst.cf_m_res_x[5] top.tb_factor.factor_inst.cf_m_res_x[4] top.tb_factor.factor_inst.cf_m_res_x[3] top.tb_factor.factor_inst.cf_m_res_x[2] top.tb_factor.factor_inst.cf_m_res_x[1] top.tb_factor.factor_inst.cf_m_res_x[0]
+@28
+top.tb_factor.factor_inst.cf_m_res_w
+@22
+#{top.tb_factor.factor_inst.cf_m_res_p[15:0]} top.tb_factor.factor_inst.cf_m_res_p[15] top.tb_factor.factor_inst.cf_m_res_p[14] top.tb_factor.factor_inst.cf_m_res_p[13] top.tb_factor.factor_inst.cf_m_res_p[12] top.tb_factor.factor_inst.cf_m_res_p[11] top.tb_factor.factor_inst.cf_m_res_p[10] top.tb_factor.factor_inst.cf_m_res_p[9] top.tb_factor.factor_inst.cf_m_res_p[8] top.tb_factor.factor_inst.cf_m_res_p[7] top.tb_factor.factor_inst.cf_m_res_p[6] top.tb_factor.factor_inst.cf_m_res_p[5] top.tb_factor.factor_inst.cf_m_res_p[4] top.tb_factor.factor_inst.cf_m_res_p[3] top.tb_factor.factor_inst.cf_m_res_p[2] top.tb_factor.factor_inst.cf_m_res_p[1] top.tb_factor.factor_inst.cf_m_res_p[0]
+@28
+top.tb_factor.factor_inst.fv_s_ready
+top.tb_factor.factor_inst.fv_s_valid
+@22
+#{top.tb_factor.factor_inst.fv_s_data[15:0]} top.tb_factor.factor_inst.fv_s_data[15] top.tb_factor.factor_inst.fv_s_data[14] top.tb_factor.factor_inst.fv_s_data[13] top.tb_factor.factor_inst.fv_s_data[12] top.tb_factor.factor_inst.fv_s_data[11] top.tb_factor.factor_inst.fv_s_data[10] top.tb_factor.factor_inst.fv_s_data[9] top.tb_factor.factor_inst.fv_s_data[8] top.tb_factor.factor_inst.fv_s_data[7] top.tb_factor.factor_inst.fv_s_data[6] top.tb_factor.factor_inst.fv_s_data[5] top.tb_factor.factor_inst.fv_s_data[4] top.tb_factor.factor_inst.fv_s_data[3] top.tb_factor.factor_inst.fv_s_data[2] top.tb_factor.factor_inst.fv_s_data[1] top.tb_factor.factor_inst.fv_s_data[0]
+@28
+top.tb_factor.factor_inst.fv_m_ready
+top.tb_factor.factor_inst.fv_m_valid
+@22
+#{top.tb_factor.factor_inst.fv_m_data[7:0]} top.tb_factor.factor_inst.fv_m_data[7] top.tb_factor.factor_inst.fv_m_data[6] top.tb_factor.factor_inst.fv_m_data[5] top.tb_factor.factor_inst.fv_m_data[4] top.tb_factor.factor_inst.fv_m_data[3] top.tb_factor.factor_inst.fv_m_data[2] top.tb_factor.factor_inst.fv_m_data[1] top.tb_factor.factor_inst.fv_m_data[0]
+@28
+top.tb_factor.factor_inst.fv_m_complete
+[pattern_trace] 1
+[pattern_trace] 0

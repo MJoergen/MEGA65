@@ -57,10 +57,14 @@ architecture synthesis of factor_vect is
    signal   state  : state_type;
    signal   s_data : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
+   signal   m_data : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
+
 begin
 
    s_ready_o <= '1' when state = IDLE_ST else
                 '0';
+
+   m_data_o <= m_data when m_valid_o = '1' else (others => '0');
 
    state_proc : process (clk_i)
    begin
@@ -74,7 +78,7 @@ begin
 
             when IDLE_ST =>
                if s_valid_i = '1' and s_ready_o = '1' then
-                  m_data_o     <= (others => '0');
+                  m_data       <= (others => '0');
                   s_data       <= s_data_i;
                   primes_index <= (others => '0');
                   state        <= READ_PRIME_ST;
@@ -96,8 +100,8 @@ begin
                      m_valid_o    <= '1';
                      state        <= IDLE_ST;
                   else
-                     s_data                             <= divexp_m_quot;
-                     m_data_o(to_integer(primes_index)) <= divexp_m_exp(0);
+                     s_data                           <= divexp_m_quot;
+                     m_data(to_integer(primes_index)) <= divexp_m_exp(0);
                      if divexp_m_quot = 1 then
                         m_complete_o <= '1';
                         m_valid_o    <= '1';

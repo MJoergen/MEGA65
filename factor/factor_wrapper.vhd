@@ -2,7 +2,7 @@ library ieee;
    use ieee.std_logic_1164.all;
    use ieee.numeric_std_unsigned.all;
 
-entity cf_wrapper is
+entity factor_wrapper is
    generic (
       G_DATA_SIZE : integer
    );
@@ -23,9 +23,9 @@ entity cf_wrapper is
       vga_blank_i     : in    std_logic;
       vga_rgb_o       : out   std_logic_vector(7 downto 0)
    );
-end entity cf_wrapper;
+end entity factor_wrapper;
 
-architecture behavioral of cf_wrapper is
+architecture behavioral of factor_wrapper is
 
    signal cf_s_start : std_logic;
    signal cf_s_val   : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
