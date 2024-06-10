@@ -182,7 +182,8 @@ begin
                end if;
 
             when CALC_XP_ST =>
-               if amm_s_valid = '0' and amm_m_valid = '1' and add_mult_s_valid = '0' and add_mult_m_valid = '1' and m_ready_i = '1' then
+               if amm_s_valid = '0' and amm_m_valid = '1' and add_mult_s_valid = '0' and
+               add_mult_m_valid = '1' and (m_ready_i = '1' or m_valid_o = '0') then
                   -- Update recursion
                   s_cur          <= s_new;
                   p_cur          <= p_new;
@@ -255,7 +256,7 @@ begin
    -- Instantiate SQRT
    --------------------
 
-   sqrt_m_ready     <= m_ready_i;
+   sqrt_m_ready     <= m_ready_i or not m_valid_o;
 
    sqrt_inst : entity work.sqrt
       generic map (
@@ -278,7 +279,7 @@ begin
    -- Instantiate DIVMOD
    ----------------------
 
-   divmod_m_ready <= m_ready_i;
+   divmod_m_ready <= m_ready_i or not m_valid_o;
 
    divmod_inst : entity work.divmod
       generic map (
@@ -302,7 +303,7 @@ begin
    -- Instantiate AMM
    ----------------------
 
-   amm_m_ready <= m_ready_i;
+   amm_m_ready <= m_ready_i or not m_valid_o;
 
    amm_inst : entity work.amm
       generic map (
@@ -327,7 +328,7 @@ begin
    -- Instantiate ADD_MULT
    ------------------------
 
-   add_mult_m_ready <= m_ready_i;
+   add_mult_m_ready <= m_ready_i or not m_valid_o;
 
    add_mult_inst : entity work.add_mult
       generic map (

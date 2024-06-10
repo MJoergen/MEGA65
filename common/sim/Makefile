@@ -4,7 +4,6 @@
 # https://github.com/ghdl/ghdl
 
 PROJECT = uart
-PROJECT = slv_to_dec
 PROJECT = divexact
 PROJECT = gcd
 PROJECT = divmod
@@ -15,7 +14,8 @@ PROJECT = add_mult
 PROJECT = cf
 PROJECT = primes
 PROJECT = factor_vect
-#PROJECT = divexp
+PROJECT = divexp
+PROJECT = slv_to_dec
 
 TB       = tb_$(PROJECT)
 SOURCES  = ../../common/uart.vhd

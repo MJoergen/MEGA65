@@ -9,7 +9,7 @@ XPM_DIR = ../../../../fransschreuder/xpm_vhdl
 PROJECT = factor
 
 TB    = tb_$(PROJECT)
-#TB    = tb_$(PROJECT)_wrapper
+TB    = tb_$(PROJECT)_wrapper
 SRCS += ../../common/clk.vhd
 SRCS += ../../common/math/add_mult.vhd
 SRCS += ../../common/math/amm.vhd

@@ -149,7 +149,7 @@ begin
             when WAIT_PRIME_ST =>
                if am_m_valid = '1' then
                   m_square <= am_m_res(G_DATA_SIZE - 1 downto 0);
-                  state    <= READ_PRIME_ST;
+                  state    <= DIVEXP_ST;
                end if;
 
          end case;
@@ -175,9 +175,9 @@ begin
          data_o  => primes_data
       ); -- primes_inst
 
-   divexp_m_ready <= m_ready_i;
+   divexp_m_ready <= '1' when state = AM_ST else '0';
 
-   am_m_ready     <= m_ready_i;
+   am_m_ready     <= '1' when state = WAIT_IDLE_ST or state = WAIT_PRIME_ST else '0';
 
    divexp_inst : entity work.divexp
       generic map (

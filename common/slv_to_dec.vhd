@@ -45,7 +45,7 @@ architecture synthesis of slv_to_dec is
       infinite_loop : loop
          new_v := ("0" & res_v(size - 4 downto 0) & "000") +
                   ("0" & res_v(size - 2 downto 0) & "0");
-         if new_v(size) = '1' or res_v(size-1 downto size-2) /= "00" then
+         if new_v(size) = '1' or res_v(size-1 downto size-3) /= "00" then
             return res_v;
          end if;
          res_v := new_v(size-1 downto 0);

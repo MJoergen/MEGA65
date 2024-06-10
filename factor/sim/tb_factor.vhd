@@ -51,6 +51,8 @@ begin
       wait until rst = '0';
       wait for 1 us;
       wait until clk = '1';
+
+      report "Test started";
       dut_s_start <= '1';
       dut_s_val   <= to_stdlogicvector(2059, 2 * G_DATA_SIZE);
       wait until clk = '1';

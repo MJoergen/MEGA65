@@ -29,6 +29,7 @@ entity factor is
       m_ready_i  : in    std_logic;
       m_valid_o  : out   std_logic;
       m_number_o : out   std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+      m_square_o : out   std_logic_vector(G_DATA_SIZE - 1 downto 0);
       m_primes_o : out   std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
       m_parity_o : out   std_logic
    );
@@ -50,7 +51,8 @@ architecture synthesis of factor is
    signal fv_m_ready    : std_logic;
    signal fv_m_valid    : std_logic;
    signal fv_m_complete : std_logic;
-   signal fv_m_data     : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
+   signal fv_m_square   : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal fv_m_primes   : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
 
    signal fv_s_number : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
    signal fv_s_parity : std_logic;
@@ -60,6 +62,17 @@ begin
    cf_s_start <= s_start_i;
    cf_s_val   <= s_val_i;
 
+   ---------------------------------------------------------------
+   -- The CF method generates a sequence of values (x,p,w)
+   -- satisfiying x^2 = p*w mod N, where p is "small" and |w| = 1
+   --
+   -- Example: N = 2059 gives the following sequence of values:
+   -- (45, 34, 1)
+   -- (91, 45, 0)
+   -- (136, 35, 1)
+   -- (227, 54, 0)
+   -- etc
+   ---------------------------------------------------------------
    cf_inst : entity work.cf
       generic map (
          G_DATA_SIZE => G_DATA_SIZE
@@ -75,6 +88,18 @@ begin
          m_res_p_o => cf_m_res_p,
          m_res_w_o => cf_m_res_w
       ); -- cf_inst
+
+   cf_debug_proc : process (clk_i)
+   begin
+      if rising_edge(clk_i) then
+         if cf_m_valid = '1' and cf_m_ready = '1' then
+            report "x=" & to_string(to_integer(cf_m_res_x)) &
+                   ", p=" & to_string(to_integer(cf_m_res_p)) &
+                   ", w=" & to_string(cf_m_res_w);
+         end if;
+      end if;
+   end process cf_debug_proc;
+
 
    fv_s_valid <= cf_m_valid;
    fv_s_data  <= cf_m_res_p;
@@ -94,8 +119,20 @@ begin
          m_ready_i    => fv_m_ready,
          m_valid_o    => fv_m_valid,
          m_complete_o => fv_m_complete,
-         m_data_o     => fv_m_data
+         m_square_o   => fv_m_square,
+         m_primes_o   => fv_m_primes
       ); -- factor_vect_inst
+
+   fv_debug_proc : process (clk_i)
+   begin
+      if rising_edge(clk_i) then
+         if fv_m_valid = '1' and fv_m_complete = '1' and fv_m_ready = '1' then
+            report "square=" & to_string(to_integer(fv_m_square)) &
+                   ", primes=" & to_hstring(fv_m_primes);
+         end if;
+      end if;
+   end process fv_debug_proc;
+
 
    number_proc : process (clk_i)
    begin
@@ -108,7 +145,8 @@ begin
    end process number_proc;
 
    m_number_o <= fv_s_number;
-   m_primes_o <= fv_m_data;
+   m_primes_o <= fv_m_primes;
+   m_square_o <= fv_m_square;
    m_parity_o <= fv_s_parity;
    m_valid_o  <= fv_m_valid and fv_m_complete;
    fv_m_ready <= m_ready_i;

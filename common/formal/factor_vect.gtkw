@@ -1,0 +1,68 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Mon Jun 10 09:43:29 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/common/formal/factor_vect_cover/engine_0/trace2.vcd"
+[dumpfile_mtime] "Mon Jun 10 09:40:05 2024"
+[dumpfile_size] 38826
+[savefile] "/home/mike/git/MJoergen/MEGA65/common/formal/factor_vect.gtkw"
+[timestart] 0
+[size] 1296 780
+[pos] -1 -1
+*-5.684754 145 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 249
+[signals_width] 296
+[sst_expanded] 1
+[sst_vpaned_height] 206
+@28
+factor_vect.clk_i
+factor_vect.rst_i
+factor_vect.s_ready_o
+factor_vect.s_valid_i
+@22
+factor_vect.s_data_i[7:0]
+@28
+factor_vect.m_ready_i
+factor_vect.m_valid_o
+factor_vect.m_complete_o
+@22
+factor_vect.m_square_o[7:0]
+factor_vect.m_primes_o[7:0]
+@28
+factor_vect.primes_index[2:0]
+@22
+factor_vect.primes_data[7:0]
+@28
+factor_vect.divexp_s_ready
+factor_vect.divexp_s_valid
+@22
+factor_vect.divexp_s_val_n[7:0]
+factor_vect.divexp_s_val_d[7:0]
+@28
+factor_vect.divexp_m_ready
+factor_vect.divexp_m_valid
+@22
+factor_vect.divexp_m_quot[7:0]
+factor_vect.divexp_m_square[7:0]
+@28
+factor_vect.divexp_m_exp
+factor_vect.am_s_ready
+factor_vect.am_s_valid
+@22
+factor_vect.am_s_val_a[7:0]
+factor_vect.am_s_val_x[7:0]
+factor_vect.am_s_val_b[15:0]
+@28
+factor_vect.am_m_ready
+factor_vect.am_m_valid
+@22
+factor_vect.am_m_res[15:0]
+@28
+factor_vect.state[2:0]
+@22
+factor_vect.s_data[7:0]
+factor_vect.m_square[7:0]
+@23
+factor_vect.m_primes[7:0]
+[pattern_trace] 1
+[pattern_trace] 0
