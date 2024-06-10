@@ -10,26 +10,38 @@ end entity tb_divexp;
 architecture simulation of tb_divexp is
 
    constant C_DATA_SIZE : integer    := 32;
-   constant C_EXP_SIZE  : integer    := 4;
 
    signal   clk          : std_logic := '1';
    signal   rst          : std_logic := '1';
    signal   test_running : std_logic := '1';
 
    -- Signals conected to DUT
-   signal   dut_s_ready : std_logic;
-   signal   dut_s_valid : std_logic;
-   signal   dut_s_val_n : std_logic_vector(C_DATA_SIZE - 1 downto 0);
-   signal   dut_s_val_d : std_logic_vector(C_DATA_SIZE - 1 downto 0);
-   signal   dut_m_ready : std_logic;
-   signal   dut_m_valid : std_logic;
-   signal   dut_m_quot  : std_logic_vector(C_DATA_SIZE - 1 downto 0);
-   signal   dut_m_exp   : std_logic_vector(C_EXP_SIZE - 1 downto 0);
+   signal   dut_s_ready  : std_logic;
+   signal   dut_s_valid  : std_logic;
+   signal   dut_s_val_n  : std_logic_vector(C_DATA_SIZE - 1 downto 0);
+   signal   dut_s_val_d  : std_logic_vector(C_DATA_SIZE - 1 downto 0);
+   signal   dut_m_ready  : std_logic;
+   signal   dut_m_valid  : std_logic;
+   signal   dut_m_quot   : std_logic_vector(C_DATA_SIZE - 1 downto 0);
+   signal   dut_m_square : std_logic_vector(C_DATA_SIZE - 1 downto 0);
+   signal   dut_m_exp    : std_logic;
 
    type     divexp_res_type is record
-      quot : natural;
-      exp  : natural;
+      quot   : natural;
+      square : natural;
+      exp    : natural;
    end record divexp_res_type;
+
+   pure function to_stdlogic (
+      arg : integer
+   ) return std_logic is
+   begin
+      if arg = 0 then
+         return '0';
+      else
+         return '1';
+      end if;
+   end function to_stdlogic;
 
 begin
 
@@ -43,20 +55,20 @@ begin
 
    divexp_inst : entity work.divexp
       generic map (
-         G_DATA_SIZE => C_DATA_SIZE,
-         G_EXP_SIZE  => C_EXP_SIZE
+         G_DATA_SIZE => C_DATA_SIZE
       )
       port map (
-         clk_i     => clk,
-         rst_i     => rst,
-         s_ready_o => dut_s_ready,
-         s_valid_i => dut_s_valid,
-         s_val_n_i => dut_s_val_n,
-         s_val_d_i => dut_s_val_d,
-         m_ready_i => dut_m_ready,
-         m_valid_o => dut_m_valid,
-         m_quot_o  => dut_m_quot,
-         m_exp_o   => dut_m_exp
+         clk_i      => clk,
+         rst_i      => rst,
+         s_ready_o  => dut_s_ready,
+         s_valid_i  => dut_s_valid,
+         s_val_n_i  => dut_s_val_n,
+         s_val_d_i  => dut_s_val_d,
+         m_ready_i  => dut_m_ready,
+         m_valid_o  => dut_m_valid,
+         m_quot_o   => dut_m_quot,
+         m_square_o => dut_m_square,
+         m_exp_o    => dut_m_exp
       ); -- divexp_inst
 
 
@@ -81,16 +93,19 @@ begin
          begin
             assert n > 1;
             assert d > 1;
-            divexp_res_v.exp  := 0;
-            divexp_res_v.quot := n;
+            divexp_res_v.exp    := 0;
+            divexp_res_v.square := 1;
+            divexp_res_v.quot   := n;
 
             while divexp_res_v.quot mod d = 0 loop
                divexp_res_v.quot := divexp_res_v.quot / d;
-               divexp_res_v.exp  := divexp_res_v.exp + 1;
-               if divexp_res_v.exp + 1 = 2**C_EXP_SIZE then
-                  exit;
+               if divexp_res_v.exp = 1 then
+                  divexp_res_v.square := divexp_res_v.square * d;
                end if;
+               divexp_res_v.exp := 1 - divexp_res_v.exp;
             end loop;
+
+            assert n = divexp_res_v.quot * divexp_res_v.square * divexp_res_v.square * (d ** divexp_res_v.exp);
 
             return divexp_res_v;
          end function calc_divexp;
@@ -103,6 +118,7 @@ begin
          report "Verify DIVEXP: " & integer'image(val_n) &
                 " / " & integer'image(val_d) &
                 " -> " & integer'image(res_v.quot) &
+                ", " & integer'image(res_v.square) &
                 ", " & integer'image(res_v.exp);
 
          -- Start calculation
@@ -120,8 +136,9 @@ begin
          end loop;
 
          -- Verify received response is correct
-         assert dut_m_quot = to_stdlogicvector(res_v.quot, C_DATA_SIZE);
-         assert dut_m_exp  = to_stdlogicvector(res_v.exp, C_EXP_SIZE);
+         assert dut_m_quot   = to_stdlogicvector(res_v.quot, C_DATA_SIZE);
+         assert dut_m_square = to_stdlogicvector(res_v.square, C_DATA_SIZE);
+         assert dut_m_exp    = to_stdlogic(res_v.exp);
       end procedure verify_divexp;
 
    --
@@ -143,12 +160,18 @@ begin
       end loop;
 
       -- Verify DIVEXP for some large integers
+      verify_divexp((2**4) * (3**3) * (5**2) * (7**1), 2);
+      verify_divexp((2**4) * (3**3) * (5**2) * (7**1), 3);
+      verify_divexp((2**4) * (3**3) * (5**2) * (7**1), 5);
+      verify_divexp((2**4) * (3**3) * (5**2) * (7**1), 7);
+      verify_divexp((2**4) * (3**3) * (5**2) * (7**1), 11);
       verify_divexp(1234567890, 2);
       verify_divexp(1234567890, 3);
       verify_divexp(1234567890, 5);
       verify_divexp(1234567890, 7);
       verify_divexp(1234567890, 11);
-      verify_divexp(2**29, 2);
+      verify_divexp(2 ** 15, 2);
+      verify_divexp(2 ** 16, 2);
 
       wait for 20 ns;
 

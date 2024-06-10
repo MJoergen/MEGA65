@@ -12,11 +12,12 @@ prove: depth 20
 smtbmc
 
 [script]
-ghdl --std=08 -gG_DATA_SIZE=8 -gG_EXP_SIZE=4 divmod.vhd divexp.vhd divexp.psl -e divexp
+ghdl --std=08 -gG_DATA_SIZE=8 divmod.vhd divexp.vhd add_mult.vhd divexp.psl -e divexp
 prep -top divexp
 
 [files]
 divexp.psl
 ../math/divmod.vhd
+../math/add_mult.vhd
 ../math/divexp.vhd
 

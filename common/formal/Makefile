@@ -40,6 +40,9 @@ $(DUT)_cover/PASS: $(DUT).sby $(DUT).psl $(SRC)
 show_prove:
 	gtkwave $(DUT)_prove/engine_0/trace.vcd $(DUT).gtkw
 
+show_cover2:
+	gtkwave $(DUT)_cover/engine_0/trace2.vcd $(DUT).gtkw
+
 show_cover3:
 	gtkwave $(DUT)_cover/engine_0/trace3.vcd $(DUT).gtkw
 

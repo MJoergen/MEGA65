@@ -10,12 +10,12 @@ PROJECT = gcd
 PROJECT = divmod
 PROJECT = jacobi
 PROJECT = sqrt
-PROJECT = divexp
 PROJECT = amm
 PROJECT = add_mult
 PROJECT = cf
 PROJECT = primes
 PROJECT = factor_vect
+#PROJECT = divexp
 
 TB       = tb_$(PROJECT)
 SOURCES  = ../../common/uart.vhd

@@ -32,7 +32,7 @@ vunit factor_vect_inst(factor_vect(synthesis))
 
    -- Output must be stable until accepted
    f_output_stable : assert always {m_valid_o and not m_ready_i and not rst_i} |=>
-      {stable(m_valid_o) and stable(m_data_o) and stable(m_complete_o)};
+      {stable(m_valid_o) and stable(m_square_o) and stable(m_complete_o) and stable(m_primes_o)};
 
 --   -- Verify correct output
 --   f_output : assert always {m_valid_o and not rst_i and f_valid} |->
