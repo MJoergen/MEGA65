@@ -8,9 +8,10 @@ library xpm;
 library work;
    use work.video_modes_pkg.all;
 
-entity cf_mega65r6 is
+entity factor_mega65r6 is
    generic (
-      G_DATA_SIZE : integer
+      G_DATA_SIZE   : integer;
+      G_VECTOR_SIZE : integer
    );
    port (
       -- Clock
@@ -31,9 +32,9 @@ entity cf_mega65r6 is
       kb_io1_o       : out   std_logic;
       kb_io2_i       : in    std_logic
    );
-end entity cf_mega65r6;
+end entity factor_mega65r6;
 
-architecture synthesis of cf_mega65r6 is
+architecture synthesis of factor_mega65r6 is
 
    constant C_VIDEO_MODE : video_modes_type := C_VIDEO_MODE_1280_720_60;
 
@@ -60,7 +61,7 @@ begin
    mega65_inst : entity work.mega65
       generic map (
          G_UART_DIVISOR => 100_000_000 / 2_000_000,
-         G_VIDEO_MODE => C_VIDEO_MODE
+         G_VIDEO_MODE   => C_VIDEO_MODE
       )
       port map (
          -- MEGA65 I/O ports
@@ -95,9 +96,10 @@ begin
          uart_tx_data_i  => uart_tx_data
       ); -- mega65_inst
 
-   cf_wrapper_inst : entity work.cf_wrapper
+   factor_wrapper_inst : entity work.factor_wrapper
       generic map (
-         G_DATA_SIZE => G_DATA_SIZE
+         G_DATA_SIZE   => G_DATA_SIZE,
+         G_VECTOR_SIZE => G_VECTOR_SIZE
       )
       port map (
          clk_i           => clk,

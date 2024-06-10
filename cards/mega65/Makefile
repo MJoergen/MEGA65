@@ -8,7 +8,7 @@ TOP = $(PROJECT)_$(PLATFORM)
 
 SRCS += ../../common/axi_merger.vhd
 SRCS += ../../common/clk.vhd
-SRCS += ../../common/divexact.vhd
+SRCS += ../../common/math/divexact.vhd
 SRCS += ../../common/font.vhd
 SRCS += ../../common/kb_matrix_ram.vhd
 SRCS += ../../common/m2m_keyb.vhd

@@ -73,7 +73,7 @@ begin
             wait until clk = '1';
          end loop;
 
-         report "gcd(" & integer'image(val1_v)
+         report "divexact(" & integer'image(val1_v)
                 & "," & integer'image(val2_v)
                 & ") -> " & integer'image(to_integer(m_res));
          assert m_res = to_stdlogicvector(exp_res_v, C_DATA_SIZE);

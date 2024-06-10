@@ -1,6 +1,6 @@
 XILINX_DIR = /opt/Xilinx/Vivado/2023.1
 
-PROJECT = cf
+PROJECT = factor
 PLATFORM = mega65r6
 
 TOP = $(PROJECT)_$(PLATFORM)
@@ -12,7 +12,10 @@ SRCS += ../../common/math/amm.vhd
 SRCS += ../../common/math/cf.vhd
 SRCS += ../../common/math/divexact.vhd
 SRCS += ../../common/math/divmod.vhd
+SRCS += ../../common/math/divexp.vhd
+SRCS += ../../common/math/factor_vect.vhd
 SRCS += ../../common/math/gcd.vhd
+SRCS += ../../common/math/primes.vhd
 SRCS += ../../common/math/sqrt.vhd
 SRCS += ../../common/kb_matrix_ram.vhd
 SRCS += ../../common/m2m_keyb.vhd
@@ -25,12 +28,14 @@ SRCS += ../../common/slv_to_dec.vhd
 SRCS += ../../common/uart.vhd
 SRCS += ../../common/video_modes_pkg.vhd
 SRCS += ../../common/video_sync.vhd
+SRCS += ../$(PROJECT).vhd
 SRCS += ../$(PROJECT)_wrapper.vhd
 SRCS += $(TOP).vhd
 
 VAL_DATA_SIZE = 32
+VAL_VECTOR_SIZE = 8
 
-GENERICS += -generic G_DATA_SIZE=$(VAL_DATA_SIZE)
+GENERICS += -generic G_DATA_SIZE=$(VAL_DATA_SIZE) -generic G_VECTOR_SIZE=$(VAL_VECTOR_SIZE)
 
 XDC = ../../common/$(PLATFORM).xdc
 

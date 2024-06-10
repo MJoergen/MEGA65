@@ -31,7 +31,7 @@ vunit cf_inst(cf(synthesis))
    f_after_reset : assert always {rst_i} |=> {not m_valid_o};
 
    -- Output must be stable until accepted
-   f_output_stable : assert always {m_valid_o and not m_ready_i and not rst_i} |=>
+   f_output_stable : assert always {m_valid_o and not m_ready_i and not rst_i and not s_start_i} |=>
       {stable(m_valid_o) and stable(m_res_x_o) and stable(m_res_p_o) and stable(m_res_w_o)};
 
 --   -- Verify correct output

@@ -10,12 +10,16 @@ library ieee;
    use ieee.numeric_std_unsigned.all;
 
 entity tb_life is
+   generic (
+      G_ROWS : integer;
+      G_COLS : integer
+   );
 end entity tb_life;
 
 architecture simulation of tb_life is
 
-   constant C_ROWS       : integer                   := 7;
-   constant C_COLS       : integer                   := 8;
+   constant C_ROWS       : integer                   := G_ROWS;
+   constant C_COLS       : integer                   := G_COLS;
    constant C_CELLS_INIT : std_logic_vector(0 to 55) :=
                                                         "00000000" &
                                                         "00010000" &

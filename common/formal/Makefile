@@ -22,6 +22,7 @@ SRC += ../math/primes.vhd
 SRC += ../math/divmod.vhd
 SRC += ../math/divexp.vhd
 SRC += ../math/$(DUT).vhd
+#SRC += ../$(DUT).vhd
 
 #GENERICS = -gG_DATA_SIZE_IN=32 -gG_DATA_SIZE_OUT=8
 GENERICS = -gG_DATA_SIZE=8

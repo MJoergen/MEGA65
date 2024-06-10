@@ -18,5 +18,5 @@ prep -top slv_to_dec
 [files]
 slv_to_dec.psl
 ../slv_to_dec.vhd
-../divexact.vhd
+../math/divexact.vhd
 
