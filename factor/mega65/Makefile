@@ -15,6 +15,7 @@ SRCS += ../../common/math/divmod.vhd
 SRCS += ../../common/math/divexp.vhd
 SRCS += ../../common/math/factor_vect.vhd
 SRCS += ../../common/math/gcd.vhd
+SRCS += ../../common/math/gf2_solver.vhd
 SRCS += ../../common/math/primes.vhd
 SRCS += ../../common/math/sqrt.vhd
 SRCS += ../../common/kb_matrix_ram.vhd

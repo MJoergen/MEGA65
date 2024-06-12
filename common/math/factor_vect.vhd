@@ -9,7 +9,8 @@ library ieee;
 entity factor_vect is
    generic (
       G_DATA_SIZE   : integer;
-      G_VECTOR_SIZE : integer -- Number of primes to attempt trial division
+      G_VECTOR_SIZE : integer; -- Number of primes to attempt trial division
+      G_USER_SIZE   : integer  -- Number of primes to attempt trial division
    );
    port (
       clk_i        : in    std_logic;
@@ -17,11 +18,13 @@ entity factor_vect is
       s_ready_o    : out   std_logic;
       s_valid_i    : in    std_logic;
       s_data_i     : in    std_logic_vector(G_DATA_SIZE - 1 downto 0);
+      s_user_i     : in    std_logic_vector(G_USER_SIZE - 1 downto 0);
       m_ready_i    : in    std_logic;
       m_valid_o    : out   std_logic;
       m_complete_o : out   std_logic;
       m_square_o   : out   std_logic_vector(G_DATA_SIZE - 1 downto 0);
-      m_primes_o   : out   std_logic_vector(G_VECTOR_SIZE - 1 downto 0)
+      m_primes_o   : out   std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
+      m_user_o     : out   std_logic_vector(G_USER_SIZE - 1 downto 0)
    );
 end entity factor_vect;
 
@@ -106,6 +109,7 @@ begin
                   s_data       <= s_data_i;
                   primes_index <= (others => '0');
                   state        <= READ_PRIME_ST;
+                  m_user_o     <= s_user_i;
                end if;
 
             when READ_PRIME_ST =>

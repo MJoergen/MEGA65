@@ -37,7 +37,7 @@ architecture synthesis of divmod is
    signal   state : state_type;
 
    signal   val_d : std_logic_vector(G_DATA_SIZE downto 0);
-   signal   shift : integer range 0 to G_DATA_SIZE - 1;
+   signal   shift : integer range 0 to G_DATA_SIZE;
 
    -- Output signals
    signal   res_q : std_logic_vector(G_DATA_SIZE - 1 downto 0);

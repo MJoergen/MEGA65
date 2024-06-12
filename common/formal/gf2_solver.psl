@@ -1,0 +1,35 @@
+vunit gf2_solver_inst(gf2_solver(synthesis))
+{
+   -- set all declarations to run on clk_i
+   default clock is rising_edge(clk_i);
+
+
+   --------------------------------------------
+   -- ASSERTIONS ABOUT OUTPUTS
+   --------------------------------------------
+
+   -- Output must be empty after reset
+   f_after_reset : assert always {rst_i} |=> {not m_valid_o};
+
+   -- Output must be stable until accepted
+   f_output_stable : assert always {m_valid_o and not m_ready_i and not rst_i} |=>
+      {stable(m_valid_o) and stable(m_user_o) and stable(m_last_o)};
+
+
+   --------------------------------------------
+   -- ASSUMPTIONS ABOUT INPUTS
+   --------------------------------------------
+
+   -- Require reset at startup.
+   f_reset : assume {rst_i};
+
+
+   --------------------------------------------
+   -- COVER STATEMENTS TO VERIFY REACHABILITY
+   --------------------------------------------
+
+   f_full_to_empty : cover {m_valid_o and not rst_i;
+                            not m_valid_o};
+
+} -- vunit gf2_solver_inst(gf2_solver(synthesis))
+

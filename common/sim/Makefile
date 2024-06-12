@@ -14,8 +14,9 @@ PROJECT = add_mult
 PROJECT = cf
 PROJECT = primes
 PROJECT = factor_vect
-PROJECT = divexp
-PROJECT = slv_to_dec
+#PROJECT = divexp
+#PROJECT = slv_to_dec
+#PROJECT = gf2_solver
 
 TB       = tb_$(PROJECT)
 SOURCES  = ../../common/uart.vhd
@@ -32,6 +33,7 @@ SOURCES += ../../common/math/add_mult.vhd
 SOURCES += ../../common/math/cf.vhd
 SOURCES += ../../common/math/primes.vhd
 SOURCES += ../../common/math/factor_vect.vhd
+SOURCES += ../../common/math/gf2_solver.vhd
 SOURCES += $(TB).vhd
 SAVE     = $(TB).gtkw
 WAVE     = $(TB).ghw
@@ -45,7 +47,7 @@ WAVE     = $(TB).ghw
 sim: $(SOURCES)
 	ghdl -i --std=08 -frelaxed-rules -fsynopsys $(SOURCES)
 	ghdl -m --std=08 -frelaxed-rules -fsynopsys $(TB)
-	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) --wave=$(WAVE) --stop-time=4000us
+	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) --wave=$(WAVE) --stop-time=1us
 
 
 $WAVE): sim

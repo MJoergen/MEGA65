@@ -1,0 +1,21 @@
+[tasks]
+cover
+prove
+
+[options]
+cover: mode cover
+cover: depth 25
+prove: mode bmc
+prove: depth 25
+
+[engines]
+smtbmc
+
+[script]
+ghdl --std=08 -gG_ROW_SIZE=4 -gG_USER_SIZE=4 gf2_solver.vhd gf2_solver.psl -e gf2_solver
+prep -top gf2_solver
+
+[files]
+gf2_solver.psl
+../math/gf2_solver.vhd
+

@@ -28,10 +28,9 @@ entity factor is
       s_val_i    : in    std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
       m_ready_i  : in    std_logic;
       m_valid_o  : out   std_logic;
-      m_number_o : out   std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
       m_square_o : out   std_logic_vector(G_DATA_SIZE - 1 downto 0);
-      m_primes_o : out   std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
-      m_parity_o : out   std_logic
+      m_x_o      : out   std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+      m_last_o   : out   std_logic
    );
 end entity factor;
 
@@ -48,19 +47,24 @@ architecture synthesis of factor is
    signal fv_s_ready    : std_logic;
    signal fv_s_valid    : std_logic;
    signal fv_s_data     : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal fv_s_user     : std_logic_vector(2 * G_DATA_SIZE downto 0);
    signal fv_m_ready    : std_logic;
    signal fv_m_valid    : std_logic;
    signal fv_m_complete : std_logic;
    signal fv_m_square   : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal fv_m_primes   : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
+   signal fv_m_user     : std_logic_vector(2 * G_DATA_SIZE downto 0);
 
-   signal fv_s_number : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal fv_s_parity : std_logic;
+   signal gf2_s_ready : std_logic;
+   signal gf2_s_valid : std_logic;
+   signal gf2_s_row   : std_logic_vector(G_VECTOR_SIZE downto 0);
+   signal gf2_s_user  : std_logic_vector(3 * G_DATA_SIZE - 1 downto 0);
+   signal gf2_m_ready : std_logic;
+   signal gf2_m_valid : std_logic;
+   signal gf2_m_user  : std_logic_vector(3 * G_DATA_SIZE - 1 downto 0);
+   signal gf2_m_last  : std_logic;
 
 begin
-
-   cf_s_start <= s_start_i;
-   cf_s_val   <= s_val_i;
 
    ---------------------------------------------------------------
    -- The CF method generates a sequence of values (x,p,w)
@@ -73,6 +77,10 @@ begin
    -- (227, 54, 0)
    -- etc
    ---------------------------------------------------------------
+
+   cf_s_start <= s_start_i;
+   cf_s_val   <= s_val_i;
+
    cf_inst : entity work.cf
       generic map (
          G_DATA_SIZE => G_DATA_SIZE
@@ -93,7 +101,7 @@ begin
    begin
       if rising_edge(clk_i) then
          if cf_m_valid = '1' and cf_m_ready = '1' then
-            report "x=" & to_string(to_integer(cf_m_res_x)) &
+            report "CF: x=" & to_string(to_integer(cf_m_res_x)) &
                    ", p=" & to_string(to_integer(cf_m_res_p)) &
                    ", w=" & to_string(cf_m_res_w);
          end if;
@@ -101,14 +109,28 @@ begin
    end process cf_debug_proc;
 
 
+   ---------------------------------------------------------------
+   -- The FV method factorizes a number using small primes.
+   -- satisfiying N = y^2*Prod(p_i), p_i are primes.
+   -- The choice of p_i is returned as a vector.
+   --
+   -- Example: N = 45 gives the following sequence of values:
+   -- 45 = 3^2 * 5, i.e.
+   -- * complete = 1
+   -- * square = 3
+   -- * primes = "...100".
+   ---------------------------------------------------------------
+
    fv_s_valid <= cf_m_valid;
    fv_s_data  <= cf_m_res_p;
+   fv_s_user  <= cf_m_res_w & cf_m_res_x;
    cf_m_ready <= fv_s_ready;
 
    factor_vect_inst : entity work.factor_vect
       generic map (
          G_DATA_SIZE   => G_DATA_SIZE,
-         G_VECTOR_SIZE => G_VECTOR_SIZE
+         G_VECTOR_SIZE => G_VECTOR_SIZE,
+         G_USER_SIZE   => 2 * G_DATA_SIZE + 1
       )
       port map (
          clk_i        => clk_i,
@@ -116,40 +138,83 @@ begin
          s_ready_o    => fv_s_ready,
          s_valid_i    => fv_s_valid,
          s_data_i     => fv_s_data,
+         s_user_i     => fv_s_user,
          m_ready_i    => fv_m_ready,
          m_valid_o    => fv_m_valid,
          m_complete_o => fv_m_complete,
          m_square_o   => fv_m_square,
-         m_primes_o   => fv_m_primes
+         m_primes_o   => fv_m_primes,
+         m_user_o     => fv_m_user
       ); -- factor_vect_inst
 
    fv_debug_proc : process (clk_i)
    begin
       if rising_edge(clk_i) then
          if fv_m_valid = '1' and fv_m_complete = '1' and fv_m_ready = '1' then
-            report "square=" & to_string(to_integer(fv_m_square)) &
-                   ", primes=" & to_hstring(fv_m_primes);
+            report "FV: square=" & to_string(to_integer(fv_m_square)) &
+                   ", primes=" & to_string(fv_m_primes) &
+                   ", user=" & to_string(fv_m_user(2 * G_DATA_SIZE)) &
+                   "," & to_string(to_integer(fv_m_user(2 * G_DATA_SIZE - 1 downto 0)));
          end if;
       end if;
    end process fv_debug_proc;
 
 
-   number_proc : process (clk_i)
+   ---------------------------------------------------------------
+   -- The GF2 entity solves a system of linear GF(2) equations.
+   --
+   -- Example: The input sequence
+   -- * ("0101", X"A")
+   -- * ("0011", X"B")
+   -- * ("1101", X"C")
+   -- * ("1010", X"D")
+   -- * ("0110", X"E")
+   -- gives the output sequence
+   -- * (X"E", '0')
+   -- * (X"A", '0')
+   -- * (X"B", '1')
+   ---------------------------------------------------------------
+
+   gf2_s_valid <= fv_m_valid and fv_m_complete;
+   gf2_s_row   <= fv_m_primes & fv_m_user(2 * G_DATA_SIZE);
+   gf2_s_user  <= fv_m_square & fv_m_user(2 * G_DATA_SIZE - 1 downto 0);
+   fv_m_ready  <= gf2_s_ready;
+
+   gf2_solver_inst : entity work.gf2_solver
+      generic map (
+         G_ROW_SIZE  => G_VECTOR_SIZE + 1,
+         G_USER_SIZE => 3 * G_DATA_SIZE
+      )
+      port map (
+         clk_i     => clk_i,
+         rst_i     => rst_i,
+         s_ready_o => gf2_s_ready,
+         s_valid_i => gf2_s_valid,
+         s_row_i   => gf2_s_row,
+         s_user_i  => gf2_s_user,
+         m_ready_i => gf2_m_ready,
+         m_valid_o => gf2_m_valid,
+         m_user_o  => gf2_m_user,
+         m_last_o  => gf2_m_last
+      ); -- gf2_solver_inst
+
+   gf2_debug_proc : process (clk_i)
    begin
       if rising_edge(clk_i) then
-         if cf_m_valid = '1' and cf_m_ready = '1' then
-            fv_s_number <= cf_m_res_x;
-            fv_s_parity <= cf_m_res_w;
+         if gf2_m_valid = '1' and gf2_m_ready = '1' then
+            report "GF2: user=" & to_string(to_integer(gf2_m_user(3 * G_DATA_SIZE - 1 downto 2 * G_DATA_SIZE))) &
+                   "," & to_string(to_integer(gf2_m_user(2 * G_DATA_SIZE - 1 downto 0))) &
+                   ", last=" & to_string(gf2_m_last);
          end if;
       end if;
-   end process number_proc;
+   end process gf2_debug_proc;
 
-   m_number_o <= fv_s_number;
-   m_primes_o <= fv_m_primes;
-   m_square_o <= fv_m_square;
-   m_parity_o <= fv_s_parity;
-   m_valid_o  <= fv_m_valid and fv_m_complete;
-   fv_m_ready <= m_ready_i;
+
+   m_last_o    <= gf2_m_last;
+   m_square_o  <= gf2_m_user(3 * G_DATA_SIZE - 1 downto 2 * G_DATA_SIZE);
+   m_x_o       <= gf2_m_user(2 * G_DATA_SIZE - 1 downto 0);
+   m_valid_o   <= gf2_m_valid;
+   gf2_m_ready <= m_ready_i;
 
 end architecture synthesis;
 

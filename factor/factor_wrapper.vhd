@@ -32,10 +32,8 @@ architecture behavioral of factor_wrapper is
    signal dut_s_val    : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
    signal dut_m_ready  : std_logic;
    signal dut_m_valid  : std_logic;
-   signal dut_m_number : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
    signal dut_m_square : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal dut_m_primes : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
-   signal dut_m_parity : std_logic;
+   signal dut_m_last   : std_logic;
 
    signal s2d_s_ready : std_logic;
    signal s2d_s_valid : std_logic;
@@ -98,10 +96,8 @@ begin
          s_val_i    => dut_s_val,
          m_ready_i  => dut_m_ready,
          m_valid_o  => dut_m_valid,
-         m_number_o => dut_m_number,
          m_square_o => dut_m_square,
-         m_primes_o => dut_m_primes,
-         m_parity_o => dut_m_parity
+         m_last_o   => dut_m_last
       ); -- factor_inst
 
    dut_m_ready <= s2d_s_ready;

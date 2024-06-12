@@ -9,7 +9,7 @@ XPM_DIR = ../../../../fransschreuder/xpm_vhdl
 PROJECT = factor
 
 TB    = tb_$(PROJECT)
-TB    = tb_$(PROJECT)_wrapper
+#TB    = tb_$(PROJECT)_wrapper
 SRCS += ../../common/clk.vhd
 SRCS += ../../common/math/add_mult.vhd
 SRCS += ../../common/math/amm.vhd
@@ -19,6 +19,7 @@ SRCS += ../../common/math/divexp.vhd
 SRCS += ../../common/math/divmod.vhd
 SRCS += ../../common/math/factor_vect.vhd
 SRCS += ../../common/math/gcd.vhd
+SRCS += ../../common/math/gf2_solver.vhd
 SRCS += ../../common/math/primes.vhd
 SRCS += ../../common/math/sqrt.vhd
 SRCS += ../../common/font.vhd
@@ -39,7 +40,7 @@ SRCS += $(TB).vhd
 SAVE  = $(TB).gtkw
 WAVE  = $(TB).ghw
 
-VAL_DATA_SIZE = 16
+VAL_DATA_SIZE = 8
 VAL_VECTOR_SIZE = 8
 
 GENERICS += -gG_DATA_SIZE=$(VAL_DATA_SIZE) -gG_VECTOR_SIZE=$(VAL_VECTOR_SIZE)

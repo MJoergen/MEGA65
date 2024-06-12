@@ -1,7 +1,8 @@
 # Type 'make formal' to run formal verification
 # Type 'make synth' to run synthesis
 
-DUT  = factor_vect
+DUT  = gf2_solver
+#DUT  = factor_vect
 #DUT  = cf
 #DUT  = add_mult
 #DUT  = amm
@@ -18,14 +19,15 @@ DUT  = factor_vect
 #DUT  = serializer
 
 #SRC += ../math/divexact.vhd
-SRC += ../math/primes.vhd
-SRC += ../math/divmod.vhd
-SRC += ../math/divexp.vhd
+#SRC += ../math/primes.vhd
+#SRC += ../math/divmod.vhd
+#SRC += ../math/divexp.vhd
 SRC += ../math/$(DUT).vhd
 #SRC += ../$(DUT).vhd
 
 #GENERICS = -gG_DATA_SIZE_IN=32 -gG_DATA_SIZE_OUT=8
-GENERICS = -gG_DATA_SIZE=8
+#GENERICS = -gG_DATA_SIZE=8
+GENERICS = -gG_ROW_SIZE=8 -gG_USER_SIZE=8
 #GENERICS = -gG_DIVISOR=8
 
 #######################
