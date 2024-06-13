@@ -8,23 +8,26 @@ library ieee;
 
 entity factor_vect is
    generic (
-      G_DATA_SIZE   : integer;
-      G_VECTOR_SIZE : integer; -- Number of primes to attempt trial division
-      G_USER_SIZE   : integer  -- Number of primes to attempt trial division
+      G_PRIME_ADDR_SIZE : integer;
+      G_DATA_SIZE       : integer;
+      G_VECTOR_SIZE     : integer; -- Number of primes to attempt trial division
+      G_USER_SIZE       : integer  -- Number of primes to attempt trial division
    );
    port (
-      clk_i        : in    std_logic;
-      rst_i        : in    std_logic;
-      s_ready_o    : out   std_logic;
-      s_valid_i    : in    std_logic;
-      s_data_i     : in    std_logic_vector(G_DATA_SIZE - 1 downto 0);
-      s_user_i     : in    std_logic_vector(G_USER_SIZE - 1 downto 0);
-      m_ready_i    : in    std_logic;
-      m_valid_o    : out   std_logic;
-      m_complete_o : out   std_logic;
-      m_square_o   : out   std_logic_vector(G_DATA_SIZE - 1 downto 0);
-      m_primes_o   : out   std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
-      m_user_o     : out   std_logic_vector(G_USER_SIZE - 1 downto 0)
+      clk_i          : in    std_logic;
+      rst_i          : in    std_logic;
+      s_ready_o      : out   std_logic;
+      s_valid_i      : in    std_logic;
+      s_data_i       : in    std_logic_vector(G_DATA_SIZE - 1 downto 0);
+      s_user_i       : in    std_logic_vector(G_USER_SIZE - 1 downto 0);
+      m_ready_i      : in    std_logic;
+      m_valid_o      : out   std_logic;
+      m_complete_o   : out   std_logic;
+      m_square_o     : out   std_logic_vector(G_DATA_SIZE - 1 downto 0);
+      m_primes_o     : out   std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
+      m_user_o       : out   std_logic_vector(G_USER_SIZE - 1 downto 0);
+      primes_index_o : out   std_logic_vector(G_PRIME_ADDR_SIZE - 1 downto 0);
+      primes_data_i  : in    std_logic_vector(G_DATA_SIZE - 1 downto 0)
    );
 end entity factor_vect;
 
@@ -44,12 +47,9 @@ architecture synthesis of factor_vect is
       return -1;
    end function log2;
 
-   constant C_ZERO2           : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0) := (others => '0');
-   constant C_ONE             : std_logic_vector(G_DATA_SIZE - 1 downto 0)     := (0 => '1', others => '0');
-   constant C_PRIME_ADDR_SIZE : natural                                        := log2(G_VECTOR_SIZE);
+   constant C_ZERO2 : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0) := (others => '0');
+   constant C_ONE   : std_logic_vector(G_DATA_SIZE - 1 downto 0)     := (0 => '1', others => '0');
 
-   signal   primes_index : std_logic_vector(C_PRIME_ADDR_SIZE - 1 downto 0);
-   signal   primes_data  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
    signal   divexp_s_ready  : std_logic;
    signal   divexp_s_valid  : std_logic;
@@ -79,13 +79,13 @@ architecture synthesis of factor_vect is
 
 begin
 
-   s_ready_o  <= '1' when state = IDLE_ST else
-                 '0';
+   s_ready_o      <= '1' when state = IDLE_ST else
+                     '0';
 
-   m_square_o <= m_square when m_valid_o = '1' else
-                 (others => '0');
-   m_primes_o <= m_primes when m_valid_o = '1' else
-                 (others => '0');
+   m_square_o     <= m_square when m_valid_o = '1' else
+                     (others => '0');
+   m_primes_o     <= m_primes when m_valid_o = '1' else
+                     (others => '0');
 
    state_proc : process (clk_i)
    begin
@@ -104,12 +104,12 @@ begin
 
             when IDLE_ST =>
                if s_valid_i = '1' and s_ready_o = '1' then
-                  m_square     <= C_ONE;
-                  m_primes     <= (others => '0');
-                  s_data       <= s_data_i;
-                  primes_index <= (others => '0');
-                  state        <= READ_PRIME_ST;
-                  m_user_o     <= s_user_i;
+                  m_square       <= C_ONE;
+                  m_primes       <= (others => '0');
+                  s_data         <= s_data_i;
+                  primes_index_o <= (others => '0');
+                  state          <= READ_PRIME_ST;
+                  m_user_o       <= s_user_i;
                end if;
 
             when READ_PRIME_ST =>
@@ -117,29 +117,29 @@ begin
 
             when DIVEXP_ST =>
                divexp_s_val_n <= s_data;
-               divexp_s_val_d <= primes_data;
+               divexp_s_val_d <= primes_data_i;
                divexp_s_valid <= '1';
                state          <= AM_ST;
 
             when AM_ST =>
                if divexp_m_valid = '1' then
-                  s_data                             <= divexp_m_quot;
-                  m_primes(to_integer(primes_index)) <= divexp_m_exp;
+                  s_data                               <= divexp_m_quot;
+                  m_primes(to_integer(primes_index_o)) <= divexp_m_exp;
 
-                  am_s_val_a                         <= m_square;
-                  am_s_val_x                         <= divexp_m_square;
-                  am_s_val_b                         <= C_ZERO2;
-                  am_s_valid                         <= '1';
+                  am_s_val_a                           <= m_square;
+                  am_s_val_x                           <= divexp_m_square;
+                  am_s_val_b                           <= C_ZERO2;
+                  am_s_valid                           <= '1';
 
                   if divexp_m_quot = 1 then
                      m_complete_o <= '1';
                      state        <= WAIT_IDLE_ST;
-                  elsif and (primes_index) = '1' then
+                  elsif and (primes_index_o) = '1' then
                      m_complete_o <= '0';
                      state        <= WAIT_IDLE_ST;
                   else
-                     primes_index <= primes_index + 1;
-                     state        <= WAIT_PRIME_ST;
+                     primes_index_o <= primes_index_o + 1;
+                     state          <= WAIT_PRIME_ST;
                   end if;
                end if;
 
@@ -159,6 +159,7 @@ begin
          end case;
 
          if rst_i = '1' then
+            primes_index_o <= (others => '0');
             divexp_s_valid <= '0';
             am_s_valid     <= '0';
             m_valid_o      <= '0';
@@ -167,21 +168,11 @@ begin
       end if;
    end process state_proc;
 
-   primes_inst : entity work.primes
-      generic map (
-         G_ADDR_SIZE => C_PRIME_ADDR_SIZE,
-         G_DATA_SIZE => G_DATA_SIZE
-      )
-      port map (
-         clk_i   => clk_i,
-         rst_i   => rst_i,
-         index_i => primes_index,
-         data_o  => primes_data
-      ); -- primes_inst
+   divexp_m_ready <= '1' when state = AM_ST else
+                     '0';
 
-   divexp_m_ready <= '1' when state = AM_ST else '0';
-
-   am_m_ready     <= '1' when state = WAIT_IDLE_ST or state = WAIT_PRIME_ST else '0';
+   am_m_ready     <= '1' when state = WAIT_IDLE_ST or state = WAIT_PRIME_ST else
+                     '0';
 
    divexp_inst : entity work.divexp
       generic map (

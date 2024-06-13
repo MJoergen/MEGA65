@@ -3,20 +3,20 @@
 # in your OS repository, otherwise it may be downloaded from here:
 # https://github.com/ghdl/ghdl
 
-PROJECT = uart
-PROJECT = divexact
-PROJECT = gcd
-PROJECT = divmod
-PROJECT = jacobi
-PROJECT = sqrt
-PROJECT = amm
-PROJECT = add_mult
+#PROJECT = add_mult
+#PROJECT = amm
 PROJECT = cf
-PROJECT = primes
-PROJECT = factor_vect
+#PROJECT = divexact
 #PROJECT = divexp
-#PROJECT = slv_to_dec
+#PROJECT = divmod
+#PROJECT = factor_vect
+#PROJECT = gcd
 #PROJECT = gf2_solver
+#PROJECT = jacobi
+#PROJECT = primes
+#PROJECT = slv_to_dec
+#PROJECT = sqrt
+#PROJECT = uart
 
 TB       = tb_$(PROJECT)
 SOURCES  = ../../common/uart.vhd
@@ -47,7 +47,7 @@ WAVE     = $(TB).ghw
 sim: $(SOURCES)
 	ghdl -i --std=08 -frelaxed-rules -fsynopsys $(SOURCES)
 	ghdl -m --std=08 -frelaxed-rules -fsynopsys $(TB)
-	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) --wave=$(WAVE) --stop-time=1us
+	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) --wave=$(WAVE) --stop-time=100us
 
 
 $WAVE): sim

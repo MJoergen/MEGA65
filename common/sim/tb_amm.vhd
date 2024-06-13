@@ -18,7 +18,7 @@ architecture simulation of tb_amm is
    -- Signals conected to DUT
    signal   dut_s_ready : std_logic;
    signal   dut_s_valid : std_logic;
-   signal   dut_s_val_a : std_logic_vector(C_DATA_SIZE - 1 downto 0);
+   signal   dut_s_val_a : std_logic_vector(2 * C_DATA_SIZE - 1 downto 0);
    signal   dut_s_val_x : std_logic_vector(2 * C_DATA_SIZE - 1 downto 0);
    signal   dut_s_val_b : std_logic_vector(2 * C_DATA_SIZE - 1 downto 0);
    signal   dut_s_val_n : std_logic_vector(2 * C_DATA_SIZE - 1 downto 0);
@@ -79,7 +79,7 @@ begin
                 " -> " & integer'image(exp_v);
 
          -- Start calculation
-         dut_s_val_a <= to_stdlogicvector(val_a, C_DATA_SIZE);
+         dut_s_val_a <= to_stdlogicvector(val_a, 2 * C_DATA_SIZE);
          dut_s_val_x <= to_stdlogicvector(val_x, 2 * C_DATA_SIZE);
          dut_s_val_b <= to_stdlogicvector(val_b, 2 * C_DATA_SIZE);
          dut_s_val_n <= to_stdlogicvector(val_n, 2 * C_DATA_SIZE);

@@ -96,7 +96,7 @@ architecture synthesis of cf is
    -- Signals connected to AMM module
    signal   amm_s_ready : std_logic;
    signal   amm_s_valid : std_logic;
-   signal   amm_s_val_a : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   amm_s_val_a : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
    signal   amm_s_val_x : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
    signal   amm_s_val_b : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
    signal   amm_s_val_n : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
@@ -233,7 +233,7 @@ begin
    divmod_s_val_d   <= p_cur;
 
    -- Calculate x_(n+1) = (a_n * x_n + x_(n-1)) mod N.
-   amm_s_val_a      <= a_cur;
+   amm_s_val_a      <= C_ZERO & a_cur;
    amm_s_val_x      <= x_cur;
    amm_s_val_b      <= x_prev;
    amm_s_val_n      <= val_n;

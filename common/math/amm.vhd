@@ -14,7 +14,7 @@ entity amm is
       rst_i     : in    std_logic;
       s_ready_o : out   std_logic;
       s_valid_i : in    std_logic;
-      s_val_a_i : in    std_logic_vector(G_DATA_SIZE - 1 downto 0);
+      s_val_a_i : in    std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
       s_val_x_i : in    std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
       s_val_b_i : in    std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
       s_val_n_i : in    std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
@@ -26,9 +26,7 @@ end entity amm;
 
 architecture synthesis of amm is
 
-   constant C_ZERO : std_logic_vector(G_DATA_SIZE - 1 downto 0) := (others => '0');
-
-   signal   mult_r : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   mult_r : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
    signal   add_r  : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
    signal   res_r  : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
    signal   val_r  : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
@@ -71,7 +69,7 @@ begin
                   end if;
                end if;
 
-               mult_r <= '0' & mult_r(G_DATA_SIZE - 1 downto 1);
+               mult_r <= '0' & mult_r(2 * G_DATA_SIZE - 1 downto 1);
                if add_r(2 * G_DATA_SIZE - 2 downto 0) & '0' >= val_r then
                   add_r <= add_r(2 * G_DATA_SIZE - 2 downto 0) & '0' - val_r;
                else

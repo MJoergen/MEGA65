@@ -34,16 +34,18 @@ SRCS += ../../common/slv_to_dec.vhd
 SRCS += ../../common/uart.vhd
 SRCS += ../../common/video_modes_pkg.vhd
 SRCS += ../../common/video_sync.vhd
+SRCS += ../candidate.vhd
 SRCS += ../$(PROJECT).vhd
 SRCS += ../$(PROJECT)_wrapper.vhd
 SRCS += $(TB).vhd
 SAVE  = $(TB).gtkw
 WAVE  = $(TB).ghw
 
+VAL_PRIME_ADDR_SIZE = 3
 VAL_DATA_SIZE = 8
 VAL_VECTOR_SIZE = 8
 
-GENERICS += -gG_DATA_SIZE=$(VAL_DATA_SIZE) -gG_VECTOR_SIZE=$(VAL_VECTOR_SIZE)
+GENERICS += -gG_PRIME_ADDR_SIZE=$(VAL_PRIME_ADDR_SIZE) -gG_DATA_SIZE=$(VAL_DATA_SIZE) -gG_VECTOR_SIZE=$(VAL_VECTOR_SIZE)
 
 #####################################
 # Simulation

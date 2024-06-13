@@ -12,7 +12,7 @@ prove: depth 8
 smtbmc
 
 [script]
-ghdl --std=08 -gG_DATA_SIZE=8 -gG_VECTOR_SIZE=8 factor_vect.vhd primes.vhd add_mult.vhd divexp.vhd divmod.vhd factor_vect.psl -e factor_vect
+ghdl --std=08 -gG_DATA_SIZE=8 -gG_PRIME_ADDR_SIZE=3 -gG_USER_SIZE=8 -gG_VECTOR_SIZE=8 factor_vect.vhd primes.vhd add_mult.vhd divexp.vhd divmod.vhd factor_vect.psl -e factor_vect
 prep -top factor_vect
 
 [files]

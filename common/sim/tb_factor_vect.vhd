@@ -7,25 +7,28 @@ end entity tb_factor_vect;
 
 architecture simulation of tb_factor_vect is
 
-   constant C_DATA_SIZE   : integer  := 8;
-   constant C_VECTOR_SIZE : integer  := 8;
-   constant C_USER_SIZE   : integer  := 8;
+   constant C_PRIME_ADDR_SIZE : integer := 3;
+   constant C_DATA_SIZE       : integer := 8;
+   constant C_VECTOR_SIZE     : integer := 8;
+   constant C_USER_SIZE       : integer := 8;
 
-   signal   test_running : std_logic := '1';
-   signal   clk          : std_logic := '1';
-   signal   rst          : std_logic := '1';
+   signal   test_running : std_logic    := '1';
+   signal   clk          : std_logic    := '1';
+   signal   rst          : std_logic    := '1';
 
    -- Signals conected to DUT
-   signal   dut_s_ready    : std_logic;
-   signal   dut_s_valid    : std_logic;
-   signal   dut_s_data     : std_logic_vector(C_DATA_SIZE - 1 downto 0);
-   signal   dut_s_user     : std_logic_vector(C_USER_SIZE - 1 downto 0);
-   signal   dut_m_ready    : std_logic;
-   signal   dut_m_valid    : std_logic;
-   signal   dut_m_complete : std_logic;
-   signal   dut_m_square   : std_logic_vector(C_VECTOR_SIZE - 1 downto 0);
-   signal   dut_m_primes   : std_logic_vector(C_VECTOR_SIZE - 1 downto 0);
-   signal   dut_m_user     : std_logic_vector(C_USER_SIZE - 1 downto 0);
+   signal   dut_s_ready      : std_logic;
+   signal   dut_s_valid      : std_logic;
+   signal   dut_s_data       : std_logic_vector(C_DATA_SIZE - 1 downto 0);
+   signal   dut_s_user       : std_logic_vector(C_USER_SIZE - 1 downto 0);
+   signal   dut_m_ready      : std_logic;
+   signal   dut_m_valid      : std_logic;
+   signal   dut_m_complete   : std_logic;
+   signal   dut_m_square     : std_logic_vector(C_VECTOR_SIZE - 1 downto 0);
+   signal   dut_m_primes     : std_logic_vector(C_VECTOR_SIZE - 1 downto 0);
+   signal   dut_m_user       : std_logic_vector(C_USER_SIZE - 1 downto 0);
+   signal   dut_primes_index : std_logic_vector(C_PRIME_ADDR_SIZE - 1 downto 0);
+   signal   dut_primes_data  : std_logic_vector(C_DATA_SIZE - 1 downto 0);
 
 begin
 
@@ -39,24 +42,40 @@ begin
 
    factor_vect_inst : entity work.factor_vect
       generic map (
-         G_DATA_SIZE   => C_DATA_SIZE,
-         G_VECTOR_SIZE => C_VECTOR_SIZE,
-         G_USER_SIZE   => C_USER_SIZE
+         G_PRIME_ADDR_SIZE => C_PRIME_ADDR_SIZE,
+         G_DATA_SIZE       => C_DATA_SIZE,
+         G_VECTOR_SIZE     => C_VECTOR_SIZE,
+         G_USER_SIZE       => C_USER_SIZE
       )
       port map (
-         clk_i        => clk,
-         rst_i        => rst,
-         s_ready_o    => dut_s_ready,
-         s_valid_i    => dut_s_valid,
-         s_data_i     => dut_s_data,
-         s_user_i     => dut_s_user,
-         m_ready_i    => dut_m_ready,
-         m_valid_o    => dut_m_valid,
-         m_complete_o => dut_m_complete,
-         m_square_o   => dut_m_square,
-         m_primes_o   => dut_m_primes,
-         m_user_o     => dut_m_user
+         clk_i          => clk,
+         rst_i          => rst,
+         s_ready_o      => dut_s_ready,
+         s_valid_i      => dut_s_valid,
+         s_data_i       => dut_s_data,
+         s_user_i       => dut_s_user,
+         m_ready_i      => dut_m_ready,
+         m_valid_o      => dut_m_valid,
+         m_complete_o   => dut_m_complete,
+         m_square_o     => dut_m_square,
+         m_primes_o     => dut_m_primes,
+         m_user_o       => dut_m_user,
+         primes_index_o => dut_primes_index,
+         primes_data_i  => dut_primes_data
       ); -- factor_vect_inst
+
+   primes_inst : entity work.primes
+      generic map (
+         G_ADDR_SIZE => C_PRIME_ADDR_SIZE,
+         G_DATA_SIZE => C_DATA_SIZE
+      )
+      port map (
+         clk_i   => clk,
+         rst_i   => rst,
+         index_i => dut_primes_index,
+         data_o  => dut_primes_data
+      ); -- primes_inst
+
 
 
    --------------------------------------------------

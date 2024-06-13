@@ -4,7 +4,7 @@ vunit amm_inst(amm(synthesis))
    default clock is rising_edge(clk_i);
 
    -- Additional signals used during formal verification
-   signal f_val_a : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal f_val_a : std_logic_vector(2*G_DATA_SIZE - 1 downto 0);
    signal f_val_x : std_logic_vector(2*G_DATA_SIZE - 1 downto 0);
    signal f_val_b : std_logic_vector(2*G_DATA_SIZE - 1 downto 0);
    signal f_val_n : std_logic_vector(2*G_DATA_SIZE - 1 downto 0);
