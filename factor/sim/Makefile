@@ -22,6 +22,7 @@ SRCS += ../../common/math/gcd.vhd
 SRCS += ../../common/math/gf2_solver.vhd
 SRCS += ../../common/math/primes.vhd
 SRCS += ../../common/math/sqrt.vhd
+SRCS += ../../common/axi_fifo_small.vhd
 SRCS += ../../common/font.vhd
 SRCS += ../../common/kb_matrix_ram.vhd
 SRCS += ../../common/m2m_keyb.vhd
@@ -31,6 +32,9 @@ SRCS += ../../common/mega65.vhd
 SRCS += ../../common/merginator.vhd
 SRCS += ../../common/serializer.vhd
 SRCS += ../../common/slv_to_dec.vhd
+SRCS += ../../common/stat.vhd
+SRCS += ../../common/stat_latency.vhd
+SRCS += ../../common/stat_wait.vhd
 SRCS += ../../common/uart.vhd
 SRCS += ../../common/video_modes_pkg.vhd
 SRCS += ../../common/video_sync.vhd
@@ -42,7 +46,7 @@ SAVE  = $(TB).gtkw
 WAVE  = $(TB).ghw
 
 VAL_PRIME_ADDR_SIZE = 3
-VAL_DATA_SIZE = 8
+VAL_DATA_SIZE = 12
 VAL_VECTOR_SIZE = 8
 
 GENERICS += -gG_PRIME_ADDR_SIZE=$(VAL_PRIME_ADDR_SIZE) -gG_DATA_SIZE=$(VAL_DATA_SIZE) -gG_VECTOR_SIZE=$(VAL_VECTOR_SIZE)
@@ -55,7 +59,7 @@ GENERICS += -gG_PRIME_ADDR_SIZE=$(VAL_PRIME_ADDR_SIZE) -gG_DATA_SIZE=$(VAL_DATA_
 sim: $(SRCS) unisim-obj08.cf xpm-obj08.cf
 	ghdl -i --std=08 -frelaxed-rules -fsynopsys $(SRCS)
 	ghdl -m --std=08 -frelaxed-rules -fsynopsys $(TB)
-	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) $(GENERICS) --wave=$(WAVE) --stop-time=12000us
+	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) $(GENERICS) --wave=$(WAVE) --stop-time=300us
 
 unisim-obj08.cf:
 	ghdl -i --std=08 --work=unisim -frelaxed-rules -fsynopsys $(XILINX_DIR)/data/vhdl/src/unisims/unisim_VCOMP.vhd

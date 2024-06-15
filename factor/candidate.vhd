@@ -37,7 +37,8 @@ end entity candidate;
 
 architecture synthesis of candidate is
 
-   constant C_ZERO : std_logic_vector(G_DATA_SIZE - 1 downto 0) := (others => '0');
+   constant C_ZERO : std_logic_vector(G_DATA_SIZE - 1 downto 0)     := (others => '0');
+   constant C_ONE2 : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0) := (0 => '1', others => '0');
 
    signal   amm_s_ready : std_logic;
    signal   amm_s_valid : std_logic;
@@ -58,20 +59,21 @@ architecture synthesis of candidate is
    signal   s_last   : std_logic;
 
    signal   s_primes_square : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
-   signal   s_primes_accum  : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
+   signal   state_primes    : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
    signal   m_y             : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
 
    signal   primes_index_d : std_logic_vector(G_PRIME_ADDR_SIZE - 1 downto 0);
 
 begin
 
-   s_ready_o   <= '1' when state = IDLE_ST and (amm_s_valid = '0' or amm_s_ready = '1') else
+   s_ready_o   <= '1' when state = IDLE_ST and
+                           (amm_s_valid = '0' or amm_s_ready = '1') and
+                           (m_valid_o = '0' or m_ready_i = '1') else
                   '0';
 
    fsm_proc : process (clk_i)
    begin
       if rising_edge(clk_i) then
-         primes_index_d <= primes_index_o;
          if amm_s_ready = '1' then
             amm_s_valid <= '0';
          end if;
@@ -85,7 +87,7 @@ begin
                if s_valid_i = '1' and s_ready_o = '1' then
                   s_primes        <= s_primes_i;
                   s_square        <= s_square_i;
-                  s_primes_square <= s_primes_i and s_primes_accum;
+                  s_primes_square <= s_primes_i and state_primes;
                   s_last          <= s_last_i;
                   s_n             <= s_n_i;
 
@@ -110,8 +112,8 @@ begin
 
             when SQUARE_ST =>
                if amm_m_valid = '1' then
-                  m_y            <= amm_m_res;
-                  s_primes_accum <= s_primes_accum xor s_primes;
+                  m_y          <= amm_m_res;
+                  state_primes <= state_primes xor s_primes;
                   if or (s_primes_square) = '0' then
                      state <= END_ST;
                   else
@@ -125,11 +127,8 @@ begin
                if primes_index_o > 0 then
                   primes_index_o <= primes_index_o - 1;
                end if;
-               if primes_index_d = 0 then
-                  state <= END_ST;
-               else
-                  state <= MULT_PRIME_ST;
-               end if;
+               primes_index_d <= primes_index_o;
+               state <= MULT_PRIME_ST;
 
             when MULT_PRIME_ST =>
                if primes_index_d = 0 then
@@ -142,21 +141,31 @@ begin
                   amm_s_val_n <= s_n;
                   amm_s_valid <= '1';
                   state       <= WAIT_MULT_PRIME_ST;
-               elsif primes_index_o > 0 then
-                  primes_index_o <= primes_index_o - 1;
+               else
+                  primes_index_d <= primes_index_o;
+                  if primes_index_o > 0 then
+                     primes_index_o <= primes_index_o - 1;
+                  end if;
                end if;
 
             when WAIT_MULT_PRIME_ST =>
                if amm_m_valid = '1' then
                   m_y   <= amm_m_res;
                   state <= READ_PRIME_ST;
+                  if primes_index_d = 0 then
+                     state <= END_ST;
+                  end if;
                end if;
 
             when END_ST =>
                if s_last = '1' then
+                  assert state_primes = 0;
                   m_x_o     <= s_x;
                   m_y_o     <= m_y;
                   m_valid_o <= '1';
+                  -- Are these next two statements necessary?
+                  m_y       <= C_ONE2;
+                  s_x       <= C_ONE2;
                end if;
                state <= IDLE_ST;
 
@@ -164,9 +173,9 @@ begin
 
          if rst_i = '1' then
             primes_index_o <= (others => '0');
-            m_y            <= (0 => '1', others => '0');                                        -- initialize to one
-            s_x            <= (0 => '1', others => '0');                                        -- initialize to one
-            s_primes_accum <= (others => '0');
+            m_y            <= C_ONE2;
+            s_x            <= C_ONE2;
+            state_primes   <= (others => '0');
             amm_s_valid    <= '0';
             m_valid_o      <= '0';
             state          <= IDLE_ST;

@@ -56,7 +56,7 @@ architecture synthesis of gf2_solver is
 
 begin
 
-   s_ready_o <= '1' when state = IDLE_ST and m_ready_i = '1' else
+   s_ready_o <= '1' when state = IDLE_ST and (m_valid_o = '0' or m_ready_i = '1') else
                 '0';
 
    fsm_proc : process (clk_i)
@@ -64,6 +64,7 @@ begin
    begin
       if rising_edge(clk_i) then
          if m_ready_i = '1' then
+            m_last_o  <= '0';
             m_valid_o <= '0';
          end if;
 

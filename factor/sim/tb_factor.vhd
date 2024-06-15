@@ -12,26 +12,32 @@ end entity tb_factor;
 
 architecture simulation of tb_factor is
 
-   signal   running     : std_logic := '1';
-   signal   clk         : std_logic := '1';
-   signal   rst         : std_logic := '1';
+   signal   running     : std_logic  := '1';
+   signal   clk         : std_logic  := '1';
+   signal   rst         : std_logic  := '1';
    signal   dut_s_start : std_logic;
    signal   dut_s_val   : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
    signal   dut_m_ready : std_logic;
    signal   dut_m_valid : std_logic;
-   signal   dut_m_x     : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal   dut_m_y     : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   dut_m_data  : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   dut_m_fail  : std_logic;
 
-   constant C_N : natural           := 4559;
+   constant C_N : natural            := 4559;
 
--- Other numbers to try:
---    2059 =   29 *   71
---    4559 =   47 *   97
---   19549 =  113 *  173
---   26329 =  113 *  233
---   35119 =  173 *  203
---   40309 =  173 *  233
--- 3837523 = 1093 * 3511. The two only known Wieferich primes.
+   -- Statistics with G_DATA_SIZE=12 and G_VECTOR_SIZE=8:
+   --
+   -- Cycles : Number
+   --    532 :    2059 =   29 *   71
+   --    927 :    4559 =   47 *   97
+   --   1109 :   19549 =  113 *  173
+   --   2067 :   26329 =  113 *  233
+   --    402 :   35119 =  173 *  203
+   --   2233 :   40309 =  173 *  233
+   --   7725 : 3837523 = 1093 * 3511. (The two only known Wieferich primes)
+
+   constant C_COUNTER_SIZE : natural := 16;
+   signal   st_count       : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
+   signal   st_valid       : std_logic;
 
 begin
 
@@ -51,8 +57,8 @@ begin
          s_val_i   => dut_s_val,
          m_ready_i => dut_m_ready,
          m_valid_o => dut_m_valid,
-         m_x_o     => dut_m_x,
-         m_y_o     => dut_m_y
+         m_data_o  => dut_m_data,
+         m_fail_o  => dut_m_fail
       ); -- factor_inst
 
    test_proc : process
@@ -60,14 +66,12 @@ begin
 
       procedure verify (
          x : integer;
-         y : integer;
          n : integer
       ) is
       begin
          report "Verify: x=" & to_string(x) &
-                ", y=" & to_string(y) &
                 ", n=" & to_string(n);
-         assert ((x * x - y * y) mod n) = 0;
+         assert (n mod x) = 0;
       end procedure verify;
 
    --
@@ -85,16 +89,51 @@ begin
       dut_s_start <= '0';
 
       while dut_m_valid = '0' loop
+         if dut_m_fail = '1' then
+            report "Failed";
+            exit;
+         end if;
          wait until clk = '1';
       end loop;
 
-      verify(to_integer(dut_m_x), to_integer(dut_m_y), C_N);
+      if dut_m_fail = '0' then
+         report "Verify: x=" & to_string(to_integer(dut_m_data)) &
+                ", n=" & to_string(C_N);
 
-      wait for 100 ns;
+         assert (C_N mod to_integer(dut_m_data)) = 0;
+         assert to_integer(dut_m_data) /= 1 and to_integer(dut_m_data) /= C_N;
+      end if;
+
+      wait until clk = '1';
+      wait until clk = '1';
       running <= '0';
       report "Test finished";
       wait;
    end process test_proc;
+
+   stat_latency_inst : entity work.stat_latency
+      generic map (
+         G_COUNTER_SIZE => C_COUNTER_SIZE
+      )
+      port map (
+         clk_i      => clk,
+         rst_i      => rst,
+         s_ready_i  => '1',
+         s_valid_i  => dut_s_start,
+         m_ready_i  => dut_m_ready,
+         m_valid_i  => dut_m_valid,
+         st_count_o => st_count,
+         st_valid_o => st_valid
+      ); -- stat_latency_inst
+
+   stat_proc : process (clk)
+   begin
+      if rising_edge(clk) then
+         if st_valid = '1' then
+            report "st_count=" & to_string(to_integer(st_count));
+         end if;
+      end if;
+   end process stat_proc;
 
 end architecture simulation;
 

@@ -79,7 +79,7 @@ architecture synthesis of factor_vect is
 
 begin
 
-   s_ready_o      <= '1' when state = IDLE_ST else
+   s_ready_o      <= '1' when state = IDLE_ST and (m_valid_o = '0' or m_ready_i = '1') else
                      '0';
 
    m_square_o     <= m_square when m_valid_o = '1' else

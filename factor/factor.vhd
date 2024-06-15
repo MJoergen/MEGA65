@@ -29,8 +29,8 @@ entity factor is
       s_val_i   : in    std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
       m_ready_i : in    std_logic;
       m_valid_o : out   std_logic;
-      m_x_o     : out   std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-      m_y_o     : out   std_logic_vector(2 * G_DATA_SIZE - 1 downto 0)
+      m_data_o  : out   std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+      m_fail_o  : out   std_logic
    );
 end entity factor;
 
@@ -89,6 +89,35 @@ architecture synthesis of factor is
    signal   cand_primes_index : std_logic_vector(G_PRIME_ADDR_SIZE - 1 downto 0);
    signal   cand_primes_data  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
+   signal   gcd_s_valid : std_logic;
+   signal   gcd_s_ready : std_logic;
+   signal   gcd_s_data1 : std_logic_vector(2 * G_DATA_SIZE downto 0);
+   signal   gcd_s_data2 : std_logic_vector(2 * G_DATA_SIZE downto 0);
+   signal   gcd_m_valid : std_logic;
+   signal   gcd_m_ready : std_logic;
+   signal   gcd_m_data  : std_logic_vector(2 * G_DATA_SIZE downto 0);
+
+   signal   factor_val : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+
+   constant C_COUNTER_SIZE : natural  := 8;
+   signal   fv_st_count    : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
+   signal   fv_st_valid    : std_logic;
+   signal   stat_min       : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
+   signal   stat_max       : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
+   signal   stat_mean      : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
+
+   signal   fv_s_st_count_00 : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
+   signal   fv_s_st_count_01 : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
+   signal   fv_s_st_count_10 : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
+   signal   fv_s_st_count_11 : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
+   signal   fv_s_st_valid    : std_logic;
+
+   signal   fv_m_st_count_00 : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
+   signal   fv_m_st_count_01 : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
+   signal   fv_m_st_count_10 : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
+   signal   fv_m_st_count_11 : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
+   signal   fv_m_st_valid    : std_logic;
+
 begin
 
    ---------------------------------------------------------------
@@ -132,15 +161,31 @@ begin
       ); -- cf_inst
 
    cf_debug_proc : process (clk_i)
+      variable x_v : integer;
+      variable p_v : integer;
+      variable w_v : integer;
+      variable n_v : integer;
    begin
       if rising_edge(clk_i) then
          if cf_m_valid = '1' and cf_m_ready = '1' then
-            report "CF: x=" & to_string(to_integer(cf_m_res_x)) &
-                   ", p=" & to_string(to_integer(cf_m_res_p)) &
-                   ", w=" & to_string(cf_m_res_w);
+            x_v := to_integer(cf_m_res_x);
+            p_v := to_integer(cf_m_res_p);
+            w_v := 1 when cf_m_res_w = '0' else -1;
+            n_v := to_integer(cf_s_val);
+            report "CF: x=" & to_string(x_v) &
+                   ", p=" & to_string(p_v) &
+                   ", w=" & to_string(w_v) &
+                   ", n=" & to_string(n_v);
+            assert w_v * w_v = 1;
+            assert p_v * p_v < 4 * n_v;
+            assert (x_v * x_v mod n_v) = p_v * w_v or
+                   (x_v * x_v mod n_v) = p_v * w_v + n_v;
          end if;
       end if;
    end process cf_debug_proc;
+
+   m_fail_o   <= '1' when cf_m_valid = '1' and cf_m_ready = '1' and cf_m_res_x = 1 else
+                 '0';
 
 
    ---------------------------------------------------------------
@@ -260,6 +305,17 @@ begin
    end process gf2_debug_proc;
 
 
+   ---------------------------------------------------------------
+   -- The candidate entity generates a solution candidate
+   --
+   -- Example: The input sequence (N=4559):
+   -- * x=1245, p=00001100, s=1
+   -- * x=  67, p=00001101, s=1
+   -- * x=1553, p=00000001, s=7, LAST
+   -- gives the output sequence
+   -- * x=4069, y=490
+   ---------------------------------------------------------------
+
    cand_s_valid  <= gf2_m_valid;
    cand_s_n      <= cf_s_val;
    cand_s_x      <= gf2_m_user(R_GF2_USER_X);
@@ -304,22 +360,139 @@ begin
          data_o  => cand_primes_data
       ); -- cand_primes_inst
 
-
    cand_debug_proc : process (clk_i)
+      variable x_v : integer;
+      variable y_v : integer;
+      variable n_v : integer;
    begin
       if rising_edge(clk_i) then
          if cand_m_valid = '1' and cand_m_ready = '1' then
-            report "CAND: x=" & to_string(to_integer(cand_m_x)) &
-                   ", y=" & to_string(to_integer(cand_m_y));
+            x_v := to_integer(cand_m_x);
+            y_v := to_integer(cand_m_y);
+            n_v := to_integer(cf_s_val);
+            report "CAND: x=" & to_string(x_v) &
+                   ", y=" & to_string(y_v) &
+                   ", n=" & to_string(n_v);
+            assert (x_v * x_v mod n_v) = (y_v * y_v mod n_v);
          end if;
       end if;
    end process cand_debug_proc;
 
 
-   m_x_o        <= cand_m_x;
-   m_y_o        <= cand_m_y;
-   m_valid_o    <= cand_m_valid;
-   cand_m_ready <= m_ready_i;
+   cand_m_ready <= gcd_s_ready;
+   gcd_s_valid  <= cand_m_valid;
+   gcd_s_data1  <= ("0" & cand_m_x) + ("0" & cand_m_y);
+   gcd_s_data2  <= "0" & cf_s_val;
+
+   gcd_inst : entity work.gcd
+      generic map (
+         G_DATA_SIZE => 2 * G_DATA_SIZE + 1
+      )
+      port map (
+         clk_i     => clk_i,
+         rst_i     => rst_i,
+         s_valid_i => gcd_s_valid,
+         s_ready_o => gcd_s_ready,
+         s_data1_i => gcd_s_data1,
+         s_data2_i => gcd_s_data2,
+         m_valid_o => gcd_m_valid,
+         m_ready_i => gcd_m_ready,
+         m_data_o  => gcd_m_data
+      ); -- gcd_inst
+
+   gcd_debug_proc : process (clk_i)
+   begin
+      if rising_edge(clk_i) then
+         if gcd_m_valid = '1' and gcd_m_ready = '1' then
+            report "GCD: res=" & to_string(to_integer(gcd_m_data));
+         end if;
+      end if;
+   end process gcd_debug_proc;
+
+
+   factor_val  <= gcd_m_data(2 * G_DATA_SIZE - 1 downto 0);
+
+   gcd_m_ready <= m_ready_i;
+
+   filter_output_proc : process (clk_i)
+   begin
+      if rising_edge(clk_i) then
+         m_valid_o <= '0';
+         if gcd_m_valid = '1' and gcd_m_ready = '1' then
+            m_data_o <= factor_val;
+            if factor_val > 10 and factor_val /= cf_s_val then
+               m_valid_o <= '1';
+            end if;
+         end if;
+      end if;
+   end process filter_output_proc;
+
+
+   ---------------------------------------------------------------
+   -- Debug counters
+   ---------------------------------------------------------------
+
+   fv_stat_latency_inst : entity work.stat_latency
+      generic map (
+         G_COUNTER_SIZE => C_COUNTER_SIZE
+      )
+      port map (
+         clk_i      => clk_i,
+         rst_i      => rst_i,
+         s_ready_i  => fv_s_ready,
+         s_valid_i  => fv_s_valid,
+         m_ready_i  => fv_m_ready,
+         m_valid_i  => fv_m_valid,
+         st_count_o => fv_st_count,
+         st_valid_o => fv_st_valid
+      ); -- fv_stat_latency_inst
+
+   fv_stat_inst : entity work.stat
+      generic map (
+         G_DATA_SIZE     => C_COUNTER_SIZE,
+         G_FRACTION_SIZE => 4
+      )
+      port map (
+         clk_i     => clk_i,
+         rst_i     => rst_i,
+         s_data_i  => fv_st_count,
+         s_valid_i => fv_st_valid,
+         m_min_o   => stat_min,
+         m_max_o   => stat_max,
+         m_mean_o  => stat_mean
+      ); -- fv_stat_inst
+
+   fv_s_stat_wait_inst : entity work.stat_wait
+      generic map (
+         G_COUNTER_SIZE => C_COUNTER_SIZE
+      )
+      port map (
+         clk_i         => clk_i,
+         rst_i         => rst_i,
+         ready_i       => fv_s_ready,
+         valid_i       => fv_s_valid,
+         st_count_00_o => fv_s_st_count_00,
+         st_count_01_o => fv_s_st_count_01,
+         st_count_10_o => fv_s_st_count_10,
+         st_count_11_o => fv_s_st_count_11,
+         st_valid_o    => fv_s_st_valid
+      ); -- fv_s_stat_wait_inst
+
+   fv_m_stat_wait_inst : entity work.stat_wait
+      generic map (
+         G_COUNTER_SIZE => C_COUNTER_SIZE
+      )
+      port map (
+         clk_i         => clk_i,
+         rst_i         => rst_i,
+         ready_i       => fv_m_ready,
+         valid_i       => fv_m_valid,
+         st_count_00_o => fv_m_st_count_00,
+         st_count_01_o => fv_m_st_count_01,
+         st_count_10_o => fv_m_st_count_10,
+         st_count_11_o => fv_m_st_count_11,
+         st_valid_o    => fv_m_st_valid
+      ); -- fv_m_stat_wait_inst
 
 end architecture synthesis;
 
