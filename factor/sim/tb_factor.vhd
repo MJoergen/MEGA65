@@ -22,7 +22,9 @@ architecture simulation of tb_factor is
    signal   dut_m_data  : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
    signal   dut_m_fail  : std_logic;
 
-   constant C_N : natural            := 4559;
+   constant C_N : string            := "4559";
+--   -- 2^37 + 1 = 3 * 1777 * 25781083
+--   constant C_N : string             := "137438953473";
 
    -- Statistics with G_DATA_SIZE=12 and G_VECTOR_SIZE=8:
    --
@@ -38,6 +40,20 @@ architecture simulation of tb_factor is
    constant C_COUNTER_SIZE : natural := 16;
    signal   st_count       : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
    signal   st_valid       : std_logic;
+
+   pure function to_stdlogicvector (
+      arg : string;
+      size : natural
+   ) return std_logic_vector is
+      variable res_v : std_logic_vector(size - 1 downto 0);
+   begin
+      res_v := (others => '0');
+      for i in arg'range loop
+         res_v := (res_v(size - 4 downto 0) & "000") + (res_v(size - 2 downto 0) & "0");
+         res_v := res_v + to_stdlogicvector(character'pos(arg(i)) - 48, size);
+      end loop;
+      return res_v;
+   end function to_stdlogicvector;
 
 begin
 
@@ -82,7 +98,7 @@ begin
       wait for 1 us;
       wait until clk = '1';
 
-      report "Test started, N = " & to_string(C_N);
+      report "Test started, N = " & C_N;
       dut_s_start <= '1';
       dut_s_val   <= to_stdlogicvector(C_N, 2 * G_DATA_SIZE);
       wait until clk = '1';
@@ -98,10 +114,12 @@ begin
 
       if dut_m_fail = '0' then
          report "Verify: x=" & to_string(to_integer(dut_m_data)) &
-                ", n=" & to_string(C_N);
+                ", n=" & C_N;
 
-         assert (C_N mod to_integer(dut_m_data)) = 0;
-         assert to_integer(dut_m_data) /= 1 and to_integer(dut_m_data) /= C_N;
+         if dut_s_val(2 * G_DATA_SIZE-1 downto 30) = 0 then
+            assert (to_integer(dut_s_val) mod to_integer(dut_m_data)) = 0;
+            assert to_integer(dut_m_data) /= 1 and to_integer(dut_m_data) /= to_integer(dut_s_val);
+         end if;
       end if;
 
       wait until clk = '1';

@@ -101,9 +101,10 @@ architecture synthesis of factor is
 
    signal   factor_val : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
 
-   constant C_COUNTER_SIZE : natural  := 8;
+   constant C_COUNTER_SIZE : natural  := 16;
    signal   fv_st_count    : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
    signal   fv_st_valid    : std_logic;
+   signal   stat_count     : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
    signal   stat_min       : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
    signal   stat_max       : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
    signal   stat_mean      : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
@@ -472,6 +473,7 @@ begin
          rst_i     => rst_i,
          s_data_i  => fv_st_count,
          s_valid_i => fv_st_valid,
+         m_count_o => stat_count,
          m_min_o   => stat_min,
          m_max_o   => stat_max,
          m_mean_o  => stat_mean
