@@ -36,6 +36,8 @@ end entity factor;
 
 architecture synthesis of factor is
 
+   constant C_DEBUG : boolean         := false;
+
    signal   cf_s_start : std_logic;
    signal   cf_s_val   : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
    signal   cf_m_ready : std_logic;
@@ -172,14 +174,16 @@ begin
             p_v := to_integer(cf_m_res_p);
             w_v := 1 when cf_m_res_w = '0' else -1;
             n_v := to_integer(cf_s_val);
-            report "CF: x=" & to_string(x_v) &
-                   ", p=" & to_string(p_v) &
-                   ", w=" & to_string(w_v) &
-                   ", n=" & to_string(n_v);
+            if C_DEBUG then
+               report "CF: x=" & to_string(x_v) &
+                      ", p=" & to_string(p_v) &
+                      ", w=" & to_string(w_v) &
+                      ", n=" & to_string(n_v);
+            end if;
             assert w_v * w_v = 1;
             assert p_v * p_v < 4 * n_v;
             assert (x_v * x_v mod n_v) = p_v * w_v or
-                   (x_v * x_v mod n_v) = p_v * w_v + n_v;
+                      (x_v * x_v mod n_v) = p_v * w_v + n_v;
          end if;
       end if;
    end process cf_debug_proc;
@@ -214,7 +218,7 @@ begin
       )
       port map (
          clk_i          => clk_i,
-         rst_i          => rst_i,
+         rst_i          => rst_i or cf_s_start,
          s_ready_o      => fv_s_ready,
          s_valid_i      => fv_s_valid,
          s_data_i       => fv_s_data,
@@ -236,7 +240,7 @@ begin
       )
       port map (
          clk_i   => clk_i,
-         rst_i   => rst_i,
+         rst_i   => rst_i or cf_s_start,
          index_i => fv_primes_index,
          data_o  => fv_primes_data
       ); -- fv_primes_inst
@@ -245,10 +249,12 @@ begin
    begin
       if rising_edge(clk_i) then
          if fv_m_valid = '1' and fv_m_complete = '1' and fv_m_ready = '1' then
-            report "FV: square=" & to_string(to_integer(fv_m_square)) &
-                   ", primes=" & to_string(fv_m_primes) &
-                   ", user=" & to_string(fv_m_user(R_FV_USER_W)) &
-                   "," & to_string(to_integer(fv_m_user(R_FV_USER_X)));
+            if C_DEBUG then
+               report "FV: square=" & to_string(to_integer(fv_m_square)) &
+                      ", primes=" & to_string(fv_m_primes) &
+                      ", user=" & to_string(fv_m_user(R_FV_USER_W)) &
+                      "," & to_string(to_integer(fv_m_user(R_FV_USER_X)));
+            end if;
          end if;
       end if;
    end process fv_debug_proc;
@@ -281,7 +287,7 @@ begin
       )
       port map (
          clk_i     => clk_i,
-         rst_i     => rst_i,
+         rst_i     => rst_i or cf_s_start,
          s_ready_o => gf2_s_ready,
          s_valid_i => gf2_s_valid,
          s_row_i   => gf2_s_row,
@@ -296,10 +302,12 @@ begin
    begin
       if rising_edge(clk_i) then
          if gf2_m_valid = '1' and gf2_m_ready = '1' then
-            report "GF2: user=" & to_string(to_integer(gf2_m_user(R_GF2_USER_X))) &
-                   "," & to_string(gf2_m_user(R_GF2_USER_PRIMES)) &
-                   "," & to_string(to_integer(gf2_m_user(R_GF2_USER_SQUARE))) &
-                   ", last=" & to_string(gf2_m_last);
+            if C_DEBUG then
+               report "GF2: user=" & to_string(to_integer(gf2_m_user(R_GF2_USER_X))) &
+                      "," & to_string(gf2_m_user(R_GF2_USER_PRIMES)) &
+                      "," & to_string(to_integer(gf2_m_user(R_GF2_USER_SQUARE))) &
+                      ", last=" & to_string(gf2_m_last);
+            end if;
          end if;
       end if;
    end process gf2_debug_proc;
@@ -332,7 +340,7 @@ begin
       )
       port map (
          clk_i          => clk_i,
-         rst_i          => rst_i,
+         rst_i          => rst_i or cf_s_start,
          s_ready_o      => cand_s_ready,
          s_valid_i      => cand_s_valid,
          s_n_i          => cand_s_n,
@@ -355,7 +363,7 @@ begin
       )
       port map (
          clk_i   => clk_i,
-         rst_i   => rst_i,
+         rst_i   => rst_i or cf_s_start,
          index_i => cand_primes_index,
          data_o  => cand_primes_data
       ); -- cand_primes_inst
@@ -370,10 +378,12 @@ begin
             x_v := to_integer(cand_m_x);
             y_v := to_integer(cand_m_y);
             n_v := to_integer(cf_s_val);
-            report "CAND: x=" & to_string(x_v) &
-                   ", y=" & to_string(y_v) &
-                   ", n=" & to_string(n_v);
-            assert (x_v * x_v mod n_v) = (y_v * y_v mod n_v);
+            if C_DEBUG then
+               report "CAND: x=" & to_string(x_v) &
+                      ", y=" & to_string(y_v) &
+                      ", n=" & to_string(n_v);
+               assert (x_v * x_v mod n_v) = (y_v * y_v mod n_v);
+            end if;
          end if;
       end if;
    end process cand_debug_proc;
@@ -390,7 +400,7 @@ begin
       )
       port map (
          clk_i     => clk_i,
-         rst_i     => rst_i,
+         rst_i     => rst_i or cf_s_start,
          s_valid_i => gcd_s_valid,
          s_ready_o => gcd_s_ready,
          s_data1_i => gcd_s_data1,
@@ -404,7 +414,9 @@ begin
    begin
       if rising_edge(clk_i) then
          if gcd_m_valid = '1' and gcd_m_ready = '1' then
-            report "GCD: res=" & to_string(to_integer(gcd_m_data));
+            if C_DEBUG then
+               report "GCD: res=" & to_string(to_integer(gcd_m_data));
+            end if;
          end if;
       end if;
    end process gcd_debug_proc;

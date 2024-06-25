@@ -183,7 +183,7 @@ begin
       end if;
    end process fsm_proc;
 
-   amm_m_ready <= m_ready_i;
+   amm_m_ready <= '1';
 
    amm_inst : entity work.amm
       generic map (

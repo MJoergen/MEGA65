@@ -4,8 +4,9 @@ library ieee;
 
 entity tb_factor_wrapper is
    generic (
-      G_DATA_SIZE   : natural;
-      G_VECTOR_SIZE : natural
+      G_PRIME_ADDR_SIZE : integer;
+      G_DATA_SIZE       : natural;
+      G_VECTOR_SIZE     : natural
    );
 end entity tb_factor_wrapper;
 
@@ -34,8 +35,9 @@ begin
 
    factor_wrapper_inst : entity work.factor_wrapper
       generic map (
-         G_DATA_SIZE   => G_DATA_SIZE,
-         G_VECTOR_SIZE => G_VECTOR_SIZE
+         G_PRIME_ADDR_SIZE => G_PRIME_ADDR_SIZE,
+         G_DATA_SIZE       => G_DATA_SIZE,
+         G_VECTOR_SIZE     => G_VECTOR_SIZE
       )
       port map (
          clk_i           => clk,
@@ -55,6 +57,10 @@ begin
 
    test_proc : process
       --
+
+      --------------------------
+      -- Send data to DUT
+      --------------------------
 
       procedure uart_rx_byte (
          arg : std_logic_vector(7 downto 0)
@@ -90,8 +96,12 @@ begin
       --
       end procedure uart_rx_string;
 
-      procedure verify_uart_tx_byte (
-         arg : std_logic_vector(7 downto 0)
+      --------------------------
+      -- Receive data from DUT
+      --------------------------
+
+      procedure get_uart_tx_byte (
+         arg : out std_logic_vector(7 downto 0)
       ) is
       begin
          uart_tx_ready <= '1';
@@ -100,36 +110,52 @@ begin
             wait until clk = '1';
          end loop;
 
-         assert uart_tx_data = arg
-            report "Got: 0x" & to_hstring(uart_tx_data) & ", expected 0x" & to_hstring(arg);
+         arg := uart_tx_data;
          wait until clk = '1';
-      end procedure verify_uart_tx_byte;
+      end procedure get_uart_tx_byte;
 
-      procedure verify_uart_tx_string (
-         arg : string
+      procedure get_uart_tx_string (
+         arg : out string
       ) is
+         variable tmp_v : std_logic_vector(7 downto 0);
       begin
          --
          for i in arg'range loop
-            verify_uart_tx_byte(to_stdlogicvector(character'pos(arg(i)), 8));
+            get_uart_tx_byte(tmp_v);
+            arg(i) := character'val(to_integer(tmp_v));
+            if tmp_v = X"0A" then
+               exit;
+            end if;
          end loop;
+      end procedure get_uart_tx_string;
 
-         verify_uart_tx_byte(X"0D");
-         verify_uart_tx_byte(X"0A");
-      end procedure verify_uart_tx_string;
-
-      procedure verify_cf (
-         arg : integer
+      procedure get_uart_tx_integer (
+         arg : out natural
       ) is
+         variable s : string(1 to 10);
       begin
-         uart_rx_string(to_string(arg));
-         report "cf(" & integer'image(arg)
+         get_uart_tx_string(s);
+         arg := 0;
+         for i in s'range loop
+            if s(i) >= '0' and s(i) <= '9' then
+               arg := arg * 10 + character'pos(s(i)) - 48;
+            end if;
+         end loop;
+      end procedure get_uart_tx_integer;
+
+      procedure verify_factor (
+         p : integer;
+         q : integer
+      ) is
+         variable f : natural;
+      begin
+         uart_rx_string(to_string(p*q));
+         report "factor(" & integer'image(p*q)
                 & ")";
-         verify_uart_tx_string("1");
-         verify_uart_tx_string("3");
-         verify_uart_tx_string("1");
-         verify_uart_tx_string("3");
-      end procedure verify_cf;
+         get_uart_tx_integer(f);
+         report "=> " & to_string(f);
+         assert f = p or f = q;
+      end procedure verify_factor;
 
    --
    begin
@@ -141,7 +167,18 @@ begin
 
       assert uart_rx_ready = '1';
 
-      verify_cf(2059);
+      verify_factor(  29,   71); --    2059
+      verify_factor(  59,   71); --    4189
+      verify_factor(  59,  101); --    5959
+      verify_factor(  89,  101); --    8989
+      verify_factor(  89,  131); --   11659
+      verify_factor( 149,  191); --   28459
+
+      verify_factor(  47,   97); --    4559
+      verify_factor( 113,  173); --   19549
+      verify_factor( 113,  233); --   26329
+      verify_factor( 173,  203); --   35119
+      verify_factor( 173,  233); --   40309
 
       wait for 20 us;
 

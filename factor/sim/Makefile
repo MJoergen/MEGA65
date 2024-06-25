@@ -9,7 +9,7 @@ XPM_DIR = ../../../../fransschreuder/xpm_vhdl
 PROJECT = factor
 
 TB    = tb_$(PROJECT)
-#TB    = tb_$(PROJECT)_wrapper
+TB    = tb_$(PROJECT)_wrapper
 SRCS += ../../common/clk.vhd
 SRCS += ../../common/math/add_mult.vhd
 SRCS += ../../common/math/amm.vhd
@@ -59,7 +59,7 @@ GENERICS += -gG_PRIME_ADDR_SIZE=$(VAL_PRIME_ADDR_SIZE) -gG_DATA_SIZE=$(VAL_DATA_
 sim: $(SRCS) unisim-obj08.cf xpm-obj08.cf
 	ghdl -i --std=08 -frelaxed-rules -fsynopsys $(SRCS)
 	ghdl -m --std=08 -frelaxed-rules -fsynopsys $(TB)
-	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) $(GENERICS) --wave=$(WAVE) --stop-time=300us
+	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) $(GENERICS) --wave=$(WAVE) --stop-time=120us
 
 unisim-obj08.cf:
 	ghdl -i --std=08 --work=unisim -frelaxed-rules -fsynopsys $(XILINX_DIR)/data/vhdl/src/unisims/unisim_VCOMP.vhd

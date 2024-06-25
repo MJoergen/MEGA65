@@ -4,8 +4,9 @@ library ieee;
 
 entity factor_wrapper is
    generic (
-      G_DATA_SIZE   : integer;
-      G_VECTOR_SIZE : integer
+      G_PRIME_ADDR_SIZE : integer;
+      G_DATA_SIZE       : integer;
+      G_VECTOR_SIZE     : integer
    );
    port (
       clk_i           : in    std_logic;
@@ -28,16 +29,16 @@ end entity factor_wrapper;
 
 architecture behavioral of factor_wrapper is
 
-   signal dut_s_start  : std_logic;
-   signal dut_s_val    : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal dut_m_ready  : std_logic;
-   signal dut_m_valid  : std_logic;
-   signal dut_m_square : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal dut_m_last   : std_logic;
+   signal dut_s_start : std_logic;
+   signal dut_s_val   : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal dut_m_ready : std_logic;
+   signal dut_m_valid : std_logic;
+   signal dut_m_data  : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal dut_m_fail  : std_logic;
 
    signal s2d_s_ready : std_logic;
    signal s2d_s_valid : std_logic;
-   signal s2d_s_data  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal s2d_s_data  : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
    signal s2d_m_ready : std_logic;
    signal s2d_m_valid : std_logic;
    signal s2d_m_data  : std_logic_vector(3 downto 0);
@@ -77,7 +78,7 @@ begin
             end if;
          end if;
 
-         if rst_i = '1' then
+         if rst_i = '1' or dut_s_start = '1' then
             dut_s_start <= '0';
             dut_s_val   <= (others => '0');
          end if;
@@ -86,27 +87,28 @@ begin
 
    factor_inst : entity work.factor
       generic map (
-         G_DATA_SIZE   => G_DATA_SIZE,
-         G_VECTOR_SIZE => G_VECTOR_SIZE
+         G_PRIME_ADDR_SIZE => G_PRIME_ADDR_SIZE,
+         G_DATA_SIZE       => G_DATA_SIZE,
+         G_VECTOR_SIZE     => G_VECTOR_SIZE
       )
       port map (
-         clk_i      => clk_i,
-         rst_i      => rst_i,
-         s_start_i  => dut_s_start,
-         s_val_i    => dut_s_val,
-         m_ready_i  => dut_m_ready,
-         m_valid_o  => dut_m_valid,
-         m_square_o => dut_m_square,
-         m_last_o   => dut_m_last
+         clk_i     => clk_i,
+         rst_i     => rst_i,
+         s_start_i => dut_s_start,
+         s_val_i   => dut_s_val,
+         m_ready_i => dut_m_ready,
+         m_valid_o => dut_m_valid,
+         m_data_o  => dut_m_data,
+         m_fail_o  => dut_m_fail
       ); -- factor_inst
 
    dut_m_ready <= s2d_s_ready;
    s2d_s_valid <= dut_m_valid;
-   s2d_s_data  <= dut_m_square;
+   s2d_s_data  <= dut_m_data;
 
    slv_to_dec_inst : entity work.slv_to_dec
       generic map (
-         G_DATA_SIZE => G_DATA_SIZE
+         G_DATA_SIZE => 2 * G_DATA_SIZE
       )
       port map (
          clk_i     => clk_i,
