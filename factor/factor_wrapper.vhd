@@ -112,7 +112,7 @@ begin
       )
       port map (
          clk_i     => clk_i,
-         rst_i     => rst_i,
+         rst_i     => rst_i or dut_s_start,
          s_ready_o => s2d_s_ready,
          s_valid_i => s2d_s_valid,
          s_data_i  => s2d_s_data,
@@ -123,7 +123,7 @@ begin
       ); -- slv_to_dec_inst
 
 
-   ser_s_valid <= s2d_m_last;
+   ser_s_valid <= s2d_m_last or dut_m_fail;
    ser_s_data  <= X"0D0A";
 
    serializer_inst : entity work.serializer
@@ -133,7 +133,7 @@ begin
       )
       port map (
          clk_i     => clk_i,
-         rst_i     => rst_i,
+         rst_i     => rst_i or dut_s_start,
          s_ready_o => ser_s_ready,
          s_valid_i => ser_s_valid,
          s_data_i  => ser_s_data,
@@ -156,7 +156,7 @@ begin
       )
       port map (
          clk_i      => clk_i,
-         rst_i      => rst_i,
+         rst_i      => rst_i or dut_s_start,
          s1_ready_o => merg_s1_ready,
          s1_valid_i => merg_s1_valid,
          s1_data_i  => merg_s1_data,

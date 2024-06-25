@@ -285,9 +285,9 @@
         <Option Name="DesignMode" Val="RTL"/>
         <Option Name="TopModule" Val="factor_mega65r6"/>
         <Option Name="TopAutoSet" Val="TRUE"/>
-        <Generic Name="G_PRIME_ADDR_SIZE" Val="3"/>
-        <Generic Name="G_DATA_SIZE" Val="12"/>
-        <Generic Name="G_VECTOR_SIZE" Val="8"/>
+        <Generic Name="G_PRIME_ADDR_SIZE" Val="6"/>
+        <Generic Name="G_DATA_SIZE" Val="66"/>
+        <Generic Name="G_VECTOR_SIZE" Val="64"/>
       </Config>
     </FileSet>
     <FileSet Name="constrs_1" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1" RelGenDir="$PGENDIR/constrs_1">

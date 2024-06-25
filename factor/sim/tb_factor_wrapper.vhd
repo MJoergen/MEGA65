@@ -157,6 +157,27 @@ begin
          assert f = p or f = q;
       end procedure verify_factor;
 
+      pure function strip(arg : string) return string is
+      begin
+         for i in arg'range loop
+            if character'pos(arg(i)) = 13 then
+               return arg(1 to i-1);
+            end if;
+         end loop;
+         return arg;
+      end function strip;
+
+      procedure verify_any_factor (
+         s : string
+      ) is
+         variable f : string(s'range);
+      begin
+         uart_rx_string(s);
+         report "factor(" & s & ")";
+         get_uart_tx_string(f);
+         report "=> " & strip(f);
+      end procedure verify_any_factor;
+
    --
    begin
       uart_rx_valid <= '0';
@@ -179,6 +200,12 @@ begin
       verify_factor( 113,  233); --   26329
       verify_factor( 173,  203); --   35119
       verify_factor( 173,  233); --   40309
+
+      verify_any_factor("2097153");              -- 2^21 + 1 = 3^2 * 43 * 5419
+      verify_any_factor("33554433");             -- 2^25 + 1 = 3 * 11 * 251 * 4051
+      verify_any_factor("536870913");            -- 2^29 + 1 = 3 * 59 * 3033169
+      verify_any_factor("8589934593");           -- 2^33 + 1 = 3^2 * 67 * 683 * 20857
+      verify_any_factor("137438953473");         -- 2^37 + 1 = 3 * 1777 * 25781083
 
       wait for 20 us;
 

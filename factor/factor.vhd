@@ -170,20 +170,20 @@ begin
    begin
       if rising_edge(clk_i) then
          if cf_m_valid = '1' and cf_m_ready = '1' then
-            x_v := to_integer(cf_m_res_x);
-            p_v := to_integer(cf_m_res_p);
-            w_v := 1 when cf_m_res_w = '0' else -1;
-            n_v := to_integer(cf_s_val);
             if C_DEBUG then
+               x_v := to_integer(cf_m_res_x);
+               p_v := to_integer(cf_m_res_p);
+               w_v := 1 when cf_m_res_w = '0' else -1;
+               n_v := to_integer(cf_s_val);
                report "CF: x=" & to_string(x_v) &
                       ", p=" & to_string(p_v) &
                       ", w=" & to_string(w_v) &
                       ", n=" & to_string(n_v);
-            end if;
-            assert w_v * w_v = 1;
-            assert p_v * p_v < 4 * n_v;
-            assert (x_v * x_v mod n_v) = p_v * w_v or
+               assert w_v * w_v = 1;
+               assert p_v * p_v < 4 * n_v;
+               assert (x_v * x_v mod n_v) = p_v * w_v or
                       (x_v * x_v mod n_v) = p_v * w_v + n_v;
+            end if;
          end if;
       end if;
    end process cf_debug_proc;
@@ -375,10 +375,10 @@ begin
    begin
       if rising_edge(clk_i) then
          if cand_m_valid = '1' and cand_m_ready = '1' then
-            x_v := to_integer(cand_m_x);
-            y_v := to_integer(cand_m_y);
-            n_v := to_integer(cf_s_val);
             if C_DEBUG then
+               x_v := to_integer(cand_m_x);
+               y_v := to_integer(cand_m_y);
+               n_v := to_integer(cf_s_val);
                report "CAND: x=" & to_string(x_v) &
                       ", y=" & to_string(y_v) &
                       ", n=" & to_string(n_v);
@@ -435,6 +435,9 @@ begin
             if factor_val > 10 and factor_val /= cf_s_val then
                m_valid_o <= '1';
             end if;
+         end if;
+         if rst_i = '1' or cf_s_start = '1' then
+            m_valid_o <= '0';
          end if;
       end if;
    end process filter_output_proc;

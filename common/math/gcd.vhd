@@ -55,7 +55,7 @@ architecture synthesis of gcd is
 
    type     fsm_state_type is
     (
-      IDLE_ST, REDUCE_ST, SHIFTING_ST, DONE_ST
+      IDLE_ST, REDUCE_ST, SHIFTING_ST
    );
 
    signal   state : fsm_state_type;
@@ -64,7 +64,7 @@ begin
 
    m_data_o  <= val1;
 
-   s_ready_o <= '1' when state = IDLE_ST and m_valid_o = '0' else
+   s_ready_o <= '1' when state = IDLE_ST and (m_ready_i = '1' or m_valid_o = '0') else
                 '0';
 
    fsm_proc : process (clk_i)
@@ -91,7 +91,7 @@ begin
                if val1 = C_ZERO or val2 = C_ZERO then
                   val1      <= (others => '0');
                   m_valid_o <= '1';
-                  state     <= DONE_ST;
+                  state     <= IDLE_ST;
                elsif val1 = C_ONE or val2 = C_ONE then
                   val1  <= C_ONE;
                   val2  <= C_ONE;
@@ -154,12 +154,7 @@ begin
                   shift <= shift - 1;
                else
                   m_valid_o <= '1';
-                  state     <= DONE_ST;
-               end if;
-
-            when DONE_ST =>
-               if s_valid_i = '0' then
-                  state <= IDLE_ST;
+                  state     <= IDLE_ST;
                end if;
 
          end case;

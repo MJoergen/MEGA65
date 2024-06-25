@@ -45,9 +45,9 @@ SRCS += $(TB).vhd
 SAVE  = $(TB).gtkw
 WAVE  = $(TB).ghw
 
-VAL_PRIME_ADDR_SIZE = 3
-VAL_DATA_SIZE = 12
-VAL_VECTOR_SIZE = 8
+VAL_PRIME_ADDR_SIZE = 6
+VAL_DATA_SIZE = 66
+VAL_VECTOR_SIZE = 64
 
 GENERICS += -gG_PRIME_ADDR_SIZE=$(VAL_PRIME_ADDR_SIZE) -gG_DATA_SIZE=$(VAL_DATA_SIZE) -gG_VECTOR_SIZE=$(VAL_VECTOR_SIZE)
 
@@ -59,7 +59,7 @@ GENERICS += -gG_PRIME_ADDR_SIZE=$(VAL_PRIME_ADDR_SIZE) -gG_DATA_SIZE=$(VAL_DATA_
 sim: $(SRCS) unisim-obj08.cf xpm-obj08.cf
 	ghdl -i --std=08 -frelaxed-rules -fsynopsys $(SRCS)
 	ghdl -m --std=08 -frelaxed-rules -fsynopsys $(TB)
-	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) $(GENERICS) --wave=$(WAVE) --stop-time=120us
+	ghdl -r --std=08 -frelaxed-rules -fsynopsys $(TB) $(GENERICS) --wave=$(WAVE) --stop-time=6000us
 
 unisim-obj08.cf:
 	ghdl -i --std=08 --work=unisim -frelaxed-rules -fsynopsys $(XILINX_DIR)/data/vhdl/src/unisims/unisim_VCOMP.vhd
