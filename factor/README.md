@@ -102,3 +102,7 @@ than 1 then this is a factor of N.
 In the first case gcd(4069+490,4559) = 0, so no new factor found.
 In the second case gcd(1622+70,4559) = 47, and indeed 47 is a factor of 4559.
 
+# Links
+* https://core.ac.uk/download/pdf/217142258.pdf
+* https://math.dartmouth.edu/~carlp/PDF/implementation.pdf
+

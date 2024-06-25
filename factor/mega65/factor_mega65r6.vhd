@@ -10,8 +10,9 @@ library work;
 
 entity factor_mega65r6 is
    generic (
-      G_DATA_SIZE   : integer;
-      G_VECTOR_SIZE : integer
+      G_PRIME_ADDR_SIZE : integer;
+      G_DATA_SIZE       : integer;
+      G_VECTOR_SIZE     : integer
    );
    port (
       -- Clock
@@ -98,8 +99,9 @@ begin
 
    factor_wrapper_inst : entity work.factor_wrapper
       generic map (
-         G_DATA_SIZE   => G_DATA_SIZE,
-         G_VECTOR_SIZE => G_VECTOR_SIZE
+         G_PRIME_ADDR_SIZE => G_PRIME_ADDR_SIZE,
+         G_DATA_SIZE       => G_DATA_SIZE,
+         G_VECTOR_SIZE     => G_VECTOR_SIZE
       )
       port map (
          clk_i           => clk,
@@ -115,7 +117,7 @@ begin
          vga_vcount_i    => vga_vcount,
          vga_blank_i     => vga_blank,
          vga_rgb_o       => vga_rgb
-      ); -- cf_wrapper_inst
+      ); -- factor_wrapper_inst
 
 end architecture synthesis;
 

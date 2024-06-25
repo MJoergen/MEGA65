@@ -11,13 +11,15 @@ SRCS += ../../common/math/add_mult.vhd
 SRCS += ../../common/math/amm.vhd
 SRCS += ../../common/math/cf.vhd
 SRCS += ../../common/math/divexact.vhd
-SRCS += ../../common/math/divmod.vhd
 SRCS += ../../common/math/divexp.vhd
+SRCS += ../../common/math/divmod.vhd
 SRCS += ../../common/math/factor_vect.vhd
 SRCS += ../../common/math/gcd.vhd
 SRCS += ../../common/math/gf2_solver.vhd
 SRCS += ../../common/math/primes.vhd
 SRCS += ../../common/math/sqrt.vhd
+SRCS += ../../common/axi_fifo_small.vhd
+SRCS += ../../common/font.vhd
 SRCS += ../../common/kb_matrix_ram.vhd
 SRCS += ../../common/m2m_keyb.vhd
 SRCS += ../../common/matrix_to_keynum.vhd
@@ -26,17 +28,22 @@ SRCS += ../../common/mega65.vhd
 SRCS += ../../common/merginator.vhd
 SRCS += ../../common/serializer.vhd
 SRCS += ../../common/slv_to_dec.vhd
+SRCS += ../../common/stat.vhd
+SRCS += ../../common/stat_latency.vhd
+SRCS += ../../common/stat_wait.vhd
 SRCS += ../../common/uart.vhd
 SRCS += ../../common/video_modes_pkg.vhd
 SRCS += ../../common/video_sync.vhd
+SRCS += ../candidate.vhd
 SRCS += ../$(PROJECT).vhd
 SRCS += ../$(PROJECT)_wrapper.vhd
 SRCS += $(TOP).vhd
 
+VAL_PRIME_ADDR_SIZE = 3
 VAL_DATA_SIZE = 32
 VAL_VECTOR_SIZE = 8
 
-GENERICS += -generic G_DATA_SIZE=$(VAL_DATA_SIZE) -generic G_VECTOR_SIZE=$(VAL_VECTOR_SIZE)
+GENERICS += -generic G_PRIME_ADDR_SIZE=$(VAL_PRIME_ADDR_SIZE) -generic G_DATA_SIZE=$(VAL_DATA_SIZE) -generic G_VECTOR_SIZE=$(VAL_VECTOR_SIZE)
 
 XDC = ../../common/$(PLATFORM).xdc
 
