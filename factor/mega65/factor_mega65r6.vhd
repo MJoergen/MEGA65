@@ -10,9 +10,10 @@ library work;
 
 entity factor_mega65r6 is
    generic (
-      G_PRIME_ADDR_SIZE : integer;
-      G_DATA_SIZE       : integer;
-      G_VECTOR_SIZE     : integer
+      G_NUM_WORKERS     : natural;
+      G_PRIME_ADDR_SIZE : natural;
+      G_DATA_SIZE       : natural;
+      G_VECTOR_SIZE     : natural
    );
    port (
       -- Clock
@@ -99,6 +100,7 @@ begin
 
    factor_wrapper_inst : entity work.factor_wrapper
       generic map (
+         G_NUM_WORKERS     => G_NUM_WORKERS,
          G_PRIME_ADDR_SIZE => G_PRIME_ADDR_SIZE,
          G_DATA_SIZE       => G_DATA_SIZE,
          G_VECTOR_SIZE     => G_VECTOR_SIZE

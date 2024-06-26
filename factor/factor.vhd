@@ -18,9 +18,10 @@ library ieee;
 
 entity factor is
    generic (
-      G_PRIME_ADDR_SIZE : integer;
-      G_DATA_SIZE       : integer;
-      G_VECTOR_SIZE     : integer
+      G_NUM_WORKERS     : natural;
+      G_PRIME_ADDR_SIZE : natural;
+      G_DATA_SIZE       : natural;
+      G_VECTOR_SIZE     : natural
    );
    port (
       clk_i     : in    std_logic;
@@ -56,8 +57,6 @@ architecture synthesis of factor is
    signal   fv_m_square     : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal   fv_m_primes     : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
    signal   fv_m_user       : std_logic_vector(2 * G_DATA_SIZE downto 0);
-   signal   fv_primes_index : std_logic_vector(G_PRIME_ADDR_SIZE - 1 downto 0);
-   signal   fv_primes_data  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
    subtype  R_FV_USER_X is natural range 2 * G_DATA_SIZE - 1 downto 0;
    subtype  R_FV_USER_W is natural range 2 * G_DATA_SIZE downto 2 * G_DATA_SIZE;
@@ -210,8 +209,9 @@ begin
    fv_s_user  <= cf_m_res_w & cf_m_res_x;
    cf_m_ready <= fv_s_ready;
 
-   factor_vect_inst : entity work.factor_vect
+   fv_wrapper_inst : entity work.fv_wrapper
       generic map (
+         G_NUM_WORKERS     => G_NUM_WORKERS,
          G_PRIME_ADDR_SIZE => G_PRIME_ADDR_SIZE,
          G_DATA_SIZE       => G_DATA_SIZE,
          G_VECTOR_SIZE     => G_VECTOR_SIZE,
@@ -229,22 +229,8 @@ begin
          m_complete_o   => fv_m_complete,
          m_square_o     => fv_m_square,
          m_primes_o     => fv_m_primes,
-         m_user_o       => fv_m_user,
-         primes_index_o => fv_primes_index,
-         primes_data_i  => fv_primes_data
-      ); -- factor_vect_inst
-
-   fv_primes_inst : entity work.primes
-      generic map (
-         G_ADDR_SIZE => G_PRIME_ADDR_SIZE,
-         G_DATA_SIZE => G_DATA_SIZE
-      )
-      port map (
-         clk_i   => clk_i,
-         rst_i   => rst_i or cf_s_start,
-         index_i => fv_primes_index,
-         data_o  => fv_primes_data
-      ); -- fv_primes_inst
+         m_user_o       => fv_m_user
+      ); -- fv_wrapper_inst
 
    fv_debug_proc : process (clk_i)
    begin
@@ -466,7 +452,7 @@ begin
    fv_stat_inst : entity work.stat
       generic map (
          G_DATA_SIZE     => C_COUNTER_SIZE,
-         G_FRACTION_SIZE => 4
+         G_FRACTION_SIZE => 6
       )
       port map (
          clk_i     => clk_i,

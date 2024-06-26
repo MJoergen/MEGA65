@@ -36,15 +36,17 @@ SRCS += ../../common/video_modes_pkg.vhd
 SRCS += ../../common/video_sync.vhd
 SRCS += ../candidate.vhd
 SRCS += ../controller.vhd
+SRCS += ../fv_wrapper.vhd
 SRCS += ../$(PROJECT).vhd
 SRCS += ../$(PROJECT)_wrapper.vhd
 SRCS += $(TOP).vhd
 
-VAL_PRIME_ADDR_SIZE = 3
-VAL_DATA_SIZE = 32
-VAL_VECTOR_SIZE = 8
+VAL_NUM_WORKERS = 32
+VAL_PRIME_ADDR_SIZE = 6
+VAL_DATA_SIZE = 66
+VAL_VECTOR_SIZE = 64
 
-GENERICS += -generic G_PRIME_ADDR_SIZE=$(VAL_PRIME_ADDR_SIZE) -generic G_DATA_SIZE=$(VAL_DATA_SIZE) -generic G_VECTOR_SIZE=$(VAL_VECTOR_SIZE)
+GENERICS += -generic G_NUM_WORKERS=$(VAL_NUM_WORKERS) -generic G_PRIME_ADDR_SIZE=$(VAL_PRIME_ADDR_SIZE) -generic G_DATA_SIZE=$(VAL_DATA_SIZE) -generic G_VECTOR_SIZE=$(VAL_VECTOR_SIZE)
 
 XDC = ../../common/$(PLATFORM).xdc
 

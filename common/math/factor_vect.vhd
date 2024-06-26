@@ -11,7 +11,7 @@ entity factor_vect is
       G_PRIME_ADDR_SIZE : integer;
       G_DATA_SIZE       : integer;
       G_VECTOR_SIZE     : integer; -- Number of primes to attempt trial division
-      G_USER_SIZE       : integer  -- Number of primes to attempt trial division
+      G_USER_SIZE       : integer
    );
    port (
       clk_i          : in    std_logic;

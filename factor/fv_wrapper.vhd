@@ -11,52 +11,70 @@ entity fv_wrapper is
       G_USER_SIZE       : natural
    );
    port (
-      clk_i          : in    std_logic;
-      rst_i          : in    std_logic;
-      s_ready_o      : out   std_logic;
-      s_valid_i      : in    std_logic;
-      s_data_i       : in    std_logic_vector(G_DATA_SIZE - 1 downto 0);
-      s_user_i       : in    std_logic_vector(G_USER_SIZE - 1 downto 0);
-      m_ready_i      : in    std_logic;
-      m_valid_o      : out   std_logic;
-      m_complete_o   : out   std_logic;
-      m_square_o     : out   std_logic_vector(G_DATA_SIZE - 1 downto 0);
-      m_primes_o     : out   std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
-      m_user_o       : out   std_logic_vector(G_USER_SIZE - 1 downto 0);
-      primes_index_o : out   std_logic_vector(G_PRIME_ADDR_SIZE - 1 downto 0);
-      primes_data_i  : in    std_logic_vector(G_DATA_SIZE - 1 downto 0)
+      clk_i        : in    std_logic;
+      rst_i        : in    std_logic;
+      s_ready_o    : out   std_logic;
+      s_valid_i    : in    std_logic;
+      s_data_i     : in    std_logic_vector(G_DATA_SIZE - 1 downto 0);
+      s_user_i     : in    std_logic_vector(G_USER_SIZE - 1 downto 0);
+      m_ready_i    : in    std_logic;
+      m_valid_o    : out   std_logic;
+      m_complete_o : out   std_logic;
+      m_square_o   : out   std_logic_vector(G_DATA_SIZE - 1 downto 0);
+      m_primes_o   : out   std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
+      m_user_o     : out   std_logic_vector(G_USER_SIZE - 1 downto 0)
    );
 end entity fv_wrapper;
 
 architecture synthesis of fv_wrapper is
 
-   signal fv_s_index : natural range 0 to G_NUM_WORKERS - 1;
-   signal fv_m_index : natural range 0 to G_NUM_WORKERS - 1;
+   signal  fv_s_index : natural range 0 to G_NUM_WORKERS - 1;
+   signal  fv_m_index : natural range 0 to G_NUM_WORKERS - 1;
 
-   type   fv_type is record
-      s_ready      : std_logic;
-      s_valid      : std_logic;
-      s_data       : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-      s_user       : std_logic_vector(G_USER_SIZE - 1 downto 0);
-      m_ready      : std_logic;
-      m_valid      : std_logic;
-      m_complete   : std_logic;
-      m_square     : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-      m_primes     : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
-      m_user       : std_logic_vector(G_USER_SIZE - 1 downto 0);
-      primes_index : std_logic_vector(G_PRIME_ADDR_SIZE - 1 downto 0);
-      primes_data  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   end record fv_type;
+   subtype DATA_TYPE is std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   subtype VECTOR_TYPE is std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
+   subtype USER_TYPE is std_logic_vector(G_USER_SIZE - 1 downto 0);
+   subtype PRIME_ADDR_TYPE is std_logic_vector(G_PRIME_ADDR_SIZE - 1 downto 0);
 
-   type   fv_vector_type is array (natural range <>) of fv_type;
-   signal fv_vector : fv_vector_type(0 to G_NUM_WORKERS - 1);
+   type    data_vector_type is array (natural range <>) of DATA_TYPE;
+
+   type    vector_vector_type is array (natural range <>) of VECTOR_TYPE;
+
+   type    user_vector_type is array (natural range <>) of USER_TYPE;
+
+   type    prime_addr_vector_type is array (natural range <>) of PRIME_ADDR_TYPE;
+
+
+   signal  s_ready    : std_logic_vector(G_NUM_WORKERS - 1 downto 0);
+   signal  s_valid    : std_logic_vector(G_NUM_WORKERS - 1 downto 0);
+   signal  s_data     : data_vector_type(G_NUM_WORKERS - 1 downto 0);
+   signal  s_user     : user_vector_type(G_NUM_WORKERS - 1 downto 0);
+   signal  m_ready    : std_logic_vector(G_NUM_WORKERS - 1 downto 0);
+   signal  m_valid    : std_logic_vector(G_NUM_WORKERS - 1 downto 0);
+   signal  m_complete : std_logic_vector(G_NUM_WORKERS - 1 downto 0);
+   signal  m_square   : data_vector_type(G_NUM_WORKERS - 1 downto 0);
+   signal  m_primes   : vector_vector_type(G_NUM_WORKERS - 1 downto 0);
+   signal  m_user     : user_vector_type(G_NUM_WORKERS - 1 downto 0);
+
+   signal  primes_index : prime_addr_vector_type(G_NUM_WORKERS - 1 downto 0);
+   signal  primes_data  : data_vector_type(G_NUM_WORKERS - 1 downto 0);
 
 begin
 
-   s_ready_o                     <= fv_vector(fv_s_index).s_ready;
-   fv_vector(fv_s_index).s_valid <= s_valid_i;
-   fv_vector(fv_s_index).s_data  <= s_data_i;
-   fv_vector(fv_s_index).s_user  <= s_user_i;
+   s_ready_o <= s_ready(fv_s_index);
+
+   s_valid_proc : process (all)
+   begin
+      s_valid <= (others => '0');
+      s_data  <= (others => (others => '0'));
+      s_user  <= (others => (others => '0'));
+
+      if s_valid_i = '1' then
+         s_valid(fv_s_index) <= s_valid_i;
+         s_data(fv_s_index)  <= s_data_i;
+         s_user(fv_s_index)  <= s_user_i;
+      end if;
+   end process s_valid_proc;
 
    fv_s_index_proc : process (clk_i)
    begin
@@ -82,23 +100,23 @@ begin
             G_PRIME_ADDR_SIZE => G_PRIME_ADDR_SIZE,
             G_DATA_SIZE       => G_DATA_SIZE,
             G_VECTOR_SIZE     => G_VECTOR_SIZE,
-            G_USER_SIZE       => C_FV_USER_SIZE
+            G_USER_SIZE       => G_USER_SIZE
          )
          port map (
             clk_i          => clk_i,
             rst_i          => rst_i,
-            s_ready_o      => fv_vector(i).s_ready,
-            s_valid_i      => fv_vector(i).s_valid,
-            s_data_i       => fv_vector(i).s_data,
-            s_user_i       => fv_vector(i).s_user,
-            m_ready_i      => fv_vector(i).m_ready,
-            m_valid_o      => fv_vector(i).m_valid,
-            m_complete_o   => fv_vector(i).m_complete,
-            m_square_o     => fv_vector(i).m_square,
-            m_primes_o     => fv_vector(i).m_primes,
-            m_user_o       => fv_vector(i).m_user,
-            primes_index_o => fv_vector(i).primes_index,
-            primes_data_i  => fv_vector(i).primes_data
+            s_ready_o      => s_ready(i),
+            s_valid_i      => s_valid(i),
+            s_data_i       => s_data(i),
+            s_user_i       => s_user(i),
+            m_ready_i      => m_ready(i),
+            m_valid_o      => m_valid(i),
+            m_complete_o   => m_complete(i),
+            m_square_o     => m_square(i),
+            m_primes_o     => m_primes(i),
+            m_user_o       => m_user(i),
+            primes_index_o => primes_index(i),
+            primes_data_i  => primes_data(i)
          ); -- factor_vect_inst
 
       fv_primes_inst : entity work.primes
@@ -109,23 +127,28 @@ begin
          port map (
             clk_i   => clk_i,
             rst_i   => rst_i,
-            index_i => fv_primes_index(i),
-            data_o  => fv_primes_data(i)
+            index_i => primes_index(i),
+            data_o  => primes_data(i)
          ); -- fv_primes_inst
 
    end generate factor_vect_gen;
 
-   fv_vector(fv_m_index).m_ready <= m_ready_i;
-   m_valid_o                     <= fv_vector(fv_m_index).m_valid;
-   m_complete_o                  <= fv_vector(fv_m_index).m_complete;
-   m_square_o                    <= fv_vector(fv_m_index).m_square;
-   m_primes_o                    <= fv_vector(fv_m_index).m_primes;
-   m_user_o                      <= fv_vector(fv_m_index).m_user;
+   m_ready_proc : process (all)
+   begin
+      m_ready             <= (others => '0');
+      m_ready(fv_m_index) <= m_ready_i;
+   end process m_ready_proc;
+
+   m_valid_o    <= m_valid(fv_m_index);
+   m_complete_o <= m_complete(fv_m_index);
+   m_square_o   <= m_square(fv_m_index);
+   m_primes_o   <= m_primes(fv_m_index);
+   m_user_o     <= m_user(fv_m_index);
 
    fv_m_index_proc : process (clk_i)
    begin
       if rising_edge(clk_i) then
-         if m_ready_o = '1' and m_valid_i = '1' then
+         if m_ready_i = '1' and m_valid_o = '1' then
             if fv_m_index < G_NUM_WORKERS - 1 then
                fv_m_index <= fv_m_index + 1;
             else

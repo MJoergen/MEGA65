@@ -9,7 +9,7 @@ XPM_DIR = ../../../../fransschreuder/xpm_vhdl
 PROJECT = factor
 
 TB    = tb_$(PROJECT)
-TB    = tb_$(PROJECT)_wrapper
+#TB    = tb_$(PROJECT)_wrapper
 SRCS += ../../common/clk.vhd
 SRCS += ../../common/math/add_mult.vhd
 SRCS += ../../common/math/amm.vhd
@@ -40,17 +40,19 @@ SRCS += ../../common/video_modes_pkg.vhd
 SRCS += ../../common/video_sync.vhd
 SRCS += ../candidate.vhd
 SRCS += ../controller.vhd
+SRCS += ../fv_wrapper.vhd
 SRCS += ../$(PROJECT).vhd
 SRCS += ../$(PROJECT)_wrapper.vhd
 SRCS += $(TB).vhd
 SAVE  = $(TB).gtkw
 WAVE  = $(TB).ghw
 
+VAL_NUM_WORKERS = 32
 VAL_PRIME_ADDR_SIZE = 6
 VAL_DATA_SIZE = 66
 VAL_VECTOR_SIZE = 64
 
-GENERICS += -gG_PRIME_ADDR_SIZE=$(VAL_PRIME_ADDR_SIZE) -gG_DATA_SIZE=$(VAL_DATA_SIZE) -gG_VECTOR_SIZE=$(VAL_VECTOR_SIZE)
+GENERICS += -gG_NUM_WORKERS=$(VAL_NUM_WORKERS) -gG_PRIME_ADDR_SIZE=$(VAL_PRIME_ADDR_SIZE) -gG_DATA_SIZE=$(VAL_DATA_SIZE) -gG_VECTOR_SIZE=$(VAL_VECTOR_SIZE)
 
 #####################################
 # Simulation
