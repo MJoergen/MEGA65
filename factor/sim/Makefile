@@ -39,6 +39,7 @@ SRCS += ../../common/uart.vhd
 SRCS += ../../common/video_modes_pkg.vhd
 SRCS += ../../common/video_sync.vhd
 SRCS += ../candidate.vhd
+SRCS += ../controller.vhd
 SRCS += ../$(PROJECT).vhd
 SRCS += ../$(PROJECT)_wrapper.vhd
 SRCS += $(TB).vhd
