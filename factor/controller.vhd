@@ -23,12 +23,12 @@ entity controller is
       vga_blank_i     : in    std_logic;
       vga_rgb_o       : out   std_logic_vector(7 downto 0);
 
-      dut_s_start_o   : out   std_logic;
-      dut_s_val_o     : out   std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+      dut_s_ready_i   : in    std_logic;
+      dut_s_valid_o   : out   std_logic;
+      dut_s_data_o    : out   std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
       dut_m_ready_o   : out   std_logic;
       dut_m_valid_i   : in    std_logic;
-      dut_m_data_i    : in    std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-      dut_m_fail_i    : in    std_logic
+      dut_m_data_i    : in    std_logic_vector(2 * G_DATA_SIZE - 1 downto 0)
    );
 end entity controller;
 
@@ -63,21 +63,23 @@ begin
    uart_rx_proc : process (clk_i)
    begin
       if rising_edge(clk_i) then
-         dut_s_start_o <= '0';
+         if dut_s_ready_i = '1' then
+            dut_s_valid_o <= '0';
+         end if;
 
          if uart_rx_valid_i = '1' then
             if uart_rx_data_i = X"0D" then
-               dut_s_start_o <= '1';
+               dut_s_valid_o <= '1';
             elsif uart_rx_data_i /= X"0A" then
-               dut_s_val_o <= (dut_s_val_o(2 * G_DATA_SIZE - 2 downto 0) & "0") +
-                            (dut_s_val_o(2 * G_DATA_SIZE - 4 downto 0) & "000") +
+               dut_s_data_o <= (dut_s_data_o(2 * G_DATA_SIZE - 2 downto 0) & "0") +
+                            (dut_s_data_o(2 * G_DATA_SIZE - 4 downto 0) & "000") +
                              uart_rx_data_i - X"30";
             end if;
          end if;
 
-         if rst_i = '1' or dut_s_start_o = '1' then
-            dut_s_start_o <= '0';
-            dut_s_val_o   <= (others => '0');
+         if rst_i = '1' or dut_s_valid_o = '1' then
+            dut_s_valid_o <= '0';
+            dut_s_data_o  <= (others => '0');
          end if;
       end if;
    end process uart_rx_proc;
@@ -88,7 +90,7 @@ begin
       )
       port map (
          clk_i     => clk_i,
-         rst_i     => rst_i or dut_s_start_o,
+         rst_i     => rst_i or dut_s_valid_o,
          s_ready_o => dut_m_ready_o,
          s_valid_i => dut_m_valid_i,
          s_data_i  => dut_m_data_i,
@@ -99,7 +101,7 @@ begin
       ); -- slv_to_dec_inst
 
 
-   ser_s_valid <= s2d_m_last or dut_m_fail_i;
+   ser_s_valid <= s2d_m_last;
    ser_s_data  <= X"0D0A";
 
    serializer_inst : entity work.serializer
@@ -109,7 +111,7 @@ begin
       )
       port map (
          clk_i     => clk_i,
-         rst_i     => rst_i or dut_s_start_o,
+         rst_i     => rst_i or dut_s_valid_o,
          s_ready_o => ser_s_ready,
          s_valid_i => ser_s_valid,
          s_data_i  => ser_s_data,
@@ -132,7 +134,7 @@ begin
       )
       port map (
          clk_i      => clk_i,
-         rst_i      => rst_i or dut_s_start_o,
+         rst_i      => rst_i or dut_s_valid_o,
          s1_ready_o => merg_s1_ready,
          s1_valid_i => merg_s1_valid,
          s1_data_i  => merg_s1_data,

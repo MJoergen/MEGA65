@@ -4,7 +4,8 @@ library ieee;
 
 entity tb_factor_wrapper is
    generic (
-      G_PRIME_ADDR_SIZE : integer;
+      G_NUM_WORKERS     : natural;
+      G_PRIME_ADDR_SIZE : natural;
       G_DATA_SIZE       : natural;
       G_VECTOR_SIZE     : natural
    );
@@ -35,6 +36,7 @@ begin
 
    factor_wrapper_inst : entity work.factor_wrapper
       generic map (
+         G_NUM_WORKERS     => G_NUM_WORKERS,
          G_PRIME_ADDR_SIZE => G_PRIME_ADDR_SIZE,
          G_DATA_SIZE       => G_DATA_SIZE,
          G_VECTOR_SIZE     => G_VECTOR_SIZE
@@ -136,6 +138,7 @@ begin
       begin
          get_uart_tx_string(s);
          arg := 0;
+
          for i in s'range loop
             if s(i) >= '0' and s(i) <= '9' then
                arg := arg * 10 + character'pos(s(i)) - 48;
@@ -149,21 +152,24 @@ begin
       ) is
          variable f : natural;
       begin
-         uart_rx_string(to_string(p*q));
-         report "factor(" & integer'image(p*q)
+         uart_rx_string(to_string(p * q));
+         report "factor(" & integer'image(p * q)
                 & ")";
          get_uart_tx_integer(f);
          report "=> " & to_string(f);
          assert f = p or f = q;
       end procedure verify_factor;
 
-      pure function strip(arg : string) return string is
+      pure function strip (
+         arg : string
+      ) return string is
       begin
          for i in arg'range loop
             if character'pos(arg(i)) = 13 then
-               return arg(1 to i-1);
+               return arg(1 to i - 1);
             end if;
          end loop;
+
          return arg;
       end function strip;
 
@@ -188,18 +194,18 @@ begin
 
       assert uart_rx_ready = '1';
 
-      verify_factor(  29,   71); --    2059
-      verify_factor(  59,   71); --    4189
-      verify_factor(  59,  101); --    5959
-      verify_factor(  89,  101); --    8989
-      verify_factor(  89,  131); --   11659
-      verify_factor( 149,  191); --   28459
+      verify_factor(  29,   71);                 --    2059
+      verify_factor(  59,   71);                 --    4189
+      verify_factor(  59,  101);                 --    5959
+      verify_factor(  89,  101);                 --    8989
+      verify_factor(  89,  131);                 --   11659
+      verify_factor( 149,  191);                 --   28459
 
-      verify_factor(  47,   97); --    4559
-      verify_factor( 113,  173); --   19549
-      verify_factor( 113,  233); --   26329
-      verify_factor( 173,  203); --   35119
-      verify_factor( 173,  233); --   40309
+      verify_factor(  47,   97);                 --    4559
+      verify_factor( 113,  173);                 --   19549
+      verify_factor( 113,  233);                 --   26329
+      verify_factor( 173,  203);                 --   35119
+      verify_factor( 173,  233);                 --   40309
 
       verify_any_factor("2097153");              -- 2^21 + 1 = 3^2 * 43 * 5419
       verify_any_factor("33554433");             -- 2^25 + 1 = 3 * 11 * 251 * 4051

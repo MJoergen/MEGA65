@@ -31,19 +31,21 @@ SRCS += ../../common/slv_to_dec.vhd
 SRCS += ../../common/stat.vhd
 SRCS += ../../common/stat_latency.vhd
 SRCS += ../../common/stat_wait.vhd
+SRCS += ../../common/two_stage_fifo.vhd
 SRCS += ../../common/uart.vhd
 SRCS += ../../common/video_modes_pkg.vhd
 SRCS += ../../common/video_sync.vhd
 SRCS += ../candidate.vhd
 SRCS += ../controller.vhd
 SRCS += ../fv_wrapper.vhd
+SRCS += ../method.vhd
 SRCS += ../$(PROJECT).vhd
 SRCS += ../$(PROJECT)_wrapper.vhd
 SRCS += $(TOP).vhd
 
 VAL_NUM_WORKERS = 32
 VAL_PRIME_ADDR_SIZE = 6
-VAL_DATA_SIZE = 66
+VAL_DATA_SIZE = 132
 VAL_VECTOR_SIZE = 64
 
 GENERICS += -generic G_NUM_WORKERS=$(VAL_NUM_WORKERS) -generic G_PRIME_ADDR_SIZE=$(VAL_PRIME_ADDR_SIZE) -generic G_DATA_SIZE=$(VAL_DATA_SIZE) -generic G_VECTOR_SIZE=$(VAL_VECTOR_SIZE)

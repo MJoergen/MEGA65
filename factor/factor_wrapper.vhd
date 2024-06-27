@@ -30,18 +30,18 @@ end entity factor_wrapper;
 
 architecture behavioral of factor_wrapper is
 
-   signal dut_s_start : std_logic;
-   signal dut_s_val   : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal dut_s_ready : std_logic;
+   signal dut_s_valid : std_logic;
+   signal dut_s_data  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal dut_m_ready : std_logic;
    signal dut_m_valid : std_logic;
-   signal dut_m_data  : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal dut_m_fail  : std_logic;
+   signal dut_m_data  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
 begin
 
    controller_inst : entity work.controller
       generic map (
-         G_DATA_SIZE => G_DATA_SIZE
+         G_DATA_SIZE => G_DATA_SIZE / 2
       )
       port map (
          clk_i           => clk_i,
@@ -57,12 +57,12 @@ begin
          vga_vcount_i    => vga_vcount_i,
          vga_blank_i     => vga_blank_i,
          vga_rgb_o       => vga_rgb_o,
-         dut_s_start_o   => dut_s_start,
-         dut_s_val_o     => dut_s_val,
+         dut_s_ready_i   => dut_s_ready,
+         dut_s_valid_o   => dut_s_valid,
+         dut_s_data_o    => dut_s_data,
          dut_m_ready_o   => dut_m_ready,
          dut_m_valid_i   => dut_m_valid,
-         dut_m_data_i    => dut_m_data,
-         dut_m_fail_i    => dut_m_fail
+         dut_m_data_i    => dut_m_data
       ); -- controller_inst
 
    factor_inst : entity work.factor
@@ -75,12 +75,12 @@ begin
       port map (
          clk_i     => clk_i,
          rst_i     => rst_i,
-         s_start_i => dut_s_start,
-         s_val_i   => dut_s_val,
+         s_ready_o => dut_s_ready,
+         s_valid_i => dut_s_valid,
+         s_data_i  => dut_s_data,
          m_ready_i => dut_m_ready,
          m_valid_o => dut_m_valid,
-         m_data_o  => dut_m_data,
-         m_fail_o  => dut_m_fail
+         m_data_o  => dut_m_data
       ); -- factor_inst
 
 end architecture behavioral;
