@@ -19,9 +19,10 @@ PROJECT = cf
 #PROJECT = uart
 
 TB       = tb_$(PROJECT)
-SOURCES  = ../../common/uart.vhd
-SOURCES += ../../common/slv_to_dec.vhd
 SOURCES += ../../common/lfsr.vhd
+SOURCES += ../../common/ram.vhd
+SOURCES += ../../common/slv_to_dec.vhd
+SOURCES += ../../common/uart.vhd
 SOURCES += ../../common/math/divexact.vhd
 SOURCES += ../../common/math/gcd.vhd
 SOURCES += ../../common/math/divmod.vhd

@@ -8,8 +8,8 @@ library ieee;
 
 entity factor_vect is
    generic (
-      G_PRIME_ADDR_SIZE : integer;
       G_DATA_SIZE       : integer;
+      G_PRIME_ADDR_SIZE : integer;
       G_VECTOR_SIZE     : integer; -- Number of primes to attempt trial division
       G_USER_SIZE       : integer
    );
@@ -96,8 +96,9 @@ begin
          if am_s_ready = '1' then
             am_s_valid <= '0';
          end if;
-         if m_ready_i = '1' then
-            m_valid_o <= '0';
+         if m_ready_i = '1' and m_valid_o = '1' then
+            m_complete_o <= '0';
+            m_valid_o    <= '0';
          end if;
 
          case state is
@@ -162,6 +163,7 @@ begin
             primes_index_o <= (others => '0');
             divexp_s_valid <= '0';
             am_s_valid     <= '0';
+            m_complete_o   <= '0';
             m_valid_o      <= '0';
             state          <= IDLE_ST;
          end if;
@@ -194,7 +196,7 @@ begin
 
    add_mult_inst : entity work.add_mult
       generic map (
-         G_DATA_SIZE => G_DATA_SIZE
+         G_DATA_SIZE => G_DATA_SIZE*2
       )
       port map (
          clk_i     => clk_i,

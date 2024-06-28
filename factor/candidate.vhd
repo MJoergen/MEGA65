@@ -187,7 +187,7 @@ begin
 
    amm_inst : entity work.amm
       generic map (
-         G_DATA_SIZE => G_DATA_SIZE
+         G_DATA_SIZE => G_DATA_SIZE*2
       )
       port map (
          clk_i     => clk_i,

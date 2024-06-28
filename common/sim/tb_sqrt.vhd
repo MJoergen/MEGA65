@@ -39,7 +39,7 @@ begin
 
    sqrt_inst : entity work.sqrt
       generic map (
-         G_DATA_SIZE => C_DATA_SIZE
+         G_DATA_SIZE => C_DATA_SIZE*2
       )
       port map (
          clk_i     => clk,

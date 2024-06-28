@@ -4,7 +4,7 @@ vunit sqrt_inst(sqrt(synthesis))
    default clock is rising_edge(clk_i);
 
    -- Additional signals used during formal verification
-   signal f_data : std_logic_vector(2*G_DATA_SIZE - 1 downto 0);
+   signal f_data : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal f_valid : std_logic;
 
    -- Process inputs

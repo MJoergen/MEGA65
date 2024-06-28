@@ -37,87 +37,89 @@ entity cf is
       rst_i     : in    std_logic;
       s_ready_o : out   std_logic;
       s_valid_i : in    std_logic;
-      s_data_i  : in    std_logic_vector(2 * G_DATA_SIZE - 1 downto 0); -- N
+      s_data_i  : in    std_logic_vector(G_DATA_SIZE - 1 downto 0);     -- N
       m_ready_i : in    std_logic;
       m_valid_o : out   std_logic;
-      m_res_x_o : out   std_logic_vector(2 * G_DATA_SIZE - 1 downto 0); -- X
-      m_res_p_o : out   std_logic_vector(G_DATA_SIZE - 1 downto 0);     -- |Y|
+      m_res_x_o : out   std_logic_vector(G_DATA_SIZE - 1 downto 0);     -- X
+      m_res_p_o : out   std_logic_vector(G_DATA_SIZE / 2 - 1 downto 0); -- |Y|
       m_res_w_o : out   std_logic                                       -- sign(Y)
    );
 end entity cf;
 
 architecture synthesis of cf is
 
-   constant C_ZERO : std_logic_vector(G_DATA_SIZE - 1 downto 0) := (others => '0');
-   constant C_ONE  : std_logic_vector(G_DATA_SIZE - 1 downto 0) := to_stdlogicvector(1, G_DATA_SIZE);
+   constant C_HALF_SIZE : natural                               := G_DATA_SIZE / 2;
+
+   constant C_ZERO : std_logic_vector(C_HALF_SIZE - 1 downto 0) := (others => '0');
+   constant C_ONE  : std_logic_vector(C_HALF_SIZE - 1 downto 0) := to_stdlogicvector(1, C_HALF_SIZE);
 
    -- State variables
    type     state_type is (IDLE_ST, SQRT_ST, CALC_AR_ST, CALC_XP_ST);
    signal   state : state_type;
 
-   signal   val_n     : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal   val_2root : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   val_n     : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   val_2root : std_logic_vector(C_HALF_SIZE - 1 downto 0);
 
-   signal   p_prev : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal   r_prev : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal   x_prev : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   p_prev : std_logic_vector(C_HALF_SIZE - 1 downto 0);
+   signal   r_prev : std_logic_vector(C_HALF_SIZE - 1 downto 0);
+   signal   x_prev : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
-   signal   p_cur : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal   s_cur : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   p_cur : std_logic_vector(C_HALF_SIZE - 1 downto 0);
+   signal   s_cur : std_logic_vector(C_HALF_SIZE - 1 downto 0);
    signal   w_cur : std_logic;
-   signal   x_cur : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   x_cur : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
-   signal   a_cur : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal   r_cur : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   a_cur : std_logic_vector(C_HALF_SIZE - 1 downto 0);
+   signal   r_cur : std_logic_vector(C_HALF_SIZE - 1 downto 0);
 
-   signal   p_new : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal   s_new : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   p_new : std_logic_vector(C_HALF_SIZE - 1 downto 0);
+   signal   s_new : std_logic_vector(C_HALF_SIZE - 1 downto 0);
    signal   w_new : std_logic;
-   signal   x_new : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   x_new : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
    -- Signals connected to SQRT module
    signal   sqrt_s_ready : std_logic;
    signal   sqrt_s_valid : std_logic;
-   signal   sqrt_s_data  : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   sqrt_s_data  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal   sqrt_m_ready : std_logic;
    signal   sqrt_m_valid : std_logic;
-   signal   sqrt_m_res   : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal   sqrt_m_diff  : std_logic_vector(G_DATA_SIZE     downto 0);
+   signal   sqrt_m_res   : std_logic_vector(C_HALF_SIZE - 1 downto 0);
+   signal   sqrt_m_diff  : std_logic_vector(C_HALF_SIZE     downto 0);
 
    -- Signals connected to DIVMOD module
    signal   divmod_s_ready : std_logic;
    signal   divmod_s_valid : std_logic;
-   signal   divmod_s_val_n : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal   divmod_s_val_d : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   divmod_s_val_n : std_logic_vector(C_HALF_SIZE - 1 downto 0);
+   signal   divmod_s_val_d : std_logic_vector(C_HALF_SIZE - 1 downto 0);
    signal   divmod_m_ready : std_logic;
    signal   divmod_m_valid : std_logic;
-   signal   divmod_m_res_q : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal   divmod_m_res_r : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   divmod_m_res_q : std_logic_vector(C_HALF_SIZE - 1 downto 0);
+   signal   divmod_m_res_r : std_logic_vector(C_HALF_SIZE - 1 downto 0);
 
    -- Signals connected to AMM module
    signal   amm_s_ready : std_logic;
    signal   amm_s_valid : std_logic;
-   signal   amm_s_val_a : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal   amm_s_val_x : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal   amm_s_val_b : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal   amm_s_val_n : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   amm_s_val_a : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   amm_s_val_x : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   amm_s_val_b : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   amm_s_val_n : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal   amm_m_ready : std_logic;
    signal   amm_m_valid : std_logic;
-   signal   amm_m_res   : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   amm_m_res   : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
    -- Signals connected to ADD-MULT module
    signal   add_mult_s_ready : std_logic;
    signal   add_mult_s_valid : std_logic;
-   signal   add_mult_s_val_a : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal   add_mult_s_val_x : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal   add_mult_s_val_b : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   add_mult_s_val_a : std_logic_vector(C_HALF_SIZE - 1 downto 0);
+   signal   add_mult_s_val_x : std_logic_vector(C_HALF_SIZE - 1 downto 0);
+   signal   add_mult_s_val_b : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal   add_mult_m_ready : std_logic;
    signal   add_mult_m_valid : std_logic;
-   signal   add_mult_m_res   : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   add_mult_m_res   : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
    -- Output signals
-   signal   res_x : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal   res_p : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   res_x : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   res_p : std_logic_vector(C_HALF_SIZE - 1 downto 0);
    signal   res_w : std_logic;
 
 begin
@@ -151,7 +153,7 @@ begin
                if sqrt_s_valid = '0' and sqrt_m_valid = '1' then
                   sqrt_1 : assert (divmod_s_ready = '1' and amm_s_ready = '1' and add_mult_s_ready = '1') or rst_i = '1' or s_valid_i = '1';
                   -- Store input values
-                  val_2root      <= sqrt_m_res(G_DATA_SIZE - 2 downto 0) & '0';
+                  val_2root      <= sqrt_m_res(C_HALF_SIZE - 2 downto 0) & '0';
 
                   -- Let: p_0 = 1, r_0 = 0, x_0 = 1.
                   p_prev         <= C_ONE;
@@ -159,8 +161,8 @@ begin
                   x_prev         <= C_ZERO & C_ONE;
 
                   -- Let: p_1 = N - M*M, s_1 = 2*M, w_1 = -1, x_1 = M.
-                  p_cur          <= sqrt_m_diff(G_DATA_SIZE - 1 downto 0);
-                  s_cur          <= sqrt_m_res(G_DATA_SIZE - 2 downto 0) & '0';
+                  p_cur          <= sqrt_m_diff(C_HALF_SIZE - 1 downto 0);
+                  s_cur          <= sqrt_m_res(C_HALF_SIZE - 2 downto 0) & '0';
                   w_cur          <= '1';
                   x_cur          <= C_ZERO & sqrt_m_res;
 
@@ -209,10 +211,13 @@ begin
 
          -- A start command should be processed from any state
          if s_valid_i = '1' and s_ready_o = '1' then
-            m_valid_o    <= '0';
-            val_n        <= s_data_i;
-            sqrt_s_valid <= '1';
-            state        <= SQRT_ST;
+            m_valid_o        <= '0';
+            val_n            <= s_data_i;
+            sqrt_s_valid     <= '1';
+            divmod_s_valid   <= '0';
+            amm_s_valid      <= '0';
+            add_mult_s_valid <= '0';
+            state            <= SQRT_ST;
 
             if s_data_i = 0 then
                sqrt_s_valid <= '0';
@@ -249,7 +254,7 @@ begin
    add_mult_s_val_a <= a_cur;
    add_mult_s_val_x <= r_cur - r_prev;
    add_mult_s_val_b <= C_ZERO & p_prev;
-   p_new            <= add_mult_m_res(G_DATA_SIZE - 1 downto 0);
+   p_new            <= add_mult_m_res(C_HALF_SIZE - 1 downto 0);
 
    -- Calculate s_(n+1) = 2*M - r_n.
    s_new            <= val_2root - r_cur;
@@ -289,11 +294,11 @@ begin
 
    divmod_inst : entity work.divmod
       generic map (
-         G_DATA_SIZE => G_DATA_SIZE
+         G_DATA_SIZE => C_HALF_SIZE
       )
       port map (
          clk_i     => clk_i,
-         rst_i     => rst_i,
+         rst_i     => rst_i or (s_valid_i and s_ready_o),
          s_ready_o => divmod_s_ready,
          s_valid_i => divmod_s_valid,
          s_val_n_i => divmod_s_val_n,
@@ -317,7 +322,7 @@ begin
       )
       port map (
          clk_i     => clk_i,
-         rst_i     => rst_i,
+         rst_i     => rst_i or (s_valid_i and s_ready_o),
          s_ready_o => amm_s_ready,
          s_valid_i => amm_s_valid,
          s_val_a_i => amm_s_val_a,
@@ -342,7 +347,7 @@ begin
       )
       port map (
          clk_i     => clk_i,
-         rst_i     => rst_i,
+         rst_i     => rst_i or (s_valid_i and s_ready_o),
          s_ready_o => add_mult_s_ready,
          s_valid_i => add_mult_s_valid,
          s_val_a_i => add_mult_s_val_a,

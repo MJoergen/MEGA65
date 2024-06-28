@@ -11,22 +11,23 @@ entity add_mult is
       rst_i     : in    std_logic;
       s_ready_o : out   std_logic;
       s_valid_i : in    std_logic;
-      s_val_a_i : in    std_logic_vector(G_DATA_SIZE - 1 downto 0);
-      s_val_x_i : in    std_logic_vector(G_DATA_SIZE - 1 downto 0);
-      s_val_b_i : in    std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+      s_val_a_i : in    std_logic_vector(G_DATA_SIZE/2 - 1 downto 0);
+      s_val_x_i : in    std_logic_vector(G_DATA_SIZE/2 - 1 downto 0);
+      s_val_b_i : in    std_logic_vector(G_DATA_SIZE - 1 downto 0);
       m_ready_i : in    std_logic;
       m_valid_o : out   std_logic;
-      m_res_o   : out   std_logic_vector(2 * G_DATA_SIZE - 1 downto 0)
+      m_res_o   : out   std_logic_vector(G_DATA_SIZE - 1 downto 0)
    );
 end entity add_mult;
 
 architecture synthesis of add_mult is
 
-   constant C_ZERO : std_logic_vector(G_DATA_SIZE - 1 downto 0) := (others => '0');
+   constant C_HALF_SIZE : natural := G_DATA_SIZE/2;
+   constant C_ZERO : std_logic_vector(C_HALF_SIZE - 1 downto 0) := (others => '0');
 
-   signal   mult_r : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal   add_r  : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal   res_r  : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   mult_r : std_logic_vector(C_HALF_SIZE - 1 downto 0);
+   signal   add_r  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   res_r  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
    type     state_type is (IDLE_ST, MULT_ST);
    signal   state_r : state_type;
@@ -60,8 +61,8 @@ begin
                   res_r <= res_r + add_r;
                end if;
 
-               mult_r <= '0' & mult_r(G_DATA_SIZE - 1 downto 1);
-               add_r  <= add_r(2 * G_DATA_SIZE - 2 downto 0) & '0';
+               mult_r <= '0' & mult_r(C_HALF_SIZE - 1 downto 1);
+               add_r  <= add_r(G_DATA_SIZE - 2 downto 0) & '0';
 
                if mult_r = 0 then
                   m_valid_o <= '1';

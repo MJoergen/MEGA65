@@ -3,7 +3,6 @@
 
 #DUT  = add_mult
 #DUT  = amm
-#DUT  = axi_merger
 #DUT  = cf
 #DUT  = divexact
 #DUT  = divexp
@@ -12,10 +11,12 @@
 #DUT  = gcd
 DUT  = gf2_solver
 #DUT  = jacobi
+#DUT  = sqrt
+
+#DUT  = axi_merger
 #DUT  = merginator
 #DUT  = serializer
 #DUT  = slv_to_dec
-#DUT  = sqrt
 #DUT  = uart
 
 #SRC += ../math/divexact.vhd

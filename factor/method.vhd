@@ -18,9 +18,9 @@ library ieee;
 
 entity method is
    generic (
+      G_DATA_SIZE       : natural;
       G_NUM_WORKERS     : natural;
       G_PRIME_ADDR_SIZE : natural;
-      G_DATA_SIZE       : natural;
       G_VECTOR_SIZE     : natural
    );
    port (
@@ -28,10 +28,10 @@ entity method is
       rst_i     : in    std_logic;
       s_ready_o : out   std_logic;
       s_valid_i : in    std_logic;
-      s_data_i  : in    std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+      s_data_i  : in    std_logic_vector(G_DATA_SIZE - 1 downto 0);
       m_ready_i : in    std_logic;
       m_valid_o : out   std_logic;
-      m_data_o  : out   std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+      m_data_o  : out   std_logic_vector(G_DATA_SIZE - 1 downto 0);
       m_fail_o  : out   std_logic
    );
 end entity method;
@@ -39,32 +39,33 @@ end entity method;
 architecture synthesis of method is
 
    constant C_DEBUG : boolean             := false;
+   constant C_HALF_SIZE : natural := G_DATA_SIZE/2;
 
    signal   cf_s_ready : std_logic;
    signal   cf_s_valid : std_logic;
-   signal   cf_s_data  : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   cf_s_data  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal   cf_m_ready : std_logic;
    signal   cf_m_valid : std_logic;
-   signal   cf_m_res_x : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal   cf_m_res_p : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   cf_m_res_x : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   cf_m_res_p : std_logic_vector(C_HALF_SIZE - 1 downto 0);
    signal   cf_m_res_w : std_logic;
 
    signal   fv_s_ready    : std_logic;
    signal   fv_s_valid    : std_logic;
-   signal   fv_s_data     : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal   fv_s_user     : std_logic_vector(2 * G_DATA_SIZE downto 0);
+   signal   fv_s_data     : std_logic_vector(C_HALF_SIZE - 1 downto 0);
+   signal   fv_s_user     : std_logic_vector(G_DATA_SIZE downto 0);
    signal   fv_m_ready    : std_logic;
    signal   fv_m_valid    : std_logic;
    signal   fv_m_complete : std_logic;
-   signal   fv_m_square   : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   fv_m_square   : std_logic_vector(C_HALF_SIZE - 1 downto 0);
    signal   fv_m_primes   : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
-   signal   fv_m_user     : std_logic_vector(2 * G_DATA_SIZE downto 0);
+   signal   fv_m_user     : std_logic_vector(G_DATA_SIZE downto 0);
 
-   subtype  R_FV_USER_X is natural range 2 * G_DATA_SIZE - 1 downto 0;
-   subtype  R_FV_USER_W is natural range 2 * G_DATA_SIZE downto 2 * G_DATA_SIZE;
-   constant C_FV_USER_SIZE : natural      := 2 * G_DATA_SIZE + 1;
+   subtype  R_FV_USER_X is natural range G_DATA_SIZE - 1 downto 0;
+   subtype  R_FV_USER_W is natural range G_DATA_SIZE downto G_DATA_SIZE;
+   constant C_FV_USER_SIZE : natural      := G_DATA_SIZE + 1;
 
-   constant C_AFS_FV_DATA_SIZE : natural  := 1 + G_DATA_SIZE + G_VECTOR_SIZE + 2 * G_DATA_SIZE + 1;
+   constant C_AFS_FV_DATA_SIZE : natural  := 1 + C_HALF_SIZE + G_VECTOR_SIZE + G_DATA_SIZE + 1;
    constant C_AFS_FV_DEPTH     : natural  := 64;
    signal   afs_fv_s_ready     : std_logic;
    signal   afs_fv_s_valid     : std_logic;
@@ -74,23 +75,23 @@ architecture synthesis of method is
    signal   afs_fv_m_valid     : std_logic;
    signal   afs_fv_m_data      : std_logic_vector(C_AFS_FV_DATA_SIZE - 1 downto 0);
    signal   afs_fv_m_complete  : std_logic;
-   signal   afs_fv_m_square    : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   afs_fv_m_square    : std_logic_vector(C_HALF_SIZE - 1 downto 0);
    signal   afs_fv_m_primes    : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
-   signal   afs_fv_m_user      : std_logic_vector(2 * G_DATA_SIZE downto 0);
+   signal   afs_fv_m_user      : std_logic_vector(G_DATA_SIZE downto 0);
 
    signal   gf2_s_ready : std_logic;
    signal   gf2_s_valid : std_logic;
    signal   gf2_s_row   : std_logic_vector(G_VECTOR_SIZE downto 0);
-   signal   gf2_s_user  : std_logic_vector(3 * G_DATA_SIZE + G_VECTOR_SIZE - 1 downto 0);
+   signal   gf2_s_user  : std_logic_vector(G_DATA_SIZE + C_HALF_SIZE + G_VECTOR_SIZE - 1 downto 0);
    signal   gf2_m_ready : std_logic;
    signal   gf2_m_valid : std_logic;
-   signal   gf2_m_user  : std_logic_vector(3 * G_DATA_SIZE + G_VECTOR_SIZE - 1 downto 0);
+   signal   gf2_m_user  : std_logic_vector(G_DATA_SIZE + C_HALF_SIZE + G_VECTOR_SIZE - 1 downto 0);
    signal   gf2_m_last  : std_logic;
 
-   subtype  R_GF2_USER_X      is natural range 2 * G_DATA_SIZE - 1 downto 0;
-   subtype  R_GF2_USER_PRIMES is natural range 2 * G_DATA_SIZE + G_VECTOR_SIZE - 1 downto 2 * G_DATA_SIZE;
-   subtype  R_GF2_USER_SQUARE is natural range 3 * G_DATA_SIZE + G_VECTOR_SIZE - 1 downto 2 * G_DATA_SIZE + G_VECTOR_SIZE;
-   constant C_GF2_USER_SIZE : natural     := 3 * G_DATA_SIZE + G_VECTOR_SIZE;
+   subtype  R_GF2_USER_X      is natural range G_DATA_SIZE - 1 downto 0;
+   subtype  R_GF2_USER_PRIMES is natural range G_DATA_SIZE + G_VECTOR_SIZE - 1 downto G_DATA_SIZE;
+   subtype  R_GF2_USER_SQUARE is natural range G_DATA_SIZE + C_HALF_SIZE + G_VECTOR_SIZE - 1 downto G_DATA_SIZE + G_VECTOR_SIZE;
+   constant C_GF2_USER_SIZE : natural     := G_DATA_SIZE + C_HALF_SIZE + G_VECTOR_SIZE;
 
    constant C_AFS_GF2_DATA_SIZE : natural := 1 + C_GF2_USER_SIZE;
    constant C_AFS_GF2_DEPTH     : natural := 64;
@@ -106,27 +107,27 @@ architecture synthesis of method is
 
    signal   cand_s_ready      : std_logic;
    signal   cand_s_valid      : std_logic;
-   signal   cand_s_n          : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal   cand_s_x          : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   cand_s_n          : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   cand_s_x          : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal   cand_s_primes     : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
-   signal   cand_s_square     : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   cand_s_square     : std_logic_vector(C_HALF_SIZE - 1 downto 0);
    signal   cand_s_last       : std_logic;
    signal   cand_m_ready      : std_logic;
    signal   cand_m_valid      : std_logic;
-   signal   cand_m_x          : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal   cand_m_y          : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   cand_m_x          : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   cand_m_y          : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal   cand_primes_index : std_logic_vector(G_PRIME_ADDR_SIZE - 1 downto 0);
-   signal   cand_primes_data  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   cand_primes_data  : std_logic_vector(C_HALF_SIZE - 1 downto 0);
 
    signal   gcd_s_valid : std_logic;
    signal   gcd_s_ready : std_logic;
-   signal   gcd_s_data1 : std_logic_vector(2 * G_DATA_SIZE downto 0);
-   signal   gcd_s_data2 : std_logic_vector(2 * G_DATA_SIZE downto 0);
+   signal   gcd_s_data1 : std_logic_vector(G_DATA_SIZE downto 0);
+   signal   gcd_s_data2 : std_logic_vector(G_DATA_SIZE downto 0);
    signal   gcd_m_valid : std_logic;
    signal   gcd_m_ready : std_logic;
-   signal   gcd_m_data  : std_logic_vector(2 * G_DATA_SIZE downto 0);
+   signal   gcd_m_data  : std_logic_vector(G_DATA_SIZE downto 0);
 
-   signal   factor_val : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   factor_val : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
    constant C_COUNTER_SIZE : natural      := 16;
    signal   fv_st_count    : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
@@ -233,9 +234,9 @@ begin
 
    fv_wrapper_inst : entity work.fv_wrapper
       generic map (
+         G_DATA_SIZE       => C_HALF_SIZE,
          G_NUM_WORKERS     => G_NUM_WORKERS,
          G_PRIME_ADDR_SIZE => G_PRIME_ADDR_SIZE,
-         G_DATA_SIZE       => G_DATA_SIZE,
          G_VECTOR_SIZE     => G_VECTOR_SIZE,
          G_USER_SIZE       => C_FV_USER_SIZE
       )
@@ -295,8 +296,8 @@ begin
    ---------------------------------------------------------------
 
    gf2_s_valid    <= afs_fv_m_valid and afs_fv_m_complete;
-   gf2_s_row      <= afs_fv_m_primes & afs_fv_m_user(2 * G_DATA_SIZE);
-   gf2_s_user     <= afs_fv_m_square & afs_fv_m_primes & afs_fv_m_user(2 * G_DATA_SIZE - 1 downto 0);
+   gf2_s_row      <= afs_fv_m_primes & afs_fv_m_user(G_DATA_SIZE);
+   gf2_s_user     <= afs_fv_m_square & afs_fv_m_primes & afs_fv_m_user(G_DATA_SIZE - 1 downto 0);
    afs_fv_m_ready <= gf2_s_ready;
 
    gf2_solver_inst : entity work.gf2_solver
@@ -361,8 +362,8 @@ begin
 
    candidate_inst : entity work.candidate
       generic map (
+         G_DATA_SIZE       => C_HALF_SIZE,
          G_PRIME_ADDR_SIZE => G_PRIME_ADDR_SIZE,
-         G_DATA_SIZE       => G_DATA_SIZE,
          G_VECTOR_SIZE     => G_VECTOR_SIZE
       )
       port map (
@@ -385,8 +386,8 @@ begin
 
    cand_primes_inst : entity work.primes
       generic map (
-         G_ADDR_SIZE => G_PRIME_ADDR_SIZE,
-         G_DATA_SIZE => G_DATA_SIZE
+         G_DATA_SIZE => C_HALF_SIZE,
+         G_ADDR_SIZE => G_PRIME_ADDR_SIZE
       )
       port map (
          clk_i   => clk_i,
@@ -403,7 +404,7 @@ begin
 
    gcd_inst : entity work.gcd
       generic map (
-         G_DATA_SIZE => 2 * G_DATA_SIZE + 1
+         G_DATA_SIZE => G_DATA_SIZE + 1
       )
       port map (
          clk_i     => clk_i,
@@ -418,7 +419,7 @@ begin
       ); -- gcd_inst
 
 
-   factor_val  <= gcd_m_data(2 * G_DATA_SIZE - 1 downto 0);
+   factor_val  <= gcd_m_data(G_DATA_SIZE - 1 downto 0);
 
    gcd_m_ready <= m_ready_i;
 

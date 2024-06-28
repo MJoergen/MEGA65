@@ -160,13 +160,14 @@ begin
 
    cf_inst : entity work.cf
       generic map (
-         G_DATA_SIZE => C_DATA_SIZE
+         G_DATA_SIZE => C_DATA_SIZE*2
       )
       port map (
          clk_i     => clk,
          rst_i     => rst,
-         s_start_i => cf_s_start,
-         s_val_i   => cf_s_val_n,
+         s_ready_o => open,
+         s_valid_i => cf_s_start,
+         s_data_i  => cf_s_val_n,
          m_ready_i => cf_m_ready,
          m_valid_o => cf_m_valid,
          m_res_x_o => cf_m_res_x,

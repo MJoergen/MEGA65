@@ -4,9 +4,9 @@ vunit add_mult_inst(add_mult(synthesis))
    default clock is rising_edge(clk_i);
 
    -- Additional signals used during formal verification
-   signal f_val_a : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal f_val_x : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal f_val_b : std_logic_vector(2*G_DATA_SIZE - 1 downto 0);
+   signal f_val_a : std_logic_vector(G_DATA_SIZE/2 - 1 downto 0);
+   signal f_val_x : std_logic_vector(G_DATA_SIZE/2 - 1 downto 0);
+   signal f_val_b : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal f_res   : natural;
    signal f_valid : std_logic;
 
@@ -56,9 +56,9 @@ vunit add_mult_inst(add_mult(synthesis))
       {stable(s_valid_i) and stable(s_val_a_i) and stable(s_val_x_i) and
                              stable(s_val_b_i)};
 
-   f_input_positive : assume always {s_val_a_i(G_DATA_SIZE-1) = '0' and
-                                     s_val_x_i(G_DATA_SIZE-1) = '0' and
-                                     s_val_b_i(2*G_DATA_SIZE-1) = '0'};
+   f_input_positive : assume always {s_val_a_i(G_DATA_SIZE/2-1) = '0' and
+                                     s_val_x_i(G_DATA_SIZE/2-1) = '0' and
+                                     s_val_b_i(G_DATA_SIZE-1) = '0'};
 
    --------------------------------------------
    -- COVER STATEMENTS TO VERIFY REACHABILITY

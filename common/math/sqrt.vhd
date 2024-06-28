@@ -29,31 +29,33 @@ entity sqrt is
       rst_i     : in    std_logic;
       s_ready_o : out   std_logic;
       s_valid_i : in    std_logic;
-      s_data_i  : in    std_logic_vector(2 * G_DATA_SIZE - 1 downto 0); -- N
+      s_data_i  : in    std_logic_vector(G_DATA_SIZE - 1 downto 0);     -- N
       m_ready_i : in    std_logic;
       m_valid_o : out   std_logic;
-      m_res_o   : out   std_logic_vector(G_DATA_SIZE - 1 downto 0);     -- M = floor(sqrt(N))
-      m_diff_o  : out   std_logic_vector(G_DATA_SIZE     downto 0)      -- N - M*M
+      m_res_o   : out   std_logic_vector(G_DATA_SIZE / 2 - 1 downto 0); -- M = floor(sqrt(N))
+      m_diff_o  : out   std_logic_vector(G_DATA_SIZE / 2     downto 0)  -- N - M*M
    );
 end entity sqrt;
 
 architecture synthesis of sqrt is
 
-   constant C_ZERO : std_logic_vector(G_DATA_SIZE - 1 downto 0) := (others => '0');
+   constant C_HALF_SIZE : natural := G_DATA_SIZE/2;
+
+   constant C_ZERO : std_logic_vector(C_HALF_SIZE - 1 downto 0) := (others => '0');
 
    type     state_type is (IDLE_ST, CALC_ST);
    signal   state_r : state_type;
 
-   signal   val_r : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal   bit_r : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   val_r : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   bit_r : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
-   signal   res_r : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   res_r : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
 begin
 
    -- Connect output signals
-   m_res_o   <= res_r(G_DATA_SIZE - 1 downto 0);
-   m_diff_o  <= val_r(G_DATA_SIZE     downto 0);
+   m_res_o   <= res_r(C_HALF_SIZE - 1 downto 0);
+   m_diff_o  <= val_r(C_HALF_SIZE     downto 0);
    s_ready_o <= '1' when state_r = IDLE_ST and (m_valid_o = '0' or m_ready_i = '1') else
                 '0';
 
@@ -69,7 +71,7 @@ begin
             when IDLE_ST =>
                if s_valid_i = '1' and s_ready_o = '1' then
                   val_r   <= s_data_i; -- Store input value
-                  bit_r   <= "01" & to_stdlogicvector(0, 2 * G_DATA_SIZE - 2);
+                  bit_r   <= "01" & to_stdlogicvector(0, G_DATA_SIZE - 2);
                   res_r   <= (others => '0');
                   state_r <= CALC_ST;
                end if;
@@ -77,12 +79,12 @@ begin
             when CALC_ST =>
                if val_r >= (res_r or bit_r) then
                   val_r <= val_r - (res_r or bit_r);
-                  res_r <= ("0" & res_r(2 * G_DATA_SIZE - 1 downto 1)) or bit_r;
+                  res_r <= ("0" & res_r(G_DATA_SIZE - 1 downto 1)) or bit_r;
                else
-                  res_r <= ("0" & res_r(2 * G_DATA_SIZE - 1 downto 1));
+                  res_r <= ("0" & res_r(G_DATA_SIZE - 1 downto 1));
                end if;
 
-               bit_r   <= "00" & bit_r(2 * G_DATA_SIZE - 1 downto 2);
+               bit_r   <= "00" & bit_r(G_DATA_SIZE - 1 downto 2);
                state_r <= CALC_ST;
 
                if bit_r(0) = '1' then

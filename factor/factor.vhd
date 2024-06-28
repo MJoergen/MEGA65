@@ -7,9 +7,9 @@ library ieee;
 
 entity factor is
    generic (
+      G_DATA_SIZE       : natural;
       G_NUM_WORKERS     : natural;
       G_PRIME_ADDR_SIZE : natural;
-      G_DATA_SIZE       : natural;
       G_VECTOR_SIZE     : natural
    );
    port (
@@ -126,9 +126,9 @@ begin
 
    method_inst : entity work.method
       generic map (
+         G_DATA_SIZE       => 8 + G_DATA_SIZE,
          G_NUM_WORKERS     => G_NUM_WORKERS,
          G_PRIME_ADDR_SIZE => G_PRIME_ADDR_SIZE,
-         G_DATA_SIZE       => (8 + G_DATA_SIZE) / 2,
          G_VECTOR_SIZE     => G_VECTOR_SIZE
       )
       port map (
