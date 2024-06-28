@@ -11,8 +11,8 @@ vunit cf_inst(cf(synthesis))
    input_proc : process (clk_i)
    begin
       if rising_edge(clk_i) then
-         if s_start_i then
-            f_val <= s_val_i;
+         if s_valid_i and s_ready_o then
+            f_val <= s_data_i;
             f_valid <= '1';
          end if;
 
@@ -31,7 +31,7 @@ vunit cf_inst(cf(synthesis))
    f_after_reset : assert always {rst_i} |=> {not m_valid_o};
 
    -- Output must be stable until accepted
-   f_output_stable : assert always {m_valid_o and not m_ready_i and not rst_i and not s_start_i} |=>
+   f_output_stable : assert always {m_valid_o and not m_ready_i and not rst_i and not s_valid_i} |=>
       {stable(m_valid_o) and stable(m_res_x_o) and stable(m_res_p_o) and stable(m_res_w_o)};
 
 --   -- Verify correct output
@@ -45,7 +45,7 @@ vunit cf_inst(cf(synthesis))
    -- Require reset at startup.
    f_reset : assume {rst_i};
 
-   f_nonzero : assume always {s_val_i /= 0};
+   f_nonzero : assume always {s_data_i /= 0};
 
 
    --------------------------------------------

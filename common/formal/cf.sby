@@ -6,7 +6,7 @@ prove
 cover: mode cover
 cover: depth 20
 prove: mode bmc
-prove: depth 5
+prove: depth 20
 
 [engines]
 smtbmc

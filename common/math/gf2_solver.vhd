@@ -4,8 +4,8 @@ library ieee;
 
 entity gf2_solver is
    generic (
-      G_ROW_SIZE  : integer;
-      G_USER_SIZE : integer
+      G_ROW_SIZE  : natural;
+      G_USER_SIZE : natural
    );
    port (
       clk_i     : in    std_logic;

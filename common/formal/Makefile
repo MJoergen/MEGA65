@@ -4,13 +4,13 @@
 #DUT  = add_mult
 #DUT  = amm
 #DUT  = axi_merger
-DUT  = cf
+#DUT  = cf
 #DUT  = divexact
 #DUT  = divexp
 #DUT  = divmod
 #DUT  = factor_vect
 #DUT  = gcd
-#DUT  = gf2_solver
+DUT  = gf2_solver
 #DUT  = jacobi
 #DUT  = merginator
 #DUT  = serializer
@@ -22,12 +22,13 @@ DUT  = cf
 #SRC += ../math/primes.vhd
 #SRC += ../math/divmod.vhd
 #SRC += ../math/divexp.vhd
+SRC += ../ram.vhd
 SRC += ../math/$(DUT).vhd
 #SRC += ../$(DUT).vhd
 
 #GENERICS = -gG_DATA_SIZE_IN=32 -gG_DATA_SIZE_OUT=8
 #GENERICS = -gG_DATA_SIZE=8
-#GENERICS = -gG_ROW_SIZE=8 -gG_USER_SIZE=8
+GENERICS = -gG_ROW_SIZE=8 -gG_USER_SIZE=8
 #GENERICS = -gG_DIVISOR=8
 
 #######################

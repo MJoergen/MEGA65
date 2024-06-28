@@ -25,15 +25,6 @@ architecture simulation of tb_factor is
    signal dut_m_valid : std_logic;
    signal dut_m_data  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
-   -- Cycles : Number
-   --    532 :    2059 =   29 *   71
-   --    927 :    4559 =   47 *   97
-   --   1109 :   19549 =  113 *  173
-   --   2067 :   26329 =  113 *  233
-   --    402 :   35119 =  173 *  203
-   --   2233 :   40309 =  173 *  233
-   --   7725 : 3837523 = 1093 * 3511. (The two only known Wieferich primes)
-
    pure function is_prime (
       arg : natural
    ) return boolean is

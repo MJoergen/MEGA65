@@ -35,13 +35,14 @@ entity cf is
    port (
       clk_i     : in    std_logic;
       rst_i     : in    std_logic;
-      s_start_i : in    std_logic;
-      s_val_i   : in    std_logic_vector(2 * G_DATA_SIZE - 1 downto 0); -- N
+      s_ready_o : out   std_logic;
+      s_valid_i : in    std_logic;
+      s_data_i  : in    std_logic_vector(2 * G_DATA_SIZE - 1 downto 0); -- N
       m_ready_i : in    std_logic;
       m_valid_o : out   std_logic;
       m_res_x_o : out   std_logic_vector(2 * G_DATA_SIZE - 1 downto 0); -- X
       m_res_p_o : out   std_logic_vector(G_DATA_SIZE - 1 downto 0);     -- |Y|
-      m_res_w_o : out   std_logic                                  -- sign(Y)
+      m_res_w_o : out   std_logic                                       -- sign(Y)
    );
 end entity cf;
 
@@ -121,6 +122,8 @@ architecture synthesis of cf is
 
 begin
 
+   s_ready_o        <= sqrt_s_ready and not sqrt_s_valid;
+
    fsm_proc : process (clk_i)
    begin
       if rising_edge(clk_i) then
@@ -146,7 +149,7 @@ begin
             when SQRT_ST =>
                -- Wait until data is ready
                if sqrt_s_valid = '0' and sqrt_m_valid = '1' then
-                  assert (divmod_s_ready = '1' and amm_s_ready = '1' and add_mult_s_ready = '1') or rst_i = '1';
+                  sqrt_1 : assert (divmod_s_ready = '1' and amm_s_ready = '1' and add_mult_s_ready = '1') or rst_i = '1' or s_valid_i = '1';
                   -- Store input values
                   val_2root      <= sqrt_m_res(G_DATA_SIZE - 2 downto 0) & '0';
 
@@ -183,7 +186,7 @@ begin
 
             when CALC_XP_ST =>
                if amm_s_valid = '0' and amm_m_valid = '1' and add_mult_s_valid = '0' and
-               add_mult_m_valid = '1' and (m_ready_i = '1' or m_valid_o = '0') then
+                  add_mult_m_valid = '1' and (m_ready_i = '1' or m_valid_o = '0') then
                   -- Update recursion
                   s_cur          <= s_new;
                   p_cur          <= p_new;
@@ -205,22 +208,25 @@ begin
          end case;
 
          -- A start command should be processed from any state
-         if s_start_i = '1' then
+         if s_valid_i = '1' and s_ready_o = '1' then
             m_valid_o    <= '0';
-            val_n        <= s_val_i;
+            val_n        <= s_data_i;
             sqrt_s_valid <= '1';
             state        <= SQRT_ST;
 
-            if s_val_i = 0 then
+            if s_data_i = 0 then
                sqrt_s_valid <= '0';
                state        <= IDLE_ST;
             end if;
          end if;
 
          if rst_i = '1' then
-            m_valid_o    <= '0';
-            sqrt_s_valid <= '0';
-            state        <= SQRT_ST;
+            m_valid_o        <= '0';
+            sqrt_s_valid     <= '0';
+            divmod_s_valid   <= '0';
+            amm_s_valid      <= '0';
+            add_mult_s_valid <= '0';
+            state            <= SQRT_ST;
          end if;
       end if;
    end process fsm_proc;

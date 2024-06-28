@@ -12,10 +12,11 @@ prove: depth 25
 smtbmc
 
 [script]
-ghdl --std=08 -gG_ROW_SIZE=4 -gG_USER_SIZE=4 gf2_solver.vhd gf2_solver.psl -e gf2_solver
+ghdl --std=08 -gG_ROW_SIZE=4 -gG_USER_SIZE=4 gf2_solver.vhd ram.vhd gf2_solver.psl -e gf2_solver
 prep -top gf2_solver
 
 [files]
 gf2_solver.psl
 ../math/gf2_solver.vhd
+../ram.vhd
 

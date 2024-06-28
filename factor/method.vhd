@@ -40,8 +40,9 @@ architecture synthesis of method is
 
    constant C_DEBUG : boolean             := false;
 
-   signal   cf_s_start : std_logic;
-   signal   cf_s_val   : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   cf_s_ready : std_logic;
+   signal   cf_s_valid : std_logic;
+   signal   cf_s_data  : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
    signal   cf_m_ready : std_logic;
    signal   cf_m_valid : std_logic;
    signal   cf_m_res_x : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
@@ -169,14 +170,14 @@ begin
             m_valid_o <= '1';
          end if;
 
-         cf_s_start <= '0';
+         cf_s_valid <= '0';
          if s_valid_i = '1' and s_ready_o = '1' then
-            cf_s_start <= '1';
-            cf_s_val   <= s_data_i;
+            cf_s_valid <= '1';
+            cf_s_data  <= s_data_i;
             m_valid_o  <= '0';
          end if;
 
-         if rst_i = '1' or cf_s_start = '1' then
+         if rst_i = '1' or cf_s_valid = '1' then
             m_valid_o <= '0';
          end if;
       end if;
@@ -202,8 +203,9 @@ begin
       port map (
          clk_i     => clk_i,
          rst_i     => rst_i,
-         s_start_i => cf_s_start,
-         s_val_i   => cf_s_val,
+         s_ready_o => cf_s_ready,
+         s_valid_i => cf_s_valid,
+         s_data_i  => cf_s_data,
          m_ready_i => cf_m_ready,
          m_valid_o => cf_m_valid,
          m_res_x_o => cf_m_res_x,
@@ -239,7 +241,7 @@ begin
       )
       port map (
          clk_i        => clk_i,
-         rst_i        => rst_i or cf_s_start,
+         rst_i        => rst_i or cf_s_valid,
          s_ready_o    => fv_s_ready,
          s_valid_i    => fv_s_valid,
          s_data_i     => fv_s_data,
@@ -263,7 +265,7 @@ begin
       )
       port map (
          clk_i     => clk_i,
-         rst_i     => rst_i or cf_s_start,
+         rst_i     => rst_i or cf_s_valid,
          s_ready_o => afs_fv_s_ready,
          s_valid_i => afs_fv_s_valid,
          s_data_i  => afs_fv_s_data,
@@ -304,7 +306,7 @@ begin
       )
       port map (
          clk_i     => clk_i,
-         rst_i     => rst_i or cf_s_start,
+         rst_i     => rst_i or cf_s_valid,
          s_ready_o => gf2_s_ready,
          s_valid_i => gf2_s_valid,
          s_row_i   => gf2_s_row,
@@ -326,7 +328,7 @@ begin
       )
       port map (
          clk_i     => clk_i,
-         rst_i     => rst_i or cf_s_start,
+         rst_i     => rst_i or cf_s_valid,
          s_ready_o => afs_gf2_s_ready,
          s_valid_i => afs_gf2_s_valid,
          s_data_i  => afs_gf2_s_data,
@@ -350,7 +352,7 @@ begin
    ---------------------------------------------------------------
 
    cand_s_valid                     <= afs_gf2_m_valid;
-   cand_s_n                         <= cf_s_val;
+   cand_s_n                         <= cf_s_data;
    cand_s_x                         <= afs_gf2_m_user(R_GF2_USER_X);
    cand_s_primes                    <= afs_gf2_m_user(R_GF2_USER_PRIMES);
    cand_s_square                    <= afs_gf2_m_user(R_GF2_USER_SQUARE);
@@ -365,7 +367,7 @@ begin
       )
       port map (
          clk_i          => clk_i,
-         rst_i          => rst_i or cf_s_start,
+         rst_i          => rst_i or cf_s_valid,
          s_ready_o      => cand_s_ready,
          s_valid_i      => cand_s_valid,
          s_n_i          => cand_s_n,
@@ -388,7 +390,7 @@ begin
       )
       port map (
          clk_i   => clk_i,
-         rst_i   => rst_i or cf_s_start,
+         rst_i   => rst_i or cf_s_valid,
          index_i => cand_primes_index,
          data_o  => cand_primes_data
       ); -- cand_primes_inst
@@ -397,7 +399,7 @@ begin
    cand_m_ready <= gcd_s_ready;
    gcd_s_valid  <= cand_m_valid;
    gcd_s_data1  <= ("0" & cand_m_x) + ("0" & cand_m_y);
-   gcd_s_data2  <= "0" & cf_s_val;
+   gcd_s_data2  <= "0" & cf_s_data;
 
    gcd_inst : entity work.gcd
       generic map (
@@ -405,7 +407,7 @@ begin
       )
       port map (
          clk_i     => clk_i,
-         rst_i     => rst_i or cf_s_start,
+         rst_i     => rst_i or cf_s_valid,
          s_valid_i => gcd_s_valid,
          s_ready_o => gcd_s_ready,
          s_data1_i => gcd_s_data1,
@@ -437,7 +439,7 @@ begin
                x_v := to_integer(cf_m_res_x);
                p_v := to_integer(cf_m_res_p);
                w_v := 1 when cf_m_res_w = '0' else -1;
-               n_v := to_integer(cf_s_val);
+               n_v := to_integer(cf_s_data);
                report "CF: x=" & to_string(x_v) &
                       ", p=" & to_string(p_v) &
                       ", w=" & to_string(w_v) &
@@ -489,7 +491,7 @@ begin
             if C_DEBUG then
                x_v := to_integer(cand_m_x);
                y_v := to_integer(cand_m_y);
-               n_v := to_integer(cf_s_val);
+               n_v := to_integer(cf_s_data);
                report "CAND: x=" & to_string(x_v) &
                       ", y=" & to_string(y_v) &
                       ", n=" & to_string(n_v);

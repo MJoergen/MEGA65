@@ -4,9 +4,9 @@ prove
 
 [options]
 cover: mode cover
-cover: depth 8
+cover: depth 20
 prove: mode bmc
-prove: depth 8
+prove: depth 20
 
 [engines]
 smtbmc
