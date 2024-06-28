@@ -15,6 +15,7 @@ entity axi_fifo_small is
       s_ready_o : out   std_logic;
       s_valid_i : in    std_logic;
       s_data_i  : in    std_logic_vector(G_RAM_WIDTH - 1 downto 0);
+      s_fill_o  : out   natural range 0 to G_RAM_DEPTH - 1;
 
       -- AXI output interface
       m_ready_i : in    std_logic;
@@ -59,6 +60,8 @@ architecture synthesis of axi_fifo_small is
    end function next_index;
 
 begin
+
+   s_fill_o <= count;
 
    head_proc : process (clk_i)
    begin

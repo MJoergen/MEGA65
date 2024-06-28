@@ -38,7 +38,7 @@ end entity method;
 
 architecture synthesis of method is
 
-   constant C_DEBUG : boolean         := false;
+   constant C_DEBUG : boolean             := false;
 
    signal   cf_s_start : std_logic;
    signal   cf_s_val   : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
@@ -61,20 +61,21 @@ architecture synthesis of method is
 
    subtype  R_FV_USER_X is natural range 2 * G_DATA_SIZE - 1 downto 0;
    subtype  R_FV_USER_W is natural range 2 * G_DATA_SIZE downto 2 * G_DATA_SIZE;
-   constant C_FV_USER_SIZE : natural  := 2 * G_DATA_SIZE + 1;
+   constant C_FV_USER_SIZE : natural      := 2 * G_DATA_SIZE + 1;
 
-   constant C_TSF_DATA_SIZE : natural := 1 + G_DATA_SIZE + G_VECTOR_SIZE + 2 * G_DATA_SIZE + 1;
-   signal   tsf_s_ready     : std_logic;
-   signal   tsf_s_valid     : std_logic;
-   signal   tsf_s_data      : std_logic_vector(C_TSF_DATA_SIZE - 1 downto 0);
-   signal   tsf_s_fill      : std_logic_vector(1 downto 0);
-   signal   tsf_m_ready     : std_logic;
-   signal   tsf_m_valid     : std_logic;
-   signal   tsf_m_data      : std_logic_vector(C_TSF_DATA_SIZE - 1 downto 0);
-   signal   tsf_m_complete  : std_logic;
-   signal   tsf_m_square    : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal   tsf_m_primes    : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
-   signal   tsf_m_user      : std_logic_vector(2 * G_DATA_SIZE downto 0);
+   constant C_AFS_FV_DATA_SIZE : natural  := 1 + G_DATA_SIZE + G_VECTOR_SIZE + 2 * G_DATA_SIZE + 1;
+   constant C_AFS_FV_DEPTH     : natural  := 64;
+   signal   afs_fv_s_ready     : std_logic;
+   signal   afs_fv_s_valid     : std_logic;
+   signal   afs_fv_s_data      : std_logic_vector(C_AFS_FV_DATA_SIZE - 1 downto 0);
+   signal   afs_fv_s_fill      : natural range 0 to C_AFS_FV_DEPTH - 1;
+   signal   afs_fv_m_ready     : std_logic;
+   signal   afs_fv_m_valid     : std_logic;
+   signal   afs_fv_m_data      : std_logic_vector(C_AFS_FV_DATA_SIZE - 1 downto 0);
+   signal   afs_fv_m_complete  : std_logic;
+   signal   afs_fv_m_square    : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   afs_fv_m_primes    : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
+   signal   afs_fv_m_user      : std_logic_vector(2 * G_DATA_SIZE downto 0);
 
    signal   gf2_s_ready : std_logic;
    signal   gf2_s_valid : std_logic;
@@ -88,7 +89,19 @@ architecture synthesis of method is
    subtype  R_GF2_USER_X      is natural range 2 * G_DATA_SIZE - 1 downto 0;
    subtype  R_GF2_USER_PRIMES is natural range 2 * G_DATA_SIZE + G_VECTOR_SIZE - 1 downto 2 * G_DATA_SIZE;
    subtype  R_GF2_USER_SQUARE is natural range 3 * G_DATA_SIZE + G_VECTOR_SIZE - 1 downto 2 * G_DATA_SIZE + G_VECTOR_SIZE;
-   constant C_GF2_USER_SIZE : natural := 3 * G_DATA_SIZE + G_VECTOR_SIZE;
+   constant C_GF2_USER_SIZE : natural     := 3 * G_DATA_SIZE + G_VECTOR_SIZE;
+
+   constant C_AFS_GF2_DATA_SIZE : natural := 1 + C_GF2_USER_SIZE;
+   constant C_AFS_GF2_DEPTH     : natural := 64;
+   signal   afs_gf2_s_ready     : std_logic;
+   signal   afs_gf2_s_valid     : std_logic;
+   signal   afs_gf2_s_data      : std_logic_vector(C_AFS_GF2_DATA_SIZE - 1 downto 0);
+   signal   afs_gf2_s_fill      : natural range 0 to C_AFS_GF2_DEPTH - 1;
+   signal   afs_gf2_m_ready     : std_logic;
+   signal   afs_gf2_m_valid     : std_logic;
+   signal   afs_gf2_m_data      : std_logic_vector(C_AFS_GF2_DATA_SIZE - 1 downto 0);
+   signal   afs_gf2_m_user      : std_logic_vector(C_GF2_USER_SIZE - 1 downto 0);
+   signal   afs_gf2_m_last      : std_logic;
 
    signal   cand_s_ready      : std_logic;
    signal   cand_s_valid      : std_logic;
@@ -114,7 +127,7 @@ architecture synthesis of method is
 
    signal   factor_val : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
 
-   constant C_COUNTER_SIZE : natural  := 16;
+   constant C_COUNTER_SIZE : natural      := 16;
    signal   fv_st_count    : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
    signal   fv_st_valid    : std_logic;
    signal   stat_count     : std_logic_vector(C_COUNTER_SIZE - 1 downto 0);
@@ -239,27 +252,29 @@ begin
          m_user_o     => fv_m_user
       ); -- fv_wrapper_inst
 
-   fv_m_ready  <= tsf_s_ready;
-   tsf_s_valid <= fv_m_valid;
-   tsf_s_data  <= fv_m_complete & fv_m_square & fv_m_primes & fv_m_user;
+   fv_m_ready     <= afs_fv_s_ready;
+   afs_fv_s_valid <= fv_m_valid;
+   afs_fv_s_data  <= fv_m_complete & fv_m_square & fv_m_primes & fv_m_user;
 
-   two_stage_fifo_inst : entity work.two_stage_fifo
+   axi_fifo_small_fv_inst : entity work.axi_fifo_small
       generic map (
-         G_DATA_SIZE => 1 + G_DATA_SIZE + G_VECTOR_SIZE + 2 * G_DATA_SIZE + 1
+         G_RAM_WIDTH => C_AFS_FV_DATA_SIZE,
+         G_RAM_DEPTH => C_AFS_FV_DEPTH
       )
       port map (
          clk_i     => clk_i,
-         rst_i     => rst_i,
-         s_ready_o => tsf_s_ready,
-         s_valid_i => tsf_s_valid,
-         s_data_i  => tsf_s_data,
-         s_fill_o  => tsf_s_fill,
-         m_ready_i => tsf_m_ready,
-         m_valid_o => tsf_m_valid,
-         m_data_o  => tsf_m_data
-      ); -- two_stage_fifo_inst
+         rst_i     => rst_i or cf_s_start,
+         s_ready_o => afs_fv_s_ready,
+         s_valid_i => afs_fv_s_valid,
+         s_data_i  => afs_fv_s_data,
+         s_fill_o  => afs_fv_s_fill,
+         m_ready_i => afs_fv_m_ready,
+         m_valid_o => afs_fv_m_valid,
+         m_data_o  => afs_fv_m_data
+      ); -- axi_fifo_small_fv_inst
 
-   (tsf_m_complete, tsf_m_square, tsf_m_primes, tsf_m_user) <= tsf_m_data;
+   (afs_fv_m_complete, afs_fv_m_square, afs_fv_m_primes, afs_fv_m_user)
+                  <= afs_fv_m_data;
 
 
    ---------------------------------------------------------------
@@ -277,10 +292,10 @@ begin
    -- * (X"B", '1')
    ---------------------------------------------------------------
 
-   gf2_s_valid                                              <= tsf_m_valid and tsf_m_complete;
-   gf2_s_row                                                <= tsf_m_primes & tsf_m_user(2 * G_DATA_SIZE);
-   gf2_s_user                                               <= tsf_m_square & tsf_m_primes & tsf_m_user(2 * G_DATA_SIZE - 1 downto 0);
-   tsf_m_ready                                              <= gf2_s_ready;
+   gf2_s_valid    <= afs_fv_m_valid and afs_fv_m_complete;
+   gf2_s_row      <= afs_fv_m_primes & afs_fv_m_user(2 * G_DATA_SIZE);
+   gf2_s_user     <= afs_fv_m_square & afs_fv_m_primes & afs_fv_m_user(2 * G_DATA_SIZE - 1 downto 0);
+   afs_fv_m_ready <= gf2_s_ready;
 
    gf2_solver_inst : entity work.gf2_solver
       generic map (
@@ -300,6 +315,28 @@ begin
          m_last_o  => gf2_m_last
       ); -- gf2_solver_inst
 
+   gf2_m_ready     <= afs_gf2_s_ready;
+   afs_gf2_s_valid <= gf2_m_valid;
+   afs_gf2_s_data  <= gf2_m_user & gf2_m_last;
+
+   axi_fifo_small_gf2_inst : entity work.axi_fifo_small
+      generic map (
+         G_RAM_WIDTH => C_AFS_GF2_DATA_SIZE,
+         G_RAM_DEPTH => C_AFS_GF2_DEPTH
+      )
+      port map (
+         clk_i     => clk_i,
+         rst_i     => rst_i or cf_s_start,
+         s_ready_o => afs_gf2_s_ready,
+         s_valid_i => afs_gf2_s_valid,
+         s_data_i  => afs_gf2_s_data,
+         s_fill_o  => afs_gf2_s_fill,
+         m_ready_i => afs_gf2_m_ready,
+         m_valid_o => afs_gf2_m_valid,
+         m_data_o  => afs_gf2_m_data
+      ); -- axi_fifo_small_gf2_inst
+
+   (afs_gf2_m_user, afs_gf2_m_last) <= afs_gf2_m_data;
 
    ---------------------------------------------------------------
    -- The candidate entity generates a solution candidate
@@ -312,13 +349,13 @@ begin
    -- * x=4069, y=490
    ---------------------------------------------------------------
 
-   cand_s_valid  <= gf2_m_valid;
-   cand_s_n      <= cf_s_val;
-   cand_s_x      <= gf2_m_user(R_GF2_USER_X);
-   cand_s_primes <= gf2_m_user(R_GF2_USER_PRIMES);
-   cand_s_square <= gf2_m_user(R_GF2_USER_SQUARE);
-   cand_s_last   <= gf2_m_last;
-   gf2_m_ready   <= cand_s_ready;
+   cand_s_valid                     <= afs_gf2_m_valid;
+   cand_s_n                         <= cf_s_val;
+   cand_s_x                         <= afs_gf2_m_user(R_GF2_USER_X);
+   cand_s_primes                    <= afs_gf2_m_user(R_GF2_USER_PRIMES);
+   cand_s_square                    <= afs_gf2_m_user(R_GF2_USER_SQUARE);
+   cand_s_last                      <= afs_gf2_m_last;
+   afs_gf2_m_ready                  <= cand_s_ready;
 
    candidate_inst : entity work.candidate
       generic map (

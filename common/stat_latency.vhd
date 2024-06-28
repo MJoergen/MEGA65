@@ -23,7 +23,7 @@ architecture synthesis of stat_latency is
    signal   counter : std_logic_vector(G_COUNTER_SIZE - 1 downto 0);
 
    constant C_AFS_RAM_WIDTH : natural := G_COUNTER_SIZE;
-   constant C_AFS_RAM_DEPTH : natural := 16;
+   constant C_AFS_RAM_DEPTH : natural := 64;
 
    signal   afs_s_ready : std_logic;
    signal   afs_s_valid : std_logic;
