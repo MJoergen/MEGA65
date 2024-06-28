@@ -55,7 +55,7 @@ begin
       if rising_edge(clk_i) then
          if s_valid_i = '1' then
             if first = '1' then
-               stat_count <= (others => '0');
+               stat_count <= to_stdlogicvector(1, G_DATA_SIZE);
                stat_min   <= s_data_i;
                stat_max   <= s_data_i;
                stat_mean  <= s_data_i & C_ZERO;

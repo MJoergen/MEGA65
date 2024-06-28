@@ -176,7 +176,7 @@ begin
             m_valid_o  <= '0';
          end if;
 
-         if rst_i = '1' then
+         if rst_i = '1' or cf_s_start = '1' then
             m_valid_o <= '0';
          end if;
       end if;

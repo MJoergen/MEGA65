@@ -38,6 +38,7 @@ architecture synthesis of gf2_solver is
    signal   row         : natural range 0 to G_ROW_SIZE - 1;
    signal   column      : natural range 0 to G_ROW_SIZE - 1;
    signal   inverse_row : std_logic_vector(G_ROW_SIZE - 1 downto 0);
+   signal   num_rows    : natural range 0 to G_ROW_SIZE;
 
    pure function leading_index (
       arg : std_logic_vector
@@ -165,6 +166,8 @@ begin
                   column                    <= index_v;
                   row                       <= index_v;
                   state                     <= REDUCE_ST;
+                  assert num_rows < G_ROW_SIZE;
+                  num_rows                  <= num_rows + 1;
                end if;
 
             when REDUCE_ST =>
@@ -213,6 +216,7 @@ begin
             m_last_o  <= '0';
             m_valid_o <= '0';
             state     <= IDLE_ST;
+            num_rows  <= 0;
          end if;
       end if;
    end process fsm_proc;

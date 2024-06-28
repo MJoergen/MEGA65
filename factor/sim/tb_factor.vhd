@@ -139,8 +139,8 @@ begin
       verify(  19549);         --   1014 :  113 *  173
       verify(  26329);         --   2285 :  113 *  233
       verify(  35119);         --    975 :  173 *  203
-      verify(  40309);         --     20 :  173 *  233
-      verify(3837523);         --  22806 : 1093 * 3511. (The two only known Wieferich primes)
+      verify(  40309);         --   1805 :  173 *  233
+      verify(3837523);         --   3660 : 1093 * 3511. (The two only known Wieferich primes)
 
       for i in 14 to 30 loop
          verify(2 ** i + 1);

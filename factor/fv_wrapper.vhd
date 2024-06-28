@@ -30,6 +30,7 @@ architecture synthesis of fv_wrapper is
 
    signal  fv_s_index : natural range 0 to G_NUM_WORKERS - 1;
    signal  fv_m_index : natural range 0 to G_NUM_WORKERS - 1;
+   signal  fv_fill    : natural range 0 to G_NUM_WORKERS;
 
    subtype DATA_TYPE is std_logic_vector(G_DATA_SIZE - 1 downto 0);
    subtype VECTOR_TYPE is std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
@@ -161,6 +162,27 @@ begin
          end if;
       end if;
    end process fv_m_index_proc;
+
+   fv_fill_proc : process (clk_i)
+   begin
+      if rising_edge(clk_i) then
+         if (s_ready_o = '1' and s_valid_i = '1') and
+            not (m_ready_i = '1' and m_valid_o = '1') then
+            assert fv_fill < G_NUM_WORKERS;
+            fv_fill <= fv_fill + 1;
+         end if;
+
+         if not (s_ready_o = '1' and s_valid_i = '1') and
+            (m_ready_i = '1' and m_valid_o = '1') then
+            assert fv_fill > 0;
+            fv_fill <= fv_fill - 1;
+         end if;
+
+         if rst_i = '1' then
+            fv_fill <= 0;
+         end if;
+      end if;
+   end process fv_fill_proc;
 
 end architecture synthesis;
 
