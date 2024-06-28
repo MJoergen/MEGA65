@@ -25,36 +25,74 @@ architecture synthesis of gf2_solver is
 
    -- In this initial implementation, this will just be a large array of registers.
    -- Later, this can be refactored to use BRAMs or LUTRAMs.
-   type   matrix_type is array (natural range <>) of std_logic_vector(G_ROW_SIZE - 1 downto 0);
-   signal matrix  : matrix_type(0 to G_ROW_SIZE - 1) := (others => (others => '0'));
-   signal inverse : matrix_type(0 to G_ROW_SIZE - 1) := (others => (others => '0'));
+   type     matrix_type is array (natural range <>) of std_logic_vector(G_ROW_SIZE - 1 downto 0);
+   signal   matrix  : matrix_type(0 to G_ROW_SIZE - 1) := (others => (others => '0'));
+   signal   inverse : matrix_type(0 to G_ROW_SIZE - 1) := (others => (others => '0'));
 
-   type   user_type is array (natural range <>) of std_logic_vector(G_USER_SIZE - 1 downto 0);
-   signal user : user_type(0 to G_ROW_SIZE - 1)      := (others => (others => '0'));
+   type     state_type is (IDLE_ST, SCAN_ST, INSERT_ST, REDUCE_ST, SOLVED_ST, LAST_ST);
+   signal   state : state_type;
 
-   type   state_type is (IDLE_ST, SCAN_ST, INSERT_ST, REDUCE_ST, SOLVED_ST, LAST_ST);
-   signal state : state_type;
-
-   signal s_row       : std_logic_vector(G_ROW_SIZE - 1 downto 0);
-   signal s_user      : std_logic_vector(G_USER_SIZE - 1 downto 0);
-   signal m_user      : std_logic_vector(G_USER_SIZE - 1 downto 0);
-   signal row         : natural range 0 to G_ROW_SIZE - 1;
-   signal column      : natural range 0 to G_ROW_SIZE - 1;
-   signal inverse_row : std_logic_vector(G_ROW_SIZE - 1 downto 0);
+   signal   s_row       : std_logic_vector(G_ROW_SIZE - 1 downto 0);
+   signal   s_user      : std_logic_vector(G_USER_SIZE - 1 downto 0);
+   signal   m_user      : std_logic_vector(G_USER_SIZE - 1 downto 0);
+   signal   row         : natural range 0 to G_ROW_SIZE - 1;
+   signal   column      : natural range 0 to G_ROW_SIZE - 1;
+   signal   inverse_row : std_logic_vector(G_ROW_SIZE - 1 downto 0);
 
    pure function leading_index (
       arg : std_logic_vector
    ) return natural is
    begin
+      --
       for i in arg'range loop
          if arg(i) = '1' then
             return i;
          end if;
       end loop;
+
       return 0; -- This should never occur
    end function leading_index;
 
+   pure function log2 (
+      arg : natural
+   ) return natural is
+   begin
+      --
+      for i in 0 to arg loop
+         if 2 ** i >= arg then
+            return i;
+         end if;
+      end loop;
+
+      return -1;
+   end function log2;
+
+   constant C_USER_RAM_ADDR_SIZE : natural             := log2(G_ROW_SIZE);
+   constant C_USER_RAM_DATA_SIZE : natural             := G_USER_SIZE;
+   signal   user_ram_a_addr      : std_logic_vector(C_USER_RAM_ADDR_SIZE - 1 downto 0);
+   signal   user_ram_a_data      : std_logic_vector(C_USER_RAM_DATA_SIZE - 1 downto 0);
+   signal   user_ram_a_we        : std_logic;
+   signal   user_ram_b_addr      : std_logic_vector(C_USER_RAM_ADDR_SIZE - 1 downto 0);
+   signal   user_ram_b_data      : std_logic_vector(C_USER_RAM_DATA_SIZE - 1 downto 0);
+
 begin
+
+   user_ram_b_addr <= to_stdlogicvector(column, C_USER_RAM_ADDR_SIZE);
+
+   user_ram_inst : entity work.ram
+      generic map (
+         G_ADDR_SIZE => C_USER_RAM_ADDR_SIZE,
+         G_DATA_SIZE => C_USER_RAM_DATA_SIZE
+      )
+      port map (
+         clk_i    => clk_i,
+         rst_i    => rst_i,
+         a_addr_i => user_ram_a_addr,
+         a_data_i => user_ram_a_data,
+         a_we_i   => user_ram_a_we,
+         b_addr_i => user_ram_b_addr,
+         b_data_o => user_ram_b_data
+      ); -- user_ram_inst
 
    s_ready_o <= '1' when state = IDLE_ST and (m_valid_o = '0' or m_ready_i = '1') else
                 '0';
@@ -63,6 +101,7 @@ begin
       variable index_v : natural range 0 to G_ROW_SIZE - 1;
    begin
       if rising_edge(clk_i) then
+         user_ram_a_we <= '0';
          if m_ready_i = '1' then
             m_last_o  <= '0';
             m_valid_o <= '0';
@@ -118,7 +157,9 @@ begin
                   insert_3 : assert matrix(index_v)(index_v) = '0' or rst_i = '1';
                   insert_4 : assert inverse_row(index_v) = '0' or rst_i = '1';
                   matrix(index_v)           <= s_row;
-                  user(index_v)             <= s_user;
+                  user_ram_a_addr           <= to_stdlogicvector(index_v, C_USER_RAM_ADDR_SIZE);
+                  user_ram_a_data           <= s_user;
+                  user_ram_a_we             <= '1';
                   inverse(index_v)          <= inverse_row;
                   inverse(index_v)(index_v) <= '1';
                   column                    <= index_v;
@@ -142,7 +183,7 @@ begin
                   if inverse_row(column) = '1' then
                      m_user_o  <= m_user;
                      m_valid_o <= '1';
-                     m_user    <= user(column);
+                     m_user    <= user_ram_b_data;
                   end if;
                   if column > 0 then
                      column <= column - 1;
@@ -162,10 +203,12 @@ begin
          end case;
 
          if rst_i = '1' then
-            for i in 0 to G_ROW_SIZE-1 loop
-               matrix(i) <= (others => '0');
+
+            for i in 0 to G_ROW_SIZE - 1 loop
+               matrix(i)  <= (others => '0');
                inverse(i) <= (others => '0');
             end loop;
+
             m_user    <= (others => '0');
             m_last_o  <= '0';
             m_valid_o <= '0';

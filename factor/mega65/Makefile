@@ -26,6 +26,7 @@ SRCS += ../../common/matrix_to_keynum.vhd
 SRCS += ../../common/mega65kbd_to_matrix.vhd
 SRCS += ../../common/mega65.vhd
 SRCS += ../../common/merginator.vhd
+SRCS += ../../common/ram.vhd
 SRCS += ../../common/serializer.vhd
 SRCS += ../../common/slv_to_dec.vhd
 SRCS += ../../common/stat.vhd
