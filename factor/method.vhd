@@ -38,8 +38,8 @@ end entity method;
 
 architecture synthesis of method is
 
-   constant C_DEBUG : boolean             := false;
-   constant C_HALF_SIZE : natural := G_DATA_SIZE/2;
+   constant C_DEBUG     : boolean         := false;
+   constant C_HALF_SIZE : natural         := G_DATA_SIZE / 2;
 
    signal   cf_s_ready : std_logic;
    signal   cf_s_valid : std_logic;
@@ -362,7 +362,7 @@ begin
 
    candidate_inst : entity work.candidate
       generic map (
-         G_DATA_SIZE       => C_HALF_SIZE,
+         G_DATA_SIZE       => G_DATA_SIZE,
          G_PRIME_ADDR_SIZE => G_PRIME_ADDR_SIZE,
          G_VECTOR_SIZE     => G_VECTOR_SIZE
       )

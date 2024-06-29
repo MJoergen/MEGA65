@@ -12,8 +12,8 @@ library ieee;
 
 entity candidate is
    generic (
-      G_PRIME_ADDR_SIZE : integer;
       G_DATA_SIZE       : integer;
+      G_PRIME_ADDR_SIZE : integer;
       G_VECTOR_SIZE     : integer
    );
    port (
@@ -21,46 +21,48 @@ entity candidate is
       rst_i          : in    std_logic;
       s_ready_o      : out   std_logic;
       s_valid_i      : in    std_logic;
-      s_n_i          : in    std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-      s_x_i          : in    std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+      s_n_i          : in    std_logic_vector(G_DATA_SIZE - 1 downto 0);
+      s_x_i          : in    std_logic_vector(G_DATA_SIZE - 1 downto 0);
       s_primes_i     : in    std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
-      s_square_i     : in    std_logic_vector(G_DATA_SIZE - 1 downto 0);
+      s_square_i     : in    std_logic_vector(G_DATA_SIZE / 2 - 1 downto 0);
       s_last_i       : in    std_logic;
       m_ready_i      : in    std_logic;
       m_valid_o      : out   std_logic;
-      m_x_o          : out   std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-      m_y_o          : out   std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+      m_x_o          : out   std_logic_vector(G_DATA_SIZE - 1 downto 0);
+      m_y_o          : out   std_logic_vector(G_DATA_SIZE - 1 downto 0);
       primes_index_o : out   std_logic_vector(G_PRIME_ADDR_SIZE - 1 downto 0);
-      primes_data_i  : in    std_logic_vector(G_DATA_SIZE - 1 downto 0)
+      primes_data_i  : in    std_logic_vector(G_DATA_SIZE / 2 - 1 downto 0)
    );
 end entity candidate;
 
 architecture synthesis of candidate is
 
-   constant C_ZERO : std_logic_vector(G_DATA_SIZE - 1 downto 0)     := (others => '0');
-   constant C_ONE2 : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0) := (0 => '1', others => '0');
+   constant C_HALF_SIZE : natural                               := G_DATA_SIZE / 2;
+
+   constant C_ZERO : std_logic_vector(C_HALF_SIZE - 1 downto 0) := (others => '0');
+   constant C_ONE2 : std_logic_vector(G_DATA_SIZE - 1 downto 0) := (0 => '1', others => '0');
 
    signal   amm_s_ready : std_logic;
    signal   amm_s_valid : std_logic;
-   signal   amm_s_val_a : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal   amm_s_val_x : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal   amm_s_val_b : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal   amm_s_val_n : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   amm_s_val_a : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   amm_s_val_x : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   amm_s_val_b : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   amm_s_val_n : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal   amm_m_ready : std_logic;
    signal   amm_m_valid : std_logic;
-   signal   amm_m_res   : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   amm_m_res   : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
    type     state_type is (IDLE_ST, MULT_X_ST, SQUARE_ST, READ_PRIME_ST, MULT_PRIME_ST, WAIT_MULT_PRIME_ST, END_ST);
    signal   state    : state_type;
-   signal   s_n      : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
-   signal   s_x      : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   s_n      : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   s_x      : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal   s_primes : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
-   signal   s_square : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal   s_square : std_logic_vector(C_HALF_SIZE - 1 downto 0);
    signal   s_last   : std_logic;
 
    signal   s_primes_square : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
    signal   state_primes    : std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
-   signal   m_y             : std_logic_vector(2 * G_DATA_SIZE - 1 downto 0);
+   signal   m_y             : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
    signal   primes_index_d : std_logic_vector(G_PRIME_ADDR_SIZE - 1 downto 0);
 
@@ -128,7 +130,7 @@ begin
                   primes_index_o <= primes_index_o - 1;
                end if;
                primes_index_d <= primes_index_o;
-               state <= MULT_PRIME_ST;
+               state          <= MULT_PRIME_ST;
 
             when MULT_PRIME_ST =>
                if primes_index_d = 0 then
@@ -187,7 +189,7 @@ begin
 
    amm_inst : entity work.amm
       generic map (
-         G_DATA_SIZE => G_DATA_SIZE*2
+         G_DATA_SIZE => G_DATA_SIZE
       )
       port map (
          clk_i     => clk_i,
