@@ -1,0 +1,64 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Sat Jun 29 20:02:29 2024
+[*]
+[dumpfile] "/home/mike/git/MJoergen/MEGA65/common/formal/gf2_solver_prove/engine_0/trace.vcd"
+[dumpfile_mtime] "Sat Jun 29 20:00:26 2024"
+[dumpfile_size] 4157
+[savefile] "/home/mike/git/MJoergen/MEGA65/common/formal/gf2_solver.gtkw"
+[timestart] 0
+[size] 1474 848
+[pos] -1 -1
+*-2.597382 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] gf2_solver.
+[sst_width] 249
+[signals_width] 484
+[sst_expanded] 1
+[sst_vpaned_height] 230
+@28
+gf2_solver.clk_i
+gf2_solver.rst_i
+[color] 5
+gf2_solver.s_ready_o
+@29
+[color] 2
+gf2_solver.s_valid_i
+@22
+gf2_solver.s_row_i[3:0]
+gf2_solver.s_user_i[3:0]
+@28
+[color] 5
+gf2_solver.m_ready_i
+@29
+[color] 2
+gf2_solver.m_valid_o
+@22
+gf2_solver.m_user_o[3:0]
+@28
+gf2_solver.m_last_o
+@22
+gf2_solver.matrix[15:0]
+gf2_solver.inverse[15:0]
+@28
+gf2_solver.state[2:0]
+@22
+gf2_solver.s_row[3:0]
+gf2_solver.s_user[3:0]
+gf2_solver.m_user[3:0]
+@28
+gf2_solver.row[1:0]
+gf2_solver.column[1:0]
+@22
+gf2_solver.inverse_row[3:0]
+@28
+gf2_solver.num_rows[2:0]
+gf2_solver.user_ram_a_addr[1:0]
+@22
+gf2_solver.user_ram_a_data[3:0]
+@28
+gf2_solver.user_ram_a_we
+gf2_solver.user_ram_b_addr[1:0]
+@22
+gf2_solver.user_ram_b_data[3:0]
+[pattern_trace] 1
+[pattern_trace] 0

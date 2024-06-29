@@ -166,7 +166,7 @@ begin
                   column                    <= index_v;
                   row                       <= index_v;
                   state                     <= REDUCE_ST;
-                  assert num_rows < G_ROW_SIZE;
+                  insert_5: assert num_rows < G_ROW_SIZE or rst_i = '1';
                   num_rows                  <= num_rows + 1;
                end if;
 
