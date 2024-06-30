@@ -172,8 +172,8 @@ begin
 
             when REDUCE_ST =>
                --
-               for i in 0 to G_ROW_SIZE - 1 loop
-                  if matrix(i)(column) = '1' and i /= row then
+               for i in row+1 to G_ROW_SIZE - 1 loop
+                  if matrix(i)(column) = '1' then
                      matrix(i)  <= matrix(i) xor matrix(row);
                      inverse(i) <= inverse(i) xor inverse(row);
                   end if;
