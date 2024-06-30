@@ -29,7 +29,7 @@ architecture synthesis of gf2_solver is
    signal   matrix  : matrix_type(0 to G_ROW_SIZE - 1) := (others => (others => '0'));
    signal   inverse : matrix_type(0 to G_ROW_SIZE - 1) := (others => (others => '0'));
 
-   type     state_type is (IDLE_ST, SCAN_ST, INSERT_ST, REDUCE_ST, SOLVED_ST, LAST_ST);
+   type     state_type is (RESET_ST, IDLE_ST, SCAN_ST, INSERT_ST, REDUCE_ST, SOLVED_ST, LAST_ST);
    signal   state : state_type;
 
    signal   s_row       : std_logic_vector(G_ROW_SIZE - 1 downto 0);
@@ -78,6 +78,9 @@ architecture synthesis of gf2_solver is
 
 begin
 
+   s_ready_o       <= '1' when state = IDLE_ST and (m_valid_o = '0' or m_ready_i = '1') else
+                      '0';
+
    user_ram_b_addr <= to_stdlogicvector(column, C_USER_RAM_ADDR_SIZE);
 
    user_ram_inst : entity work.ram
@@ -95,11 +98,10 @@ begin
          b_data_o => user_ram_b_data
       ); -- user_ram_inst
 
-   s_ready_o <= '1' when state = IDLE_ST and (m_valid_o = '0' or m_ready_i = '1') else
-                '0';
 
    fsm_proc : process (clk_i)
-      variable index_v : natural range 0 to G_ROW_SIZE - 1;
+      variable index_v       : natural range 0 to G_ROW_SIZE - 1;
+      variable inverse_row_v : std_logic_vector(G_ROW_SIZE - 1 downto 0);
    begin
       if rising_edge(clk_i) then
          user_ram_a_we <= '0';
@@ -134,7 +136,7 @@ begin
                -- existing rows.
                if s_row(column) = '1' and matrix(row)(column) = '1' then
                   s_row       <= s_row xor matrix(row);
-                  inverse_row <= inverse_row xor inverse(column);
+                  inverse_row <= inverse_row xor inverse(row);
                end if;
 
                if column > 0 then
@@ -152,34 +154,42 @@ begin
                else
                   insert_1 : assert s_row /= 0 or rst_i = '1';
                   -- Now we insert the new row into an empty spot in the matrix
-                  index_v                   := leading_index(s_row);
+                  index_v                := leading_index(s_row);
 
                   insert_2 : assert s_row(index_v) = '1' or rst_i = '1';
                   insert_3 : assert matrix(index_v)(index_v) = '0' or rst_i = '1';
                   insert_4 : assert inverse_row(index_v) = '0' or rst_i = '1';
-                  matrix(index_v)           <= s_row;
-                  user_ram_a_addr           <= to_stdlogicvector(index_v, C_USER_RAM_ADDR_SIZE);
-                  user_ram_a_data           <= s_user;
-                  user_ram_a_we             <= '1';
-                  inverse(index_v)          <= inverse_row;
-                  inverse(index_v)(index_v) <= '1';
-                  column                    <= index_v;
-                  row                       <= index_v;
-                  state                     <= REDUCE_ST;
+                  matrix(index_v)        <= s_row;
+                  user_ram_a_addr        <= to_stdlogicvector(index_v, C_USER_RAM_ADDR_SIZE);
+                  user_ram_a_data        <= s_user;
+                  user_ram_a_we          <= '1';
+                  inverse_row(index_v)   <= '1';
+
+                  inverse_row_v          := inverse_row;
+                  inverse_row_v(index_v) := '1';
+
+                  inverse(index_v)       <= inverse_row_v;
                   insert_5: assert num_rows < G_ROW_SIZE or rst_i = '1';
-                  num_rows                  <= num_rows + 1;
+                  num_rows               <= num_rows + 1;
+                  if index_v < G_ROW_SIZE - 1 then
+                     column <= index_v;
+                     row    <= index_v + 1;
+                     state  <= REDUCE_ST;
+                  else
+                     state <= IDLE_ST;
+                  end if;
                end if;
 
             when REDUCE_ST =>
-               --
-               for i in row+1 to G_ROW_SIZE - 1 loop
-                  if matrix(i)(column) = '1' then
-                     matrix(i)  <= matrix(i) xor matrix(row);
-                     inverse(i) <= inverse(i) xor inverse(row);
-                  end if;
-               end loop;
-
-               state <= IDLE_ST;
+               if matrix(row)(column) = '1' then
+                  matrix(row)  <= matrix(row) xor s_row;
+                  inverse(row) <= inverse(row) xor inverse_row;
+               end if;
+               if row < G_ROW_SIZE - 1 then
+                  row <= row + 1;
+               else
+                  state <= IDLE_ST;
+               end if;
 
             when SOLVED_ST =>
                if m_valid_o = '0' or m_ready_i = '1' then
@@ -203,19 +213,23 @@ begin
                   state     <= IDLE_ST;
                end if;
 
+            when RESET_ST =>
+               matrix(row)  <= (others => '0');
+               inverse(row) <= (others => '0');
+               if row < G_ROW_SIZE - 1 then
+                  row <= row + 1;
+               else
+                  state <= IDLE_ST;
+               end if;
+
          end case;
 
          if rst_i = '1' then
-
-            for i in 0 to G_ROW_SIZE - 1 loop
-               matrix(i)  <= (others => '0');
-               inverse(i) <= (others => '0');
-            end loop;
-
+            row       <= 0;
             m_user    <= (others => '0');
             m_last_o  <= '0';
             m_valid_o <= '0';
-            state     <= IDLE_ST;
+            state     <= RESET_ST;
             num_rows  <= 0;
          end if;
       end if;
