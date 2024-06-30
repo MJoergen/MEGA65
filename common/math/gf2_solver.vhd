@@ -27,7 +27,6 @@ architecture synthesis of gf2_solver is
    -- Later, this can be refactored to use BRAMs or LUTRAMs.
    type     matrix_type is array (natural range <>) of std_logic_vector(G_ROW_SIZE - 1 downto 0);
    signal   matrix  : matrix_type(0 to G_ROW_SIZE - 1) := (others => (others => '0'));
-   signal   inverse : matrix_type(0 to G_ROW_SIZE - 1) := (others => (others => '0'));
 
    type     state_type is (RESET_ST, IDLE_ST, SCAN_ST, INSERT_ST, REDUCE_ST, SOLVED_ST, LAST_ST);
    signal   state : state_type;
@@ -76,6 +75,14 @@ architecture synthesis of gf2_solver is
    signal   user_ram_b_addr      : std_logic_vector(C_USER_RAM_ADDR_SIZE - 1 downto 0);
    signal   user_ram_b_data      : std_logic_vector(C_USER_RAM_DATA_SIZE - 1 downto 0);
 
+   constant C_INVERSE_RAM_ADDR_SIZE : natural          := log2(G_ROW_SIZE);
+   constant C_INVERSE_RAM_DATA_SIZE : natural          := G_ROW_SIZE;
+   signal   inverse_ram_a_addr      : std_logic_vector(C_INVERSE_RAM_ADDR_SIZE - 1 downto 0);
+   signal   inverse_ram_a_data      : std_logic_vector(C_INVERSE_RAM_DATA_SIZE - 1 downto 0);
+   signal   inverse_ram_a_we        : std_logic;
+   signal   inverse_ram_b_addr      : std_logic_vector(C_INVERSE_RAM_ADDR_SIZE - 1 downto 0);
+   signal   inverse_ram_b_data      : std_logic_vector(C_INVERSE_RAM_DATA_SIZE - 1 downto 0);
+
 begin
 
    s_ready_o       <= '1' when state = IDLE_ST and (m_valid_o = '0' or m_ready_i = '1') else
@@ -98,13 +105,30 @@ begin
          b_data_o => user_ram_b_data
       ); -- user_ram_inst
 
+   inverse_ram_b_addr <= to_stdlogicvector(row, C_USER_RAM_ADDR_SIZE);
+
+   inverse_ram_inst : entity work.ram
+      generic map (
+         G_ADDR_SIZE => C_INVERSE_RAM_ADDR_SIZE,
+         G_DATA_SIZE => C_INVERSE_RAM_DATA_SIZE
+      )
+      port map (
+         clk_i    => clk_i,
+         rst_i    => rst_i,
+         a_addr_i => inverse_ram_a_addr,
+         a_data_i => inverse_ram_a_data,
+         a_we_i   => inverse_ram_a_we,
+         b_addr_i => inverse_ram_b_addr,
+         b_data_o => inverse_ram_b_data
+      ); -- inverse_ram_inst
 
    fsm_proc : process (clk_i)
       variable index_v       : natural range 0 to G_ROW_SIZE - 1;
       variable inverse_row_v : std_logic_vector(G_ROW_SIZE - 1 downto 0);
    begin
       if rising_edge(clk_i) then
-         user_ram_a_we <= '0';
+         user_ram_a_we    <= '0';
+         inverse_ram_a_we <= '0';
          if m_ready_i = '1' then
             m_last_o  <= '0';
             m_valid_o <= '0';
@@ -136,7 +160,7 @@ begin
                -- existing rows.
                if s_row(column) = '1' and matrix(row)(column) = '1' then
                   s_row       <= s_row xor matrix(row);
-                  inverse_row <= inverse_row xor inverse(row);
+                  inverse_row <= inverse_row xor inverse_ram_b_data;
                end if;
 
                if column > 0 then
@@ -168,7 +192,10 @@ begin
                   inverse_row_v          := inverse_row;
                   inverse_row_v(index_v) := '1';
 
-                  inverse(index_v)       <= inverse_row_v;
+                  inverse_ram_a_addr <= to_stdlogicvector(index_v, C_INVERSE_RAM_ADDR_SIZE);
+                  inverse_ram_a_data <= inverse_row_v;
+                  inverse_ram_a_we   <= '1';
+
                   insert_5: assert num_rows < G_ROW_SIZE or rst_i = '1';
                   num_rows               <= num_rows + 1;
                   if index_v < G_ROW_SIZE - 1 then
@@ -183,7 +210,10 @@ begin
             when REDUCE_ST =>
                if matrix(row)(column) = '1' then
                   matrix(row)  <= matrix(row) xor s_row;
-                  inverse(row) <= inverse(row) xor inverse_row;
+
+                  inverse_ram_a_addr <= to_stdlogicvector(row, C_INVERSE_RAM_ADDR_SIZE);
+                  inverse_ram_a_data <= inverse_ram_b_data xor inverse_row;
+                  inverse_ram_a_we   <= '1';
                end if;
                if row < G_ROW_SIZE - 1 then
                   row <= row + 1;
@@ -215,7 +245,9 @@ begin
 
             when RESET_ST =>
                matrix(row)  <= (others => '0');
-               inverse(row) <= (others => '0');
+               inverse_ram_a_addr <= to_stdlogicvector(row, C_INVERSE_RAM_ADDR_SIZE);
+               inverse_ram_a_data <= (others => '0');
+               inverse_ram_a_we   <= '1';
                if row < G_ROW_SIZE - 1 then
                   row <= row + 1;
                else
