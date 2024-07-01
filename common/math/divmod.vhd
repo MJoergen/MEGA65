@@ -33,7 +33,7 @@ architecture synthesis of divmod is
    constant C_ZERO : std_logic_vector(G_DATA_SIZE - 1 downto 0) := (others => '0');
    constant C_ONE  : std_logic_vector(G_DATA_SIZE - 1 downto 0) := to_stdlogicvector(1, G_DATA_SIZE);
 
-   type     state_type is (IDLE_ST, SHIFT_ST, REDUCE_ST);
+   type     state_type is (IDLE_ST, PREPARE_ST, SHIFT_ST, REDUCE_ST);
    signal   state : state_type;
 
    signal   val_d : std_logic_vector(G_DATA_SIZE downto 0);
@@ -70,7 +70,6 @@ begin
    fsm_proc : process (clk_i)
       variable index_res_v : natural range 0 to G_DATA_SIZE - 1;
       variable index_val_v : natural range 0 to G_DATA_SIZE - 1;
-      variable shift_v     : natural range 0 to G_DATA_SIZE - 1;
    begin
       if rising_edge(clk_i) then
          if m_ready_i = '1' then
@@ -82,24 +81,30 @@ begin
             -- Store the input values
             when IDLE_ST =>
                if s_valid_i = '1' and s_ready_o = '1' then
-                  if s_val_n_i /= 0 then
+                  res_q <= (others => '0');
+                  res_r <= '0' & s_val_n_i;
+                  val_d <= '0' & s_val_d_i;
+
+                  if s_val_n_i = 0 then
+                     m_valid_o <= '1';
+                     state     <= IDLE_ST;
+                  else
+                     m_valid_o <= '0';
                      index_res_v := leading_index(s_val_n_i);
                      index_val_v := leading_index(s_val_d_i);
-                     if index_res_v >= index_val_v then
-                        shift_v := index_res_v - index_val_v;
-                        val_d   <= '0' & shift_left(s_val_d_i, shift_v);
-                        shift   <= shift_v;
+                     if index_res_v > index_val_v then
+                        shift <= index_res_v - index_val_v;
+                        state <= PREPARE_ST;
                      else
-                        val_d <= '0' & s_val_d_i;
                         shift <= 0;
+                        state <= SHIFT_ST;
                      end if;
                   end if;
-
-                  res_q     <= (others => '0');
-                  res_r     <= '0' & s_val_n_i;
-                  m_valid_o <= '0';
-                  state     <= SHIFT_ST;
                end if;
+
+            when PREPARE_ST =>
+               val_d <= shift_left(val_d, shift);
+               state <= SHIFT_ST;
 
             -- Shift the denominator, until it is larger than the numerator
             when SHIFT_ST =>

@@ -314,7 +314,7 @@ begin
    -- Instantiate AMM
    ----------------------
 
-   amm_m_ready <= m_ready_i or not m_valid_o;
+   amm_m_ready <= (m_ready_i or not m_valid_o) and add_mult_m_valid;
 
    amm_inst : entity work.amm
       generic map (
@@ -339,7 +339,7 @@ begin
    -- Instantiate ADD_MULT
    ------------------------
 
-   add_mult_m_ready <= m_ready_i or not m_valid_o;
+   add_mult_m_ready <= (m_ready_i or not m_valid_o) and amm_m_valid;
 
    add_mult_inst : entity work.add_mult
       generic map (

@@ -108,9 +108,9 @@ begin
          dut_s_valid <= '1';
          dut_m_ready <= '0';
          wait until clk = '1';
+         assert dut_m_valid = '0';
          dut_s_valid <= '0';
          wait until clk = '1';
-         assert dut_m_valid = '0';
 
          -- Verify response is received within a given time
          for i in 1 to cycles_v loop

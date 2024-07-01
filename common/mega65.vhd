@@ -99,7 +99,7 @@ begin
    m2m_keyb_inst : entity work.m2m_keyb
       port map (
          clk_main_i       => clk_o,
-         clk_main_speed_i => 100 * 1000 * 1000,
+         clk_main_speed_i => 120 * 1000 * 1000,
          kio8_o           => kb_io0_o,
          kio9_o           => kb_io1_o,
          kio10_i          => kb_io2_i,

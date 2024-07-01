@@ -117,17 +117,19 @@ Factoring small numbers take the following time:
 Factoring larger numbers take (on average):
 | bits |  min |    max | smooth |
 | ---- | ---- |   ---- | ------ |
-|  20  |  830 |  23635 |   3884 |
-|  24  | 1480 | 154200 |   7733 |
-|  28  |  370 |  28990 |   6139 |
-|  30  | 2100 |  25638 |   6338 |
+|  20  |  830 |  23635 |   3970 |
+|  24  | 1480 | 154200 |   7803 |
+|  28  |  370 |  28990 |   6217 |
+|  30  | 2100 |  25638 |   6455 |
 
 Utilization report for the factor\_inst shows:
-* LUTS      = 57829
-* Registers = 51648
+* LUTS      = 60384
+* Registers = 52136
 * Slices    = 19507
 * LUTRAM    =  1084
-* BRAM      =     8
+* BRAM      =   104
+
+Frequency: 120 MHz
 
 # Links
 * https://core.ac.uk/download/pdf/217142258.pdf
