@@ -30,7 +30,7 @@ architecture synthesis of fv_wrapper is
 
    signal  fv_s_index : natural range 0 to G_NUM_WORKERS - 1;
    signal  fv_m_index : natural range 0 to G_NUM_WORKERS - 1;
-   signal  fv_fill    : natural range 0 to G_NUM_WORKERS;
+   signal  fv_fill    : natural range 0 to 16*G_NUM_WORKERS;
 
    subtype DATA_TYPE is std_logic_vector(G_DATA_SIZE - 1 downto 0);
    subtype VECTOR_TYPE is std_logic_vector(G_VECTOR_SIZE - 1 downto 0);
@@ -96,41 +96,83 @@ begin
 
    factor_vect_gen : for i in 0 to G_NUM_WORKERS - 1 generate
 
-      factor_vect_inst : entity work.factor_vect
-         generic map (
-            G_PRIME_ADDR_SIZE => G_PRIME_ADDR_SIZE,
-            G_DATA_SIZE       => G_DATA_SIZE,
-            G_VECTOR_SIZE     => G_VECTOR_SIZE,
-            G_USER_SIZE       => G_USER_SIZE
-         )
-         port map (
-            clk_i          => clk_i,
-            rst_i          => rst_i,
-            s_ready_o      => s_ready(i),
-            s_valid_i      => s_valid(i),
-            s_data_i       => s_data(i),
-            s_user_i       => s_user(i),
-            m_ready_i      => m_ready(i),
-            m_valid_o      => m_valid(i),
-            m_complete_o   => m_complete(i),
-            m_square_o     => m_square(i),
-            m_primes_o     => m_primes(i),
-            m_user_o       => m_user(i),
-            primes_index_o => primes_index(i),
-            primes_data_i  => primes_data(i)
-         ); -- factor_vect_inst
+      factor_vect_block : block is
 
-      fv_primes_inst : entity work.primes
-         generic map (
-            G_ADDR_SIZE => G_PRIME_ADDR_SIZE,
-            G_DATA_SIZE => G_DATA_SIZE
-         )
-         port map (
-            clk_i   => clk_i,
-            rst_i   => rst_i,
-            index_i => primes_index(i),
-            data_o  => primes_data(i)
-         ); -- fv_primes_inst
+         constant C_AFS_RAM_WIDTH : natural := G_DATA_SIZE + G_USER_SIZE;
+         constant C_AFS_RAM_DEPTH : natural := 16;
+
+         signal   afs_s_ready     : std_logic;
+         signal   afs_s_valid     : std_logic;
+         signal   afs_s_data      : std_logic_vector(C_AFS_RAM_WIDTH - 1 downto 0);
+         signal   afs_s_fill      : natural range 0 to C_AFS_RAM_DEPTH - 1;
+         signal   afs_m_ready     : std_logic;
+         signal   afs_m_valid     : std_logic;
+         signal   afs_m_data      : std_logic_vector(C_AFS_RAM_WIDTH - 1 downto 0);
+         signal   afs_m_data_data : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+         signal   afs_m_data_user : std_logic_vector(G_USER_SIZE - 1 downto 0);
+
+      begin
+
+         s_ready(i)  <= afs_s_ready;
+         afs_s_valid <= s_valid(i);
+         afs_s_data  <= s_data(i) & s_user(i);
+
+         axi_fifo_small_inst : entity work.axi_fifo_small
+            generic map (
+               G_RAM_WIDTH => C_AFS_RAM_WIDTH,
+               G_RAM_DEPTH => C_AFS_RAM_DEPTH
+            )
+            port map (
+               clk_i     => clk_i,
+               rst_i     => rst_i,
+               s_ready_o => afs_s_ready,
+               s_valid_i => afs_s_valid,
+               s_data_i  => afs_s_data,
+               s_fill_o  => afs_s_fill,
+               m_ready_i => afs_m_ready,
+               m_valid_o => afs_m_valid,
+               m_data_o  => afs_m_data
+            ); -- axi_fifo_small_inst
+
+         (afs_m_data_data, afs_m_data_user) <= afs_m_data;
+
+         factor_vect_inst : entity work.factor_vect
+            generic map (
+               G_PRIME_ADDR_SIZE => G_PRIME_ADDR_SIZE,
+               G_DATA_SIZE       => G_DATA_SIZE,
+               G_VECTOR_SIZE     => G_VECTOR_SIZE,
+               G_USER_SIZE       => G_USER_SIZE
+            )
+            port map (
+               clk_i          => clk_i,
+               rst_i          => rst_i,
+               s_ready_o      => afs_m_ready,
+               s_valid_i      => afs_m_valid,
+               s_data_i       => afs_m_data_data,
+               s_user_i       => afs_m_data_user,
+               m_ready_i      => m_ready(i),
+               m_valid_o      => m_valid(i),
+               m_complete_o   => m_complete(i),
+               m_square_o     => m_square(i),
+               m_primes_o     => m_primes(i),
+               m_user_o       => m_user(i),
+               primes_index_o => primes_index(i),
+               primes_data_i  => primes_data(i)
+            ); -- factor_vect_inst
+
+         fv_primes_inst : entity work.primes
+            generic map (
+               G_ADDR_SIZE => G_PRIME_ADDR_SIZE,
+               G_DATA_SIZE => G_DATA_SIZE
+            )
+            port map (
+               clk_i   => clk_i,
+               rst_i   => rst_i,
+               index_i => primes_index(i),
+               data_o  => primes_data(i)
+            ); -- fv_primes_inst
+
+      end block factor_vect_block;
 
    end generate factor_vect_gen;
 
@@ -168,7 +210,7 @@ begin
       if rising_edge(clk_i) then
          if (s_ready_o = '1' and s_valid_i = '1') and
             not (m_ready_i = '1' and m_valid_o = '1') then
-            assert fv_fill < G_NUM_WORKERS;
+            assert fv_fill < 16*G_NUM_WORKERS;
             fv_fill <= fv_fill + 1;
          end if;
 
