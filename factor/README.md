@@ -102,6 +102,25 @@ than 1 then this is a factor of N.
 In the first case gcd(4069+490,4559) = 0, so no new factor found.
 In the second case gcd(1622+70,4559) = 47, and indeed 47 is a factor of 4559.
 
+# Performance
+Factoring small numbers take the following time:
+| number | factors     | cycles
+| ------ | -------     | ------
+|   2059 |   29 *   71 | 1055
+|   4559 |   47 *   97 |  956
+|  19549 |  113 *  173 | 1341
+|  26329 |  113 *  233 | 2457
+|  35119 |  173 *  203 | 1003
+|  40309 |  173 *  233 | 2366
+|3837523 | 1093 * 3511 | 4135
+
+Utilization report for the factor\_inst shows:
+* LUTS = 47389
+* Registers = 51666
+* Slices = 17343
+* LUTRAM = 1084
+* BRAM = 8
+
 # Links
 * https://core.ac.uk/download/pdf/217142258.pdf
 * https://math.dartmouth.edu/~carlp/PDF/implementation.pdf

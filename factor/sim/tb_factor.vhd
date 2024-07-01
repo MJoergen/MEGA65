@@ -125,13 +125,13 @@ begin
       wait until clk = '1';
       report "Test started.";
 
-      verify(   2059);         --    819 :   29 *   71
-      verify(   4559);         --    904 :   47 *   97
-      verify(  19549);         --   1014 :  113 *  173
-      verify(  26329);         --   2285 :  113 *  233
-      verify(  35119);         --    975 :  173 *  203
-      verify(  40309);         --   1805 :  173 *  233
-      verify(3837523);         --   3660 : 1093 * 3511. (The two only known Wieferich primes)
+      verify(   2059);         --   1055 :   29 *   71
+      verify(   4559);         --    956 :   47 *   97
+      verify(  19549);         --   1341 :  113 *  173
+      verify(  26329);         --   2457 :  113 *  233
+      verify(  35119);         --   1003 :  173 *  203
+      verify(  40309);         --   2366 :  173 *  233
+      verify(3837523);         --   4135 : 1093 * 3511. (The two only known Wieferich primes)
 
       for i in 14 to 30 loop
          verify(2 ** i + 1);
