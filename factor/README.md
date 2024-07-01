@@ -114,6 +114,14 @@ Factoring small numbers take the following time:
 |  40309 |  173 *  233 | 2316
 |3837523 | 1093 * 3511 | 3813
 
+Factoring larger numbers take (on average):
+| bits |  min |    max | smooth |
+| ---- | ---- |   ---- | ------ |
+|  20  |  830 |  23635 |   3884 |
+|  24  | 1480 | 154200 |   7733 |
+|  28  |  370 |  28990 |   6139 |
+|  30  | 2100 |  25638 |   6338 |
+
 Utilization report for the factor\_inst shows:
 * LUTS      = 57829
 * Registers = 51648
