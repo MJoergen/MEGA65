@@ -43,6 +43,23 @@ architecture synthesis of divmod is
    signal   res_q : std_logic_vector(G_DATA_SIZE - 1 downto 0);
    signal   res_r : std_logic_vector(G_DATA_SIZE downto 0);
 
+   pure function leading_index (
+      arg : std_logic_vector
+   ) return natural is
+   begin
+      assert arg /= 0;
+      --
+      for i in arg'range loop
+         if arg(i) = '1' then
+            return i;
+         end if;
+      end loop;
+
+      -- This should never occur
+      assert false;
+      return 0;
+   end function leading_index;
+
 begin
 
    m_res_q_o <= res_q;
@@ -51,6 +68,9 @@ begin
                 '0';
 
    fsm_proc : process (clk_i)
+      variable index_res_v : natural range 0 to G_DATA_SIZE - 1;
+      variable index_val_v : natural range 0 to G_DATA_SIZE - 1;
+      variable shift_v     : natural range 0 to G_DATA_SIZE - 1;
    begin
       if rising_edge(clk_i) then
          if m_ready_i = '1' then
@@ -62,8 +82,19 @@ begin
             -- Store the input values
             when IDLE_ST =>
                if s_valid_i = '1' and s_ready_o = '1' then
-                  val_d     <= '0' & s_val_d_i;
-                  shift     <= 0;
+                  if s_val_n_i /= 0 then
+                     index_res_v := leading_index(s_val_n_i);
+                     index_val_v := leading_index(s_val_d_i);
+                     if index_res_v >= index_val_v then
+                        shift_v := index_res_v - index_val_v;
+                        val_d   <= '0' & shift_left(s_val_d_i, shift_v);
+                        shift   <= shift_v;
+                     else
+                        val_d <= '0' & s_val_d_i;
+                        shift <= 0;
+                     end if;
+                  end if;
+
                   res_q     <= (others => '0');
                   res_r     <= '0' & s_val_n_i;
                   m_valid_o <= '0';

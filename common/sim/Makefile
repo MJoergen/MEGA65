@@ -5,10 +5,10 @@
 
 #PROJECT = add_mult
 #PROJECT = amm
-PROJECT = cf
+#PROJECT = cf
 #PROJECT = divexact
 #PROJECT = divexp
-#PROJECT = divmod
+PROJECT = divmod
 #PROJECT = factor_vect
 #PROJECT = gcd
 #PROJECT = gf2_solver

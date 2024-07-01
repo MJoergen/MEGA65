@@ -6,10 +6,10 @@
 #DUT  = cf
 #DUT  = divexact
 #DUT  = divexp
-#DUT  = divmod
+DUT  = divmod
 #DUT  = factor_vect
 #DUT  = gcd
-DUT  = gf2_solver
+#DUT  = gf2_solver
 #DUT  = jacobi
 #DUT  = sqrt
 
