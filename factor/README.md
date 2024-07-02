@@ -6,9 +6,13 @@ What this means is that given an integer N, this design will find two numbers A 
 such that A\*B = N.
 
 ## Performance
-With the parameters ...
+With the following parameters:
+* G_NUM_WORKERS = 32
+* G_PRIME_ADDR_SIZE = 6
+* G_DATA_SIZE = 132
+* G_VECTOR_SIZE = 64
 
-Factoring small numbers take the following time:
+factoring small numbers take the following time:
 | number | factors     | cycles
 | ------ | -------     | ------
 |   2059 |   29 *   71 | 1048
