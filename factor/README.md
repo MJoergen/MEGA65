@@ -26,7 +26,6 @@ factoring small numbers take the following time:
 Factoring larger numbers take (on average):
 | bits | count |  min |    max | smooth |
 | ---- | ----- | ---- |   ---- | ------ |
-
 |  16  |   30  |  501 |   7628 |   2576 |
 |  17  |   37  |  343 |  10679 |   2855 |
 |  18  |   41  |  376 |  11226 |   2862 |
