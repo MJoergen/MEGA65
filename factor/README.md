@@ -42,8 +42,8 @@ Factoring larger numbers take (on average):
 |  29  |   73  |  960 | 111320 |   6323 |
 |  30  |   71  | 1723 |  33267 |   7644 |
 
-A very rough estimate of the number of cycles is the following formula:
-150 \* 2^sqrt(bits)
+A very rough estimate of the average number of cycles is the following formula:
+150 \* 2^sqrt(bits).
 
 Utilization report for the factor\_inst shows:
 * LUTS      = 60384
