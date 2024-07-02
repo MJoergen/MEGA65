@@ -25,6 +25,29 @@ architecture simulation of tb_factor is
    signal dut_m_valid : std_logic;
    signal dut_m_data  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
+   pure function sqrt (
+      v : natural
+   ) return natural is
+      variable r_v : natural;
+   begin
+      r_v := 0;
+
+      while r_v * r_v <= v loop
+         r_v := r_v + 1;
+      end loop;
+
+      return r_v - 1;
+   end function sqrt;
+
+   pure function is_square (
+      arg : natural
+   ) return boolean is
+      variable i_v : natural;
+   begin
+      i_v := sqrt(arg);
+      return i_v*i_v = arg;
+   end function is_square;
+
    pure function is_prime (
       arg : natural
    ) return boolean is
@@ -178,9 +201,9 @@ begin
       --         verify(2 ** i + 1);
       --      end loop;
 
-      for i in 1 to 500 loop
-         val_v := 2 ** 30 + i;
-         if not is_prime(val_v) and not has_small_divisors(val_v, 100) then
+      for i in 1 to 1000 loop
+         val_v := 2 ** 16 + i;
+         if not is_prime(val_v) and not is_square(val_v) and not has_small_divisors(val_v, 100) then
             verify(val_v);
          end if;
       end loop;

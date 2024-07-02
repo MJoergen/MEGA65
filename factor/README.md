@@ -5,6 +5,54 @@ This design can factorize a (large) integer N.
 What this means is that given an integer N, this design will find two numbers A and B,
 such that A\*B = N.
 
+## Performance
+With the parameters ...
+
+Factoring small numbers take the following time:
+| number | factors     | cycles
+| ------ | -------     | ------
+|   2059 |   29 *   71 | 1048
+|   4559 |   47 *   97 |  926
+|  19549 |  113 *  173 | 1324
+|  26329 |  113 *  233 | 2446
+|  35119 |  173 *  203 |  964
+|  40309 |  173 *  233 | 2337
+|3837523 | 1093 * 3511 | 3880
+
+Factoring larger numbers take (on average):
+| bits | count |  min |    max | smooth |
+| ---- | ----- | ---- |   ---- | ------ |
+
+|  16  |   30  |  501 |   7628 |   2576 |
+|  17  |   37  |  343 |  10679 |   2855 |
+|  18  |   41  |  376 |  11226 |   2862 |
+|  19  |   45  |  911 |   8999 |   3689 |
+|  20  |   49  |  851 |  23692 |   3789 |
+|  21  |   51  | 1129 |  47705 |   4619 |
+|  22  |   46  |  373 |  74275 |   4725 |
+|  23  |   57  | 1090 |  16546 |   4706 |
+|  24  |   68  | 1549 | 154269 |   7479 |
+|  25  |   50  | 1309 |  51845 |   6222 |
+|  26  |   67  |  463 |  32268 |   5746 |
+|  27  |   68  | 1236 |  30571 |   6624 |
+|  28  |   66  |  380 |  48046 |   6607 |
+|  29  |   73  |  960 | 111320 |   6323 |
+|  30  |   71  | 1723 |  33267 |   7644 |
+
+A very rough estimate of the number of cycles is the following formula:
+150 \* 2^sqrt(bits)
+
+Utilization report for the factor\_inst shows:
+* LUTS      = 60384
+* Registers = 52136
+* Slices    = 18428
+* LUTRAM    =  1084
+* BRAM      =   104
+
+Frequency: 120 MHz
+
+## Description of algorithm
+
 The method used is quite involved and proceeds in five stages. In the first stage a
 sequence of numbers are generated, and in the subsequent stages the output from the
 previous stage is processed and (some of them) passed on to the next stage.
@@ -16,7 +64,7 @@ The first stage generates a sequence of tuples (x, p, w) satisfying
 x^2 = p\*w mod N, where |p| < 2\*sqrt(N) and |w| = 1. The important part here is that p is "small",
 i.e. contains only half as many digits as N.
 
-Starting with N=4559 we get the following sequence (note that p < 2\*sqrt(4559) = 135)
+Starting with N=4559, stage 1 generates the following sequence (note that p < 2\*sqrt(4559) = 135):
 
 |    x  |    p  |     w |
 | ----- | ----- | ----- |
@@ -38,28 +86,31 @@ The second stage takes as input the number p and does two things:
 p = s^2 * q, where s is the largest possible solution. In other words,
 q has no square divisors.
 2. It then factors q into its prime divisors, i.e. writes q = Product p_i.
+Note here that each prime p_i appears with power at most 1.
 
 All-in-all. the number p is written as p = s^2 * Product p_i.
 Only a limited number of primes p_i is considered for this factorization, so not all
 numbers p will be factored in stage 2.
 
-With the N=4559 example we also have to decide on a set of primes. Let's choose the first
-eight primes: 2, 3, 5, 7, 11, 13, 17, and 19.
+In stage 2 we also have to decide on a set of primes.
+
+For this example with N=4559 let's choose the first eight primes: 2, 3, 5, 7, 11, 13, 17,
+and 19.
 
 We then get this result:
 
-|   x   |   p   |    s           | 19 | 17 | 13 | 11 | 7 | 5 | 3 | 2 |  w |
-| ----- | ----- | -------------- | -- | -- | -- | -- | - | - | - | - | -- |
-|   67  |   70  |    1           |  . |  . |  . |  . | X | X | . | X | -1 |
-|   68  |   65  |    1           |  . |  . |  X |  . | . | X | . | . |  1 |
-|  135  |   11  |    1           |  . |  . |  . |  X | . | . | . | . | -1 |
-| 1553  |   98  |    7           |  . |  . |  . |  . | . | . | . | X |  1 |
-| 1688  |   31  |  not factored  |
-| 2058  |   53  |  not factored  |
-| 1245  |   35  |    1           |  . |  . |  . |  . | X | X | . | . | -1 |
-| 1234  |   50  |    5           |  . |  . |  . |  . | . | . | . | X |  1 |
-| 3713  |   47  |  not factored  |  . |  . |  . |  . | . | . | . | . | -1 |
-
+| row |   x   |   p   |    s           | 19 | 17 | 13 | 11 | 7 | 5 | 3 | 2 | w=-1 |
+| --- | ----- | ----- | -------------- | -- | -- | -- | -- | - | - | - | - | ---- |
+|   1 |   67  |   70  |    1           |  . |  . |  . |  . | X | X | . | X |  X   |
+|   2 |   68  |   65  |    1           |  . |  . |  X |  . | . | X | . | . |  .   |
+|   3 |  135  |   11  |    1           |  . |  . |  . |  X | . | . | . | . |  X   |
+|   4 | 1553  |   98  |    7           |  . |  . |  . |  . | . | . | . | X |  .   |
+|     | 1688  |   31  |  not factored  |
+|     | 2058  |   53  |  not factored  |
+|   5 | 1245  |   35  |    1           |  . |  . |  . |  . | X | X | . | . |  X   |
+|   6 | 1234  |   50  |    5           |  . |  . |  . |  . | . | . | . | X |  .   |
+|     | 3713  |   47  |  not factored  |  . |  . |  . |  . | . | . | . | . |  X   |
+ 
 Translated to equations this gives the following results:
 
 1.   67^2 mod 4559 = -70 = 1^2 * 7 * 5 * 2 * (-1)
@@ -71,12 +122,14 @@ Translated to equations this gives the following results:
 
 
 ## Stage 3
-This stage takes as input the list of factors p_i and sign w, and finds a combination of previous
-factors such that each prime p_i and sign w appears an even number of times.
+This stage takes as input the list of factors p_i and sign w, and finds a combination of
+previous factors such that each prime p_i and sign w appears an even number of times.
 
-So after row 5 (1245^2) is received, this stage outputs rows 1, 4, and 5.
+So after rows 1-5 are received, this stage outputs rows 1, 4, and 5, corresponding to an
+even occurrence of the primes 7, 5, 2, and -1.
 
-After row 6 (1234^2) is received, the output is rows 4 and 6.
+And after row 6 is received, the output is rows 4 and 6, corresponding to an even
+occurrence of the prime 2.
 
 ## Stage 4
 This stage multiplies the rows selected from the previous stage and outputs the square
@@ -101,35 +154,6 @@ than 1 then this is a factor of N.
 
 In the first case gcd(4069+490,4559) = 0, so no new factor found.
 In the second case gcd(1622+70,4559) = 47, and indeed 47 is a factor of 4559.
-
-# Performance
-Factoring small numbers take the following time:
-| number | factors     | cycles
-| ------ | -------     | ------
-|   2059 |   29 *   71 | 1039
-|   4559 |   47 *   97 |  890
-|  19549 |  113 *  173 | 1313
-|  26329 |  113 *  233 | 2437
-|  35119 |  173 *  203 |  930
-|  40309 |  173 *  233 | 2316
-|3837523 | 1093 * 3511 | 3813
-
-Factoring larger numbers take (on average):
-| bits |  min |    max | smooth |
-| ---- | ---- |   ---- | ------ |
-|  20  |  830 |  23635 |   3970 |
-|  24  | 1480 | 154200 |   7803 |
-|  28  |  370 |  28990 |   6217 |
-|  30  | 2100 |  25638 |   6455 |
-
-Utilization report for the factor\_inst shows:
-* LUTS      = 60384
-* Registers = 52136
-* Slices    = 19507
-* LUTRAM    =  1084
-* BRAM      =   104
-
-Frequency: 120 MHz
 
 # Links
 * https://core.ac.uk/download/pdf/217142258.pdf

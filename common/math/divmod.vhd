@@ -81,6 +81,7 @@ begin
             -- Store the input values
             when IDLE_ST =>
                if s_valid_i = '1' and s_ready_o = '1' then
+                  assert s_val_d_i /= 0;
                   res_q <= (others => '0');
                   res_r <= '0' & s_val_n_i;
                   val_d <= '0' & s_val_d_i;
