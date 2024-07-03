@@ -58,18 +58,18 @@ architecture behavioral of factor_wrapper is
 
 begin
 
-   pll_inst : component plle2_base
+   pll_inst : component mmcme2_base
       generic map (
          BANDWIDTH          => "OPTIMIZED",
-         CLKFBOUT_MULT      => 12,   -- 1200 MHz
+         CLKFBOUT_MULT_F    => 12.000,   -- 1200 MHz
          CLKFBOUT_PHASE     => 0.000,
-         CLKIN1_PERIOD      => 10.0, -- INPUT @ 100 MHz
-         CLKOUT0_DIVIDE     => 10,   -- OUTPUT @ 120 MHz
+         CLKIN1_PERIOD      => 10.0,     -- INPUT @ 100 MHz
+         CLKOUT0_DIVIDE_F   => 9.5,      -- OUTPUT @ 126.3 MHz
          CLKOUT0_DUTY_CYCLE => 0.500,
          CLKOUT0_PHASE      => 0.000,
          DIVCLK_DIVIDE      => 1,
          REF_JITTER1        => 0.010,
-         STARTUP_WAIT       => "FALSE"
+         STARTUP_WAIT       => FALSE
       )
       port map (
          clkfbin  => pll_clk_fb,

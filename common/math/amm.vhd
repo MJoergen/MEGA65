@@ -26,13 +26,13 @@ end entity amm;
 
 architecture synthesis of amm is
 
-   signal   mult_r : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal   add_r  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal   res_r  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
-   signal   val_r  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal mult_r : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal add_r  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal res_r  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
+   signal val_r  : std_logic_vector(G_DATA_SIZE - 1 downto 0);
 
-   type     state_type is (IDLE_ST, MULT_ST);
-   signal   state_r : state_type;
+   type   state_type is (IDLE_ST, MULT_ST, MOD_ST);
+   signal state_r : state_type;
 
 begin
 
@@ -62,11 +62,8 @@ begin
 
             when MULT_ST =>
                if mult_r(0) = '1' then
-                  if res_r + add_r >= val_r then
-                     res_r <= res_r + add_r - val_r;
-                  else
-                     res_r <= res_r + add_r;
-                  end if;
+                  res_r   <= res_r + add_r;
+                  state_r <= MOD_ST;
                end if;
 
                mult_r <= '0' & mult_r(G_DATA_SIZE - 1 downto 1);
@@ -80,6 +77,12 @@ begin
                   m_valid_o <= '1';
                   state_r   <= IDLE_ST;
                end if;
+
+            when MOD_ST =>
+               if res_r >= val_r then
+                  res_r <= res_r - val_r;
+               end if;
+               state_r <= MULT_ST;
 
          end case;
 
