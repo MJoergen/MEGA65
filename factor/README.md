@@ -23,7 +23,7 @@ factoring small numbers take the following time:
 |  40309 |  173 *  233 | 2337
 |3837523 | 1093 * 3511 | 3880
 
-Factoring larger numbers take (on average):
+Factoring larger numbers take (on average, in clock cycles):
 | bits | count |  min |    max | smooth |
 | ---- | ----- | ---- |   ---- | ------ |
 |  16  |   30  |  501 |   7628 |   2576 |
@@ -42,13 +42,35 @@ Factoring larger numbers take (on average):
 |  29  |   73  |  960 | 111320 |   6323 |
 |  30  |   71  | 1723 |  33267 |   7644 |
 
-A very rough estimate of the average number of cycles is the following formula:
+A very rough estimate of the average number of cycles for this range is the following formula:
 150 \* 2^sqrt(bits).
 
+Factoring even larger numbers take (on average, in seconds):
+| bits | seconds |
+| ---- |  ------ |
+|  72  |   0.022 |
+|  74  |   0.034 |
+|  76  |   0.044 |
+|  78  |   0.067 |
+|  80  |   0.085 |
+|  82  |   0.118 |
+|  84  |   0.174 |
+|  86  |   0.216 |
+|  88  |   0.336 |
+|  90  |   0.515 |
+|  92  |   0.847 |
+|  94  |   0.988 |
+|  96  |   1.613 |
+|  98  |   1.830 |
+| 100  |   2.972 |
+
+A very rough estimate of the average number of seconds for this range is the following formula:
+25^(sqrt(bits) - 9.69)
+
 Utilization report for the factor\_inst shows:
-* LUTS      = 60384
-* Registers = 52136
-* Slices    = 18428
+* LUTS      = 60381
+* Registers = 52148
+* Slices    = 18896
 * LUTRAM    =  1084
 * BRAM      =   104
 

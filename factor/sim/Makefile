@@ -22,6 +22,7 @@ SRCS += ../../common/math/gcd.vhd
 SRCS += ../../common/math/gf2_solver.vhd
 SRCS += ../../common/math/primes.vhd
 SRCS += ../../common/math/sqrt.vhd
+SRCS += ../../common/axi_fifo.vhd
 SRCS += ../../common/axi_fifo_small.vhd
 SRCS += ../../common/font.vhd
 SRCS += ../../common/kb_matrix_ram.vhd

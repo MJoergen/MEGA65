@@ -37,7 +37,7 @@ begin
          CLKFBOUT_MULT      => 12,   -- 1200 MHz
          CLKFBOUT_PHASE     => 0.000,
          CLKIN1_PERIOD      => 10.0, -- INPUT @ 100 MHz
-         CLKOUT0_DIVIDE     => 10,   -- OUTPUT @ 120 MHz
+         CLKOUT0_DIVIDE     => 12,   -- OUTPUT @ 100 MHz
          CLKOUT0_DUTY_CYCLE => 0.500,
          CLKOUT0_PHASE      => 0.000,
          CLKOUT1_DIVIDE     => 48,   -- OUTPUT @ 25 MHz
